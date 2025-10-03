@@ -2,12 +2,26 @@
 {
     public class Herramienta
     {
+        [Key]
         public int Id { get; set; }
-        public int Nombre { get; set; }
+
+        [Required, StringLength(30, ErrorMessage = "El nombre no puede tener más de 30 caracteres")]
+        [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
+        public string Nombre { get; set; }
+
+        [Required, StringLength(30, ErrorMessage = "El material no puede tener más de 30 caracteres")]
         public string Material { get; set; }
-        public float Precio { get; set; }
+
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
+        [Display(Name = "Price For Renting")]
+        [Precision(18, 2)]
+        public decimal Precio { get; set; }
+
         public float TiempoReparacion { get; set; }
-        
+
         public Fabricante Fabricante { get; set; }
+        
+
+        public List<CompraItem> CompraItems { get; set; } 
     }
 }
