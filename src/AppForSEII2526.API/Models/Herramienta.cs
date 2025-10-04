@@ -28,5 +28,6 @@
         
         public List<ReparacionItem> ReparacionItems { get; set; }
 
+        public List<AlquilerItem> AlquilerItems { get; set; }
     }
 }
