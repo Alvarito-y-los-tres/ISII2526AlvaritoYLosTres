@@ -20,11 +20,14 @@
         public float TiempoReparacion { get; set; }
 
         public Fabricante Fabricante { get; set; }
-        
 
-        public List<CompraItem> CompraItems { get; set; } 
+
+        public List<CompraItem> CompraItems { get; set; }
 
         public List<OfertaItem> OfertaItems { get; set; }
+        
+        public List<ReparacionItem> ReparacionItems { get; set; }
+
         public List<AlquilerItem> AlquilerItems { get; set; }
     }
 }
