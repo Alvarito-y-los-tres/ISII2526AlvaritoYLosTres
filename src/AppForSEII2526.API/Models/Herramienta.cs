@@ -25,5 +25,6 @@
         public List<CompraItem> CompraItems { get; set; } 
 
         public List<OfertaItem> OfertaItems { get; set; }
+        public List<AlquilerItem> AlquilerItems { get; set; }
     }
 }
