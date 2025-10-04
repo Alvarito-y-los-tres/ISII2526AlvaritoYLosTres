@@ -12,6 +12,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Herramienta> Herramientas { get; set; }
     public DbSet<Compra> Compras { get; set; }
     public DbSet<CompraItem> CompraItems { get; set; }
+    public DbSet<Oferta> Ofertas { get; set; }
+    public DbSet<OfertaItem> OfertaItems { get; set; }
+    public DbSet<Alquiler> Alquileres { get; set; }
+    public DbSet<AlquilerItem> AlquilerItems { get; set; }
+
 
 }
 
