@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="AppForSEII2526.API.Models.Fabricante">
+    <Position X="0.5" Y="0.75" Width="1.5" />
+    <AssociationLine Name="Herramientas" Type="AppForSEII2526.API.Models.Herramienta">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.059" Y="0.071" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAgAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Models\Fabricante.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Herramientas" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Herramienta">
+    <Position X="3.25" Y="0.75" Width="1.75" />
+    <AssociationLine Name="OfertaItems" Type="AppForSEII2526.API.Models.OfertaItem">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.282" Y="0.06" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AEACAEAAAAAAAAAAAAAAgAAQGAAQEAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Models\Herramienta.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Fabricante" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="OfertaItems" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.OfertaItem">
+    <Position X="6.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACCAAAAAAAAAAABAAAAAAAgABAACAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Models\OfertaItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Herramienta" />
+      <Property Name="Oferta" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Oferta">
+    <Position X="8.75" Y="0.75" Width="1.5" />
+    <AssociationLine Name="DirigidaOferta" Type="AppForSEII2526.API.Models.TiposDirigidaOferta" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.25" Y="1.438" />
+        <Point X="11.25" Y="1.438" />
+        <Point X="11.25" Y="3" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.157" Y="0.651" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACABAAAAAAAAAAAAAAAAAAEgAAAAIAAAAAAAAgAAA=</HashCode>
+      <FileName>Models\Oferta.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetodoPago" />
+      <Property Name="DirigidaOferta" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="OfertaItems" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Enum Name="AppForSEII2526.API.Models.TiposMetodosPago">
+    <Position X="8.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\TiposMetodosPago.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="AppForSEII2526.API.Models.TiposDirigidaOferta">
+    <Position X="10.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Models\TiposDirigidaOferta.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
