@@ -14,5 +14,10 @@
         public DateTime FechaFin { get; set; }
 
         public List<OfertaItem> OfertaItems { get; set; }
+
+        [Required]
+        public TiposMetodosPago MetodoPago { get; set; }
+
+        public TiposDirigidaOferta DirigidaOferta { get; set; }
     }
 }
