@@ -34,6 +34,9 @@
         [Phone]
         public int Telefono { get; set; }
 
+        [Required]
+        public TiposMetodosPago MetodoPago { get; set; }
+
         public List<CompraItem> CompraItems { get; set; }
     }
 }
