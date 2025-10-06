@@ -4,7 +4,7 @@ namespace AppForSEII2526.API.Models
 
     public class ReparacionItem
     {
-        public int Id { get; set; }
+        
 
         [Required]
         public int Cantidad { get; set; }
@@ -20,6 +20,7 @@ namespace AppForSEII2526.API.Models
         public int IdHerramienta { get; set; }
         public Herramienta Herramienta { get; set; }
 
+        [Key]
         public int IdReparacion { get; set; }
         public Reparacion Reparacion { get; set; }
     }

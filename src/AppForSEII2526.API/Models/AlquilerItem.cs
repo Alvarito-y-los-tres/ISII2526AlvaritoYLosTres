@@ -2,14 +2,13 @@
 {
     public class AlquilerItem
     {
-        [Key]
-        public int Id { get; set; }
+        
 
         [Required]
         public int IdHerramienta { get; set; }
         public Herramienta Herramienta { get; set; }
 
-        [Required]
+        [Key]
         public int IdAlquiler{ get; set; }
        
 
