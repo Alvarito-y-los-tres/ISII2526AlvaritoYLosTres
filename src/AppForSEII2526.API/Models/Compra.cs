@@ -16,7 +16,7 @@
         [Required]
         public string DireccionEnvio { get; set; }
 
-        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name = "Release Date")]
+        [DataType(System.ComponentModel.DataAnnotations.DataType.Date), Display(Name = "Fecha Compra")]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime FechaCompra { get; set; }
 
