@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AppForSEII2526.API.Models.Fabricante">
+    <Position X="1.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAgAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Models\Fabricante.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Herramientas" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Herramienta">
+    <Position X="5.25" Y="1.25" Width="1.5" />
+    <AssociationLine Name="Fabricante" Type="AppForSEII2526.API.Models.Fabricante" FixedFromPoint="true">
+      <Path>
+        <Point X="5.25" Y="1.656" />
+        <Point X="3.25" Y="1.656" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AEACAEAAAAAAAAAAAAAAgAAQGAAQEAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Models\Herramienta.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Fabricante" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ReparacionItems" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.ReparacionItem">
+    <Position X="8.75" Y="1.25" Width="1.5" />
+    <AssociationLine Name="Herramienta" Type="AppForSEII2526.API.Models.Herramienta" FixedFromPoint="true">
+      <Path>
+        <Point X="8.75" Y="1.769" />
+        <Point X="6.75" Y="1.769" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAARABAAAAAAIAAIAAAAAEA=</HashCode>
+      <FileName>Models\ReparacionItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Herramienta" />
+      <Property Name="Reparacion" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.Reparacion">
+    <Position X="11.75" Y="1.25" Width="1.5" />
+    <AssociationLine Name="ItemsReparacion" Type="AppForSEII2526.API.Models.ReparacionItem" FixedFromPoint="true">
+      <Path>
+        <Point X="11.75" Y="1.768" />
+        <Point X="10.25" Y="1.768" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACCAAAAAAAAACAABAAAAAAAAQACAIAAAAAAAEAEAA=</HashCode>
+      <FileName>Models\Reparacion.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MetodoPago" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ItemsReparacion" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Enum Name="AppForSEII2526.API.Models.TiposMetodosPago">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Models\TiposMetodosPago.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
