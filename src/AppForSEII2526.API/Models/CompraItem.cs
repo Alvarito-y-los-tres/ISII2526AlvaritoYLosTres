@@ -4,8 +4,7 @@ namespace AppForSEII2526.API.Models
 {
     public class CompraItem
     {
-        [Key]
-        public int Id { get; set; }
+        
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser un valor positivo")]
@@ -26,7 +25,7 @@ namespace AppForSEII2526.API.Models
         public Herramienta Herramienta { get; set; } 
 
 
-        [Required]
+        [Key]
         public int IdCompra { get; set; }
         public Compra Compra { get; set; }
     }
