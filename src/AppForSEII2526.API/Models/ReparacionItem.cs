@@ -21,7 +21,6 @@ namespace AppForSEII2526.API.Models
         public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
 
-        [Key]
         public int ReparacionId { get; set; }
         public Reparacion Reparacion { get; set; }
     }

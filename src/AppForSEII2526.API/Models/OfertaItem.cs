@@ -1,13 +1,14 @@
 ﻿namespace AppForSEII2526.API.Models
 {
+
+    [PrimaryKey("HerramientaId", "OfertaId")]
+
     public class OfertaItem
     {
-        [Required]
-        public int IdHerramienta { get; set; }
+        public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
 
-        [Key]
-        public int IdOferta { get; set; }
+        public int OfertaId { get; set; }
         public Oferta Oferta { get; set; }
 
         [Required]

@@ -20,4 +20,6 @@ public class ApplicationUser : IdentityUser
     public string? NumTelefono { get; set; }
         
     public List<Reparacion> Reparaciones { get; set; }
+
+    public List<Oferta> Ofertas { get; set; }
 }
