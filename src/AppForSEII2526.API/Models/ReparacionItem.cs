@@ -2,9 +2,10 @@ namespace AppForSEII2526.API.Models
 {
     using System.ComponentModel.DataAnnotations;
 
+    [PrimaryKey("ReparacionId", "HerramientaId")]
     public class ReparacionItem
     {
-        
+
 
         [Required]
         public int Cantidad { get; set; }
@@ -17,11 +18,11 @@ namespace AppForSEII2526.API.Models
         public decimal Precio { get; set; }
 
         // Relaciones
-        public int IdHerramienta { get; set; }
+        public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
 
         [Key]
-        public int IdReparacion { get; set; }
+        public int ReparacionId { get; set; }
         public Reparacion Reparacion { get; set; }
     }
     
