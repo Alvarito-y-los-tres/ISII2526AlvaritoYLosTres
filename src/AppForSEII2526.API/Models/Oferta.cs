@@ -22,6 +22,8 @@
         [Required]
         public TiposMetodosPago MetodoPago { get; set; }
 
-        public TiposDirigidaOferta DirigidaOferta { get; set; }
+        public TiposDirigidaOferta ParaSocio { get; set; }
+
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }
