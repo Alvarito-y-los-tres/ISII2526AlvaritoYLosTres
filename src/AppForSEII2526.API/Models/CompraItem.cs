@@ -2,9 +2,11 @@
 
 namespace AppForSEII2526.API.Models
 {
+
+    [PrimaryKey("HerramientaId", "CompraId")]
+
     public class CompraItem
     {
-        
 
         [Required]
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser un valor positivo")]
@@ -20,13 +22,13 @@ namespace AppForSEII2526.API.Models
         public decimal Precio { get; set; }
 
 
-        [Required]
-        public int IdHerramienta { get; set; }
+        
+        public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; } 
 
 
-        [Key]
-        public int IdCompra { get; set; }
+        
+        public int CompraId { get; set; }
         public Compra Compra { get; set; }
     }
 }
