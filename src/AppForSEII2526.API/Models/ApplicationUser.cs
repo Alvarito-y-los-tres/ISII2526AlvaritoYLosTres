@@ -18,8 +18,14 @@ public class ApplicationUser : IdentityUser
 
     [Phone(ErrorMessage = "Número de teléfono no válido")]
     public string? NumTelefono { get; set; }
-        
+
+
+    [EmailAddress]
+    public string CorreoElectronico { get; set; }
+
     public List<Reparacion> Reparaciones { get; set; }
 
     public List<Oferta> Ofertas { get; set; }
+
+    public List<Compra> Compras { get; set; }
 }
