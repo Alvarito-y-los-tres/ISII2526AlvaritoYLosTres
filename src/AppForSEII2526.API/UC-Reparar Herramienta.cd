@@ -38,7 +38,7 @@
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAAAAAAAAAAAAARABAAAAAAIAAIAAAAAEA=</HashCode>
+      <HashCode>AAAgAAEAAAAAAACAAAAAAAARAAAAAAAAIAAAAAAAAEA=</HashCode>
       <FileName>Models\ReparacionItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -50,19 +50,30 @@
     <Position X="11.75" Y="1.25" Width="1.5" />
     <AssociationLine Name="ItemsReparacion" Type="AppForSEII2526.API.Models.ReparacionItem" FixedFromPoint="true">
       <Path>
-        <Point X="11.75" Y="1.768" />
-        <Point X="10.25" Y="1.768" />
+        <Point X="11.75" Y="1.715" />
+        <Point X="10.25" Y="1.715" />
       </Path>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAACCAAAAAAAAACAABAAAAAAAAQACAIAAAAAAAEAEAA=</HashCode>
+      <HashCode>AAACAAAAAAAAAACQABAAAAAAAAQACAIAAAAAAAAAAAA=</HashCode>
       <FileName>Models\Reparacion.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="MetodoPago" />
+      <Property Name="ApplicationUser" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Property Name="ItemsReparacion" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="AppForSEII2526.API.Models.ApplicationUser">
+    <Position X="15" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAIAAgAAAAAAAAAAQAAAAAAAAAAACBAAAAEAEAA=</HashCode>
+      <FileName>Models\ApplicationUser.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Reparaciones" />
     </ShowAsCollectionAssociation>
   </Class>
   <Enum Name="AppForSEII2526.API.Models.TiposMetodosPago">

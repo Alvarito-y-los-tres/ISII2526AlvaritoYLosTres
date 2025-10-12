@@ -1,15 +1,16 @@
 ﻿namespace AppForSEII2526.API.Models
 {
+    [PrimaryKey("AlquilerId", "HerramientaId")]
     public class AlquilerItem
     {
         
 
         [Required]
-        public int IdHerramienta { get; set; }
+        public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
 
-        [Key]
-        public int IdAlquiler{ get; set; }
+       
+        public int AlquilerId{ get; set; }
        
 
         [DataType(System.ComponentModel.DataAnnotations.DataType.Currency)]
