@@ -7,16 +7,16 @@ namespace AppForSEII2526.API.DTOs
         public string Fabricante { get; set; }
         public decimal Precio { get; set; }
 
-        public int DiasHabilesReparacion { get; set; }
+        public float TiempoReparacion { get; set; }
 
 
-        public HerramientaRepararDTO(string nombre, string material, string fabricante, decimal precio, int diasHabilesReparacion)
+        public HerramientaRepararDTO(string nombre, string material, string fabricante, decimal precio, float diasHabilesReparacion)
         {
             Nombre = nombre;
             Material = material;
             Fabricante = fabricante;
             Precio = precio;
-            DiasHabilesReparacion = diasHabilesReparacion;
+            TiempoReparacion = diasHabilesReparacion;
         }
 
         public override bool Equals(object? obj)
@@ -26,12 +26,12 @@ namespace AppForSEII2526.API.DTOs
                    Material == dTO.Material &&
                    Fabricante == dTO.Fabricante &&
                    Precio == dTO.Precio &&
-                   DiasHabilesReparacion == dTO.DiasHabilesReparacion;
+                   TiempoReparacion == dTO.TiempoReparacion;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Nombre, Material, Fabricante, Precio, DiasHabilesReparacion);
+            return HashCode.Combine(Nombre, Material, Fabricante, Precio, TiempoReparacion);
         }
     }
 }
