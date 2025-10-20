@@ -41,6 +41,38 @@ namespace AppForSEII2526.API.Controllers
                 .Select(h => new HerramientasParaComprarDTO(h.Nombre, h.Material, h.Precio, h.Fabricante.Nombre))
                 .ToListAsync();
             return Ok(selectHerramienta);
+        [HttpGet]
+        [Route("Para-Alquilar")]
+        [ProducesResponseType(typeof(IList<HerramientaAlquilarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetHerramientasParaAlquilar(string? nombre, string? material)
+        {
+            var herramientasAlquilar = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.Material == null || h.Material == material))
+                .Select(h => new HerramientaAlquilarDTO(
+                    h.Nombre,
+                    h.Material,
+                    h.Fabricante.Nombre,
+                    h.Precio))
+                .ToListAsync();
+            return Ok(herramientasAlquilar);
+        }
+        [HttpGet]
+        [Route("Para-Reparar")]
+        [ProducesResponseType(typeof(IList<HerramientaRepararDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetHerramientasParaReparar(string? nombre, string? diasHabilesReparacion)
+        {
+            var herramientasReparar = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.DiasHabilesReparacion == null || h.DiasHabilesReparacion == diasHabilesReparacion))
+                .Select(h => new HerramientaAlquilarDTO(
+                    h.Nombre,
+                    h.Material,
+                    h.Fabricante.Nombre,
+                    h.Precio,
+                    h.DiasHabilesReparacion))
+                .ToListAsync();
+            return Ok(herramientasAlquilar);
         }
 
     }
