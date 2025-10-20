@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
@@ -40,5 +41,53 @@ namespace AppForSEII2526.API.Controllers
                 .ToListAsync();
             return Ok(selectHerramienta);
         }
+
+        [HttpGet]
+        [Route("Para-Comprar")]
+        [ProducesResponseType(typeof(IList<HerramientasParaComprarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetHerramientaParaComprar(string? material, decimal? precio)
+        {
+            IList<HerramientasParaComprarDTO> selectHerramienta = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Include(h => h.CompraItems).ThenInclude(pi => pi.Compra)
+                .Where(h => (material == null || h.Material == material) &&
+                            (precio == null || h.Precio <= precio))
+                .Select(h => new HerramientasParaComprarDTO(h.Nombre, h.Material, h.Precio, h.Fabricante.Nombre))
+                .ToListAsync();
+            return Ok(selectHerramienta);
+        [HttpGet]
+        [Route("Para-Alquilar")]
+        [ProducesResponseType(typeof(IList<HerramientaAlquilarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetHerramientasParaAlquilar(string? nombre, string? material)
+        {
+            var herramientasAlquilar = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.Material == null || h.Material == material))
+                .Select(h => new HerramientaAlquilarDTO(
+                    h.Nombre,
+                    h.Material,
+                    h.Fabricante.Nombre,
+                    h.Precio))
+                .ToListAsync();
+            return Ok(herramientasAlquilar);
+        }
+        [HttpGet]
+        [Route("Para-Reparar")]
+        [ProducesResponseType(typeof(IList<HerramientaRepararDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetHerramientasParaReparar(string? nombre, string? diasHabilesReparacion)
+        {
+            var herramientasReparar = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.DiasHabilesReparacion == null || h.DiasHabilesReparacion == diasHabilesReparacion))
+                .Select(h => new HerramientaAlquilarDTO(
+                    h.Nombre,
+                    h.Material,
+                    h.Fabricante.Nombre,
+                    h.Precio,
+                    h.DiasHabilesReparacion))
+                .ToListAsync();
+            return Ok(herramientasAlquilar);
+        }
+
     }
 }
