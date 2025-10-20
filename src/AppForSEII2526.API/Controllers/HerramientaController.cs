@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace AppForSEII2526.API.Controllers
 {
     [Route("api/[controller]")]
@@ -25,6 +26,21 @@ namespace AppForSEII2526.API.Controllers
             IList<Herramienta> herramientas = await _context.Herramientas.ToListAsync();
               return Ok(herramientas);
         }
+
+
+        [HttpGet]
+        [Route("Para-Comprar")]
+        [ProducesResponseType(typeof(IList<HerramientasParaComprarDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetHerramientaParaComprar(string? material, decimal? precio)
+        {
+            IList<HerramientasParaComprarDTO> selectHerramienta = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Include(h => h.CompraItems).ThenInclude(pi => pi.Compra)
+                .Where(h => (material == null || h.Material == material) &&
+                            (precio == null || h.Precio <= precio))
+                .Select(h => new HerramientasParaComprarDTO(h.Nombre, h.Material, h.Precio, h.Fabricante.Nombre))
+                .ToListAsync();
+            return Ok(selectHerramienta);
         [HttpGet]
         [Route("Para-Alquilar")]
         [ProducesResponseType(typeof(IList<HerramientaAlquilarDTO>), (int)HttpStatusCode.OK)]
