@@ -41,6 +41,23 @@ namespace AppForSEII2526.API.Controllers
                 .ToListAsync();
             return Ok(herramientasAlquilar);
         }
+        [HttpGet]
+        [Route("Para-Reparar")]
+        [ProducesResponseType(typeof(IList<HerramientaRepararDTO>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetHerramientasParaReparar(string? nombre, string? diasHabilesReparacion)
+        {
+            var herramientasReparar = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.DiasHabilesReparacion == null || h.DiasHabilesReparacion == diasHabilesReparacion))
+                .Select(h => new HerramientaAlquilarDTO(
+                    h.Nombre,
+                    h.Material,
+                    h.Fabricante.Nombre,
+                    h.Precio,
+                    h.DiasHabilesReparacion))
+                .ToListAsync();
+            return Ok(herramientasAlquilar);
+        }
 
     }
 }
