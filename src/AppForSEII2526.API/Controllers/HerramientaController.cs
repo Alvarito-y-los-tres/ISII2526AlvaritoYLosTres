@@ -80,7 +80,7 @@ namespace AppForSEII2526.API.Controllers
         {
             var herramientasReparar = await _context.Herramientas
                 .Include(h => h.Fabricante)
-                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.TiempoReparacion == null || h.TiempoReparacion == tiempoReparacion))
+                .Where(h => (nombre == null || h.Nombre == nombre) && (tiempoReparacion == null || h.TiempoReparacion == tiempoReparacion))
                 .Select(h => new HerramientaRepararDTO(
                     h.Nombre,
                     h.Material,
