@@ -55,7 +55,7 @@ namespace AppForSEII2526.API.Controllers
                 .Select(h => new HerramientasParaComprarDTO(h.Nombre, h.Material, h.Precio, h.Fabricante.Nombre))
                 .ToListAsync();
             return Ok(selectHerramienta);
-        }    
+        }
         [HttpGet]
         [Route("Para-Alquilar")]
         [ProducesResponseType(typeof(IList<HerramientaAlquilarDTO>), (int)HttpStatusCode.OK)]
@@ -63,7 +63,8 @@ namespace AppForSEII2526.API.Controllers
         {
             var herramientasAlquilar = await _context.Herramientas
                 .Include(h => h.Fabricante)
-                .Where(h => (h.Nombre == null || h.Nombre == nombre) && (h.Material == null || h.Material == material))
+                // 👇 LÍNEA CORREGIDA 👇
+                .Where(h => (nombre == null || h.Nombre == nombre) && (material == null || h.Material == material))
                 .Select(h => new HerramientaAlquilarDTO(
                     h.Nombre,
                     h.Material,
