@@ -4,7 +4,7 @@ namespace AppForSEII2526.API.DTOs
 {
     public class CompraDetalleDTO
     {
-        public int Id { get; set; }
+       
         public string NombreCLiente { get; set; }
         public string ApellidoCliente { get; set; }
 
@@ -15,9 +15,8 @@ namespace AppForSEII2526.API.DTOs
 
         public IList<CompraItemDTO> CompraItemDTO { get; set; }
 
-        public CompraDetalleDTO(int id, string nombreCLiente, string apellidoCliente, string direccionEnvio, decimal precioTotal, DateTime fechaCompra, IList<CompraItemDTO> compraItemDTO)
+        public CompraDetalleDTO(string nombreCLiente, string apellidoCliente, string direccionEnvio, decimal precioTotal, DateTime fechaCompra, IList<CompraItemDTO> compraItemDTO)
         {
-            Id = id;
             NombreCLiente = nombreCLiente;
             ApellidoCliente = apellidoCliente;
             DireccionEnvio = direccionEnvio;
@@ -29,7 +28,6 @@ namespace AppForSEII2526.API.DTOs
         public override bool Equals(object? obj)
         {
             return obj is CompraDetalleDTO dTO &&
-                   Id == dTO.Id &&
                    NombreCLiente == dTO.NombreCLiente &&
                    ApellidoCliente == dTO.ApellidoCliente &&
                    DireccionEnvio == dTO.DireccionEnvio &&
@@ -40,7 +38,7 @@ namespace AppForSEII2526.API.DTOs
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, NombreCLiente, ApellidoCliente, DireccionEnvio, PrecioTotal, FechaCompra, CompraItemDTO);
+            return HashCode.Combine(NombreCLiente, ApellidoCliente, DireccionEnvio, PrecioTotal, FechaCompra, CompraItemDTO);
         }
     }
 }
