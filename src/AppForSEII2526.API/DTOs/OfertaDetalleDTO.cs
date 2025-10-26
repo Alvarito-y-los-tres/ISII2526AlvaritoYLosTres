@@ -1,6 +1,5 @@
 ﻿
 
-
 namespace AppForSEII2526.API.DTOs
 {
     public class OfertaDetalleDTO
@@ -10,16 +9,16 @@ namespace AppForSEII2526.API.DTOs
         public DateTime FechaOferta { get; set; }
         public TiposDirigidaOferta ParaSocios { get; set; }
         public TiposMetodosPago MetodoPago { get; set; }
-        public IList<OfertaItemDTO> OfertaItems { get; set; }
+        public IList<OfertaItemDTO> Items { get; set; }
 
-        public OfertaDetalleDTO(DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, TiposDirigidaOferta paraSocios, TiposMetodosPago metodoPago, IList<OfertaItemDTO> ofertaItems)
+        public OfertaDetalleDTO(DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, TiposDirigidaOferta paraSocios, TiposMetodosPago metodoPago, IList<OfertaItemDTO> items)
         {
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             FechaOferta = fechaOferta;
             ParaSocios = paraSocios;
             MetodoPago = metodoPago;
-            OfertaItems = ofertaItems;
+            Items = items;
         }
 
         public override bool Equals(object? obj)
@@ -30,12 +29,12 @@ namespace AppForSEII2526.API.DTOs
                    FechaOferta == dTO.FechaOferta &&
                    ParaSocios == dTO.ParaSocios &&
                    MetodoPago == dTO.MetodoPago &&
-                   EqualityComparer<IList<OfertaItemDTO>>.Default.Equals(OfertaItems, dTO.OfertaItems);
+                   EqualityComparer<IList<OfertaItemDTO>>.Default.Equals(Items, dTO.Items);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(FechaInicio, FechaFin, FechaOferta, ParaSocios, MetodoPago, OfertaItems);
+            return HashCode.Combine(FechaInicio, FechaFin, FechaOferta, ParaSocios, MetodoPago, Items);
         }
     }
 }
