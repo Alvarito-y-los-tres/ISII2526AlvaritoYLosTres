@@ -30,7 +30,6 @@ namespace AppForSEII2526.API.Controllers
             }
 
             IList<CompraDetalleDTO> compraDetalles = await _context.Compras
-                .Include(o => o.MetodoPago)
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.CompraItems)
                     .ThenInclude(oi => oi.Herramienta)
