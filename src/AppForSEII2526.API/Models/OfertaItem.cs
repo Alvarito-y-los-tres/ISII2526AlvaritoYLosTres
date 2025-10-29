@@ -5,6 +5,9 @@
 
     public class OfertaItem
     {
+        public OfertaItem()
+        {
+        }
         public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
 

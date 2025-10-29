@@ -2,12 +2,12 @@
 {
     public class Alquiler
     {
+        public Alquiler()
+        {
+            
+        }
         [Key]
         public int Id { get; set; }
-
-        
-
-        
 
         [Required]
         public string DireccionEnvio { get; set; }

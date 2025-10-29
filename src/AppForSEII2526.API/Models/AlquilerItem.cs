@@ -5,6 +5,9 @@
     {
         
 
+        public AlquilerItem()
+        {
+        }
         
         public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }

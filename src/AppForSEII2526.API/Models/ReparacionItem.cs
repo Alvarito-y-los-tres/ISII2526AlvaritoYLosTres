@@ -6,7 +6,9 @@ namespace AppForSEII2526.API.Models
     public class ReparacionItem
     {
 
-
+        public ReparacionItem()
+        {
+        }
         [Required]
         public int Cantidad { get; set; }
 
