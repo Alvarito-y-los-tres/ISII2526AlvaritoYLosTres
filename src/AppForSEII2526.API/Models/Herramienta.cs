@@ -33,5 +33,14 @@
         public List<ReparacionItem> ReparacionItems { get; set; }
 
         public List<AlquilerItem> AlquilerItems { get; set; }
+
+        public Herramienta(string nombre, string material, decimal precio, float tiempoReparacion, Fabricante fabricante)
+        {
+            Nombre = nombre;
+            Material = material;
+            Precio = precio;
+            TiempoReparacion = tiempoReparacion;
+            Fabricante = fabricante;
+        }
     }
 }
