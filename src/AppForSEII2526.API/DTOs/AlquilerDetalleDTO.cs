@@ -21,7 +21,7 @@ namespace AppForSEII2526.API.DTOs
             this.direccionCliente = direccionCliente;
             this.fechaAlquiler = fechaAlquiler;
             this.precioTotal = precioTotal;
-            this.fechaInicioALquiler = fechaInicioALquiler;
+            this.fechaInicioAlquiler = fechaInicioALquiler;
             this.fechaFinAlquiler = fechaFinAlquiler;
             this.items = items;
         }

@@ -36,7 +36,7 @@
 
         public TiposMetodosPago MetodoPago { get; set; }
 
-        public List<AlquilerItem> AlquilerItem { get; set; }
+        public List<AlquilerItem> AlquilerItems { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }
 }
