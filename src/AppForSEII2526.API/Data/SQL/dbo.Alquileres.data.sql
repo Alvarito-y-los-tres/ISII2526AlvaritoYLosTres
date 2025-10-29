@@ -1,0 +1,6 @@
+﻿SET IDENTITY_INSERT [dbo].[Alquileres] ON;
+INSERT INTO [dbo].[Alquileres] ([Id], [DireccionEnvio], [FechaAlquiler], [FechaInicio], [FechaFin], [Periodo], [PrecioTotal], [MetodoPago], [ApplicationUserId]) VALUES (1, N'Calle Falsa, 123', N'2025-10-29 10:30:00', N'2025-11-01 09:00:00', N'2025-11-08 18:00:00', 4, CAST(150.00 AS Decimal(10, 2)), 0, N'1')
+INSERT INTO [dbo].[Alquileres] ([Id], [DireccionEnvio], [FechaAlquiler], [FechaInicio], [FechaFin], [Periodo], [PrecioTotal], [MetodoPago], [ApplicationUserId]) VALUES (2, N'Avenida Siempre Viva, 742', N'2025-10-28 15:00:00', N'2025-10-30 12:00:00', N'2025-11-30 12:00:00', 5, CAST(475.50 AS Decimal(10, 2)), 1, N'2')
+INSERT INTO [dbo].[Alquileres] ([Id], [DireccionEnvio], [FechaAlquiler], [FechaInicio], [FechaFin], [Periodo], [PrecioTotal], [MetodoPago], [ApplicationUserId]) VALUES (3, N'Plaza del Muro, 1', N'2025-10-29 11:15:00', N'2025-10-29 14:00:00', N'2025-10-31 14:00:00', 2, CAST(80.20 AS Decimal(10, 2)), 0, N'3')
+INSERT INTO [dbo].[Alquileres] ([Id], [DireccionEnvio], [FechaAlquiler], [FechaInicio], [FechaFin], [Periodo], [PrecioTotal], [MetodoPago], [ApplicationUserId]) VALUES (4, N'Camino del Roble, 44', N'2025-10-29 14:00:00', N'2025-11-05 09:00:00', N'2025-11-12 09:00:00', 4, CAST(210.00 AS Decimal(10, 2)), 2, N'4')
+SET IDENTITY_INSERT [dbo].[Alquileres] OFF;
