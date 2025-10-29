@@ -2,6 +2,10 @@
 {
     public class Oferta
     {
+        public Oferta()
+        {
+            
+        }
         [Key]
         public int Id { get; set; }
 

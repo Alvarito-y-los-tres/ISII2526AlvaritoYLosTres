@@ -2,6 +2,10 @@
 {
     public class Herramienta
     {
+        public Herramienta()
+        {
+
+        }
         [Key]
         public int Id { get; set; }
 

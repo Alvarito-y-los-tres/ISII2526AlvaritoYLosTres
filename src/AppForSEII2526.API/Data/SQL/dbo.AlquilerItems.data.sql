@@ -1,4 +1,4 @@
-﻿
+
 INSERT INTO [dbo].[AlquilerItems] 
 ([HerramientaId], [AlquilerId], [Precio], [Cantidad]) 
 VALUES 
@@ -13,6 +13,4 @@ INSERT INTO [dbo].[AlquilerItems]
 ([HerramientaId], [AlquilerId], [Precio], [Cantidad]) 
 VALUES 
 (3, 3, CAST(120.00 AS Decimal(10, 2)), 4);
-
-
 
