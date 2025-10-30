@@ -6,6 +6,10 @@
         {
             
         }
+        public Fabricante(string nombre)
+        {
+            Nombre = nombre;
+        }
         [Key]
         public int Id { get; set; }
 
