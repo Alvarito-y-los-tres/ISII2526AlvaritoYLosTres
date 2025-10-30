@@ -22,9 +22,10 @@
         [Precision(5, 2)]
         public decimal PrecioFinal { get; set; }
 
-        
-        
-       
-
+        public OfertaItem(float porcentaje, decimal precioFinal)
+        {
+            Porcentaje = porcentaje;
+            PrecioFinal = precioFinal;
+        }
     }
 }

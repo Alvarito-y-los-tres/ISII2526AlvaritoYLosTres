@@ -19,5 +19,9 @@
 
         public List<Herramienta> Herramientas { get; set; } 
 
+        public Fabricante(string nombre)
+        {
+            Nombre = nombre;
+        }
     }
 }
