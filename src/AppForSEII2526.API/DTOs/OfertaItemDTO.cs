@@ -9,6 +9,7 @@ namespace AppForSEII2526.API.DTOs
         public string FabricanteHerramienta { get; set; }
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
+        public float Porcentaje { get; set; }
 
         public OfertaItemDTO(string nombreHerramienta, string materialHerramienta, string fabricanteHerramienta, decimal precio, decimal precioFinal)
         {
