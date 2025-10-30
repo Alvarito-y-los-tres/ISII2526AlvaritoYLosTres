@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AppForSEII2526.UT.HerramientasController_test
 {
-    public class GetHerramientaParaComprar_test: AppFoSEII25264SqLiteUT
+    public class GetHerramientaParaComprar_test: AppForSEII25264SqliteUT
     {
         public GetHerramientaParaComprar_test()
         {
