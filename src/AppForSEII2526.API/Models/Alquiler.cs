@@ -2,12 +2,12 @@
 {
     public class Alquiler
     {
+        public Alquiler()
+        {
+            
+        }
         [Key]
         public int Id { get; set; }
-
-        
-
-        
 
         [Required]
         public string DireccionEnvio { get; set; }
@@ -32,11 +32,11 @@
         public int Periodo { get; set; }
 
         [Range(0, int.MaxValue, ErrorMessage = "El precio total no puede ser negativo")]
-        public int PrecioTotal { get; set; }
+        public decimal PrecioTotal { get; set; }
 
         public TiposMetodosPago MetodoPago { get; set; }
 
-        public List<AlquilerItem> AlquilerItem { get; set; }
+        public List<AlquilerItem> AlquilerItems { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }
 }

@@ -17,12 +17,12 @@ namespace AppForSEII2526.API.DTOs
         
        
 
-        public HerramientasParaComprarDTO(string nombre, string material, decimal precio, string facbricante)
+        public HerramientasParaComprarDTO(string nombre, string material, decimal precio, string fabricante)
         {
             Nombre = nombre;
             Material = material;
             Precio = precio;
-            Fabricante = facbricante;
+            Fabricante = fabricante;
         }
 
         public override bool Equals(object? obj)

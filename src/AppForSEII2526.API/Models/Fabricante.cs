@@ -2,6 +2,14 @@
 {
     public class Fabricante
     {
+        public Fabricante()
+        {
+            
+        }
+        public Fabricante(string nombre)
+        {
+            Nombre = nombre;
+        }
         [Key]
         public int Id { get; set; }
 
@@ -9,7 +17,8 @@
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         public string Nombre { get; set; }
 
-        public List<Herramienta> Herramientas { get; set; } 
+        public List<Herramienta> Herramientas { get; set; }
 
+        
     }
 }

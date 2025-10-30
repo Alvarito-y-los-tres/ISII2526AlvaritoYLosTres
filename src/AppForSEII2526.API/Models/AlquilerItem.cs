@@ -5,6 +5,9 @@
     {
         
 
+        public AlquilerItem()
+        {
+        }
         
         public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
@@ -23,5 +26,6 @@
         public int Cantidad { get; set; }
 
         public Alquiler Alquiler { get; set; }
+        public string DescripcionHerramienta { get; set; }
     }
 }

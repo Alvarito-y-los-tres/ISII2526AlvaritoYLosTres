@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace AppForSEII2526.UT.HerramientasController_test
 {
-    public class GetHerramientaParaOferta_test: AppForSEII25264SqliteUT
+    public class GetHerramientaParaAlquilar_test : AppForSEII25264SqliteUT
     {
-        public GetHerramientaParaOferta_test()
+        public GetHerramientaParaAlquilar_test()
         {
             var fabricante = new List<Fabricante>
             {
@@ -65,11 +65,11 @@ namespace AppForSEII2526.UT.HerramientasController_test
         [MemberData(nameof(TestCasesFor_GetHerramientasParaOferta_OK))]
         [Trait("Database", "WithoutFixture")]
         [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetHerramientaParaOferta_OK_test(string? fabricante, decimal? precio, IList<HerramientasParaOfertarDTO>herramientasDTOEsperado)
+        public async Task GetHerramientaParaOferta_OK_test(string? nombre, decimal? material, IList<HerramientasParaOfertarDTO> herramientasDTOEsperado)
         {
-            var controller = new HerramientaController(_context, null);   
+            var controller = new HerramientaController(_context, null);
 
-            var result = await controller.GetHerramientaParaOferta(fabricante, precio);
+            var result = await controller.GetHerramientaParaOferta(nombre, material);
 
             var okResult = result as OkObjectResult;
 
