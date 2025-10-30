@@ -46,8 +46,8 @@ namespace AppForSEII2526.UT.HerramientasController_test
                 new HerramientasParaComprarDTO("Tijeras", "Plastico", 3, "Ferretería Ruiz")
             };
 
-            var herramientaDTOsTC1 = new List<HerramientasParaComprarDTO>() { herramientaDTOs[1], herramientaDTOs[2] }
-            .OrderBy(h => h.Nombre).ToList();
+            var herramientaDTOsTC1 = new List<HerramientasParaComprarDTO>() { herramientaDTOs[0], herramientaDTOs[1], herramientaDTOs[2] };
+            
 
             var herramientaDTOsTC2 = new List<HerramientasParaComprarDTO>() { herramientaDTOs[1] };
             var herramientaDTOsTC3 = new List<HerramientasParaComprarDTO>() { herramientaDTOs[2] };
@@ -68,7 +68,7 @@ namespace AppForSEII2526.UT.HerramientasController_test
         [MemberData(nameof(TestCasesFor_GetHerramientasParaComprar_OK))]
         [Trait("Database", "WithoutFixture")]
         [Trait("LevelTesting", "Unit Testing")]
-        public async Task GetHerramientaParaComprar_OK_test(string? material, decimal? precio,
+        public async Task GetHerramientaParaComprar_OK_test(string? material, int? precio,
             IList<HerramientasParaComprarDTO> expectedHerramienta)
         {
             // Arrange
