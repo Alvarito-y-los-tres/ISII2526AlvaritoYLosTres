@@ -2,6 +2,10 @@
 {
     public class Oferta
     {
+        public Oferta()
+        {
+            
+        }
         [Key]
         public int Id { get; set; }
 
@@ -25,5 +29,14 @@
         public TiposDirigidaOferta ParaSocio { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
+
+        public Oferta(DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, TiposMetodosPago metodoPago, TiposDirigidaOferta paraSocio)
+        {
+            FechaInicio = fechaInicio;
+            FechaFin = fechaFin;
+            FechaOferta = fechaOferta;
+            MetodoPago = metodoPago;
+            ParaSocio = paraSocio;
+        }
     }
 }

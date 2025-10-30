@@ -5,6 +5,10 @@ namespace AppForSEII2526.API.Models;
 // Add profile data for application users by adding properties to the ApplicationUser class
 public class ApplicationUser : IdentityUser
 {
+    public ApplicationUser()
+    {
+        
+    }
 
     [Required(ErrorMessage = "El nombre del cliente es obligatorio")]
     [StringLength(50, ErrorMessage = "El nombre no puede superar los 50 caracteres")]

@@ -2,6 +2,14 @@
 {
     public class Fabricante
     {
+        public Fabricante()
+        {
+            
+        }
+        public Fabricante(string nombre)
+        {
+            Nombre = nombre;
+        }
         [Key]
         public int Id { get; set; }
 
