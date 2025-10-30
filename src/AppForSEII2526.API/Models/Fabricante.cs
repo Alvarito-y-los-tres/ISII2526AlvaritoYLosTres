@@ -17,7 +17,7 @@
         [RegularExpression(@"^[A-Z]+[a-zA-Z''-'\s]*$")]
         public string Nombre { get; set; }
 
-        public List<Herramienta> Herramientas { get; set; } 
+        public List<Herramienta> Herramientas { get; set; }
 
         public Fabricante(string nombre)
         {
