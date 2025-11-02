@@ -42,7 +42,9 @@ namespace AppForSEII2526.API.Controllers
                         oi.Herramienta.Material,
                         oi.Herramienta.Fabricante.Nombre,
                         oi.Herramienta.Precio,
-                        oi.Herramienta.Precio * (1 - (decimal)(oi.Porcentaje / 100))
+                        oi.Herramienta.Precio * (1 - (decimal)(oi.Porcentaje / 100)),
+                        oi.Porcentaje,
+                        oi.OfertaId
                         )).ToList()
                 ))
                 .ToListAsync();
@@ -126,6 +128,13 @@ namespace AppForSEII2526.API.Controllers
                 return ValidationProblem(ModelState);
             }
 
+            var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearOfertaDTO.nombreUsuario);
+            if (usuario == null)
+            {
+                _logger.LogWarning($"Usuario '{crearOfertaDTO.nombreUsuario}' no encontrado.");
+                return NotFound($"El usuario '{crearOfertaDTO.nombreUsuario}' no existe.");
+            }
+
             if (ModelState.ErrorCount > 0)
             {
                 return BadRequest(new ValidationProblemDetails(ModelState));
@@ -139,6 +148,7 @@ namespace AppForSEII2526.API.Controllers
                 FechaOferta = crearOfertaDTO.FechaOferta,
                 MetodoPago = metodoPago,
                 ParaSocio = tiposDirigidaOferta,
+                ApplicationUser = usuario,
                 OfertaItems = new List<OfertaItem>()
             };
 
@@ -164,6 +174,8 @@ namespace AppForSEII2526.API.Controllers
 
             _context.Ofertas.Add(nuevaOferta);
             await _context.SaveChangesAsync();
+
+
             var ofertaDetalleDTO = new OfertaDetalleDTO(
                 nuevaOferta.FechaInicio,
                 nuevaOferta.FechaFin,
@@ -175,7 +187,9 @@ namespace AppForSEII2526.API.Controllers
                     oi.Herramienta.Material,
                     oi.Herramienta.Fabricante.Nombre,
                     oi.Herramienta.Precio,
-                    oi.PrecioFinal
+                    oi.PrecioFinal,
+                    oi.Porcentaje,
+                    oi.OfertaId
                     )).ToList()
             );
             return Ok(ofertaDetalleDTO);
