@@ -1,5 +1,7 @@
 ﻿
 
+
+
 namespace AppForSEII2526.API.DTOs
 {
     public class OfertaItemDTO
@@ -10,14 +12,17 @@ namespace AppForSEII2526.API.DTOs
         public decimal Precio { get; set; }
         public decimal PrecioFinal { get; set; }
         public float Porcentaje { get; set; }
+        public int OfertaId { get; set; }
 
-        public OfertaItemDTO(string nombreHerramienta, string materialHerramienta, string fabricanteHerramienta, decimal precio, decimal precioFinal)
+        public OfertaItemDTO(string nombreHerramienta, string materialHerramienta, string fabricanteHerramienta, decimal precio, decimal precioFinal, float porcentaje, int ofertaId)
         {
             NombreHerramienta = nombreHerramienta;
             MaterialHerramienta = materialHerramienta;
             FabricanteHerramienta = fabricanteHerramienta;
             Precio = precio;
             PrecioFinal = precioFinal;
+            Porcentaje = porcentaje;
+            OfertaId = ofertaId;
         }
 
         public override bool Equals(object? obj)
@@ -27,12 +32,14 @@ namespace AppForSEII2526.API.DTOs
                    MaterialHerramienta == dTO.MaterialHerramienta &&
                    FabricanteHerramienta == dTO.FabricanteHerramienta &&
                    Precio == dTO.Precio &&
-                   PrecioFinal == dTO.PrecioFinal;
+                   PrecioFinal == dTO.PrecioFinal &&
+                   Porcentaje == dTO.Porcentaje &&
+                   OfertaId == dTO.OfertaId;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(NombreHerramienta, MaterialHerramienta, FabricanteHerramienta, Precio, PrecioFinal);
+            return HashCode.Combine(NombreHerramienta, MaterialHerramienta, FabricanteHerramienta, Precio, PrecioFinal, Porcentaje, OfertaId);
         }
     }
 }

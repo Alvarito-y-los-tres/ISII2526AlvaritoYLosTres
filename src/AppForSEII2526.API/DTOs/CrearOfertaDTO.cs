@@ -8,6 +8,7 @@
         public List<OfertaItemDTO> Items { get; set; }
         public int MetodoPago { get; set; }
         public int ParaSocio { get; set; }
+        public string nombreUsuario { get; set; }
 
         public CrearOfertaDTO()
         {
