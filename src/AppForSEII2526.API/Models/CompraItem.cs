@@ -33,5 +33,14 @@ namespace AppForSEII2526.API.Models
         
         public int CompraId { get; set; }
         public Compra Compra { get; set; }
+
+        public CompraItem(int cantidad, string descripcion, decimal precio, Herramienta herramienta, Compra compra)
+        {
+            Cantidad = cantidad;
+            Descripcion = descripcion;
+            Precio = precio;
+            Herramienta = herramienta;
+            Compra = compra;
+        }
     }
 }

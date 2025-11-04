@@ -29,5 +29,16 @@
         public List<CompraItem> CompraItems { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
+
+        public Compra(string direccionEnvio, DateTime fechaCompra, decimal precioTotal, TiposMetodosPago metodoPago, List<CompraItem> compraItems, ApplicationUser applicationUser)
+        {
+            
+            DireccionEnvio = direccionEnvio;
+            FechaCompra = fechaCompra;
+            PrecioTotal = precioTotal;
+            MetodoPago = metodoPago;
+            CompraItems = compraItems;
+            ApplicationUser = applicationUser;
+        }
     }
 }
