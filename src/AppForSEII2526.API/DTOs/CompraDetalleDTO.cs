@@ -14,7 +14,7 @@ namespace AppForSEII2526.API.DTOs
         public DateTime FechaCompra { get; set; }
 
 
-        public IList<CompraItemDTO> items { get; set; }
+        public IList<CompraItemDTO> Items { get; set; }
 
         public CompraDetalleDTO(string nombreCLiente, string apellidoCliente, string direccionEnvio, decimal precioTotal, DateTime fechaCompra, IList<CompraItemDTO> items)
         {
@@ -23,7 +23,7 @@ namespace AppForSEII2526.API.DTOs
             DireccionEnvio = direccionEnvio;
             PrecioTotal = precioTotal;
             FechaCompra = fechaCompra;
-            this.items = items;
+            Items = items;
         }
 
         public override bool Equals(object? obj)
@@ -34,12 +34,12 @@ namespace AppForSEII2526.API.DTOs
                    DireccionEnvio == dTO.DireccionEnvio &&
                    PrecioTotal == dTO.PrecioTotal &&
                    FechaCompra == dTO.FechaCompra &&
-                   EqualityComparer<IList<CompraItemDTO>>.Default.Equals(items, dTO.items);
+                   EqualityComparer<IList<CompraItemDTO>>.Default.Equals(Items, dTO.Items);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(NombreCLiente, ApellidoCliente, DireccionEnvio, PrecioTotal, FechaCompra, items);
+            return HashCode.Combine(NombreCLiente, ApellidoCliente, DireccionEnvio, PrecioTotal, FechaCompra, Items);
         }
     }
 }
