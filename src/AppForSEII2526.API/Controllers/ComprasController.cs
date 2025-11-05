@@ -1,4 +1,4 @@
-﻿using AppForSEII2526.API.DTOs;
+﻿/*using AppForSEII2526.API.DTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -98,7 +98,7 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError(nameof(crearCompraDTO.MetodoPagoId), "El método de pago no puede ser nulo.");
 
 
-            /*
+            
             TiposMetodosPago metodoPago;
             if (crearCompraDTO.MetodoPagoId == 0)
             {
@@ -117,9 +117,9 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
                 return ValidationProblem(ModelState);
             }
-            */
+            
 
-
+            /*
             //buscamos el usuario
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearCompraDTO.Nombre && u.ApellidoCliente == crearCompraDTO.Apellido);
             if (usuario == null)
@@ -205,6 +205,6 @@ namespace AppForSEII2526.API.Controllers
         }
     } }
 
-
+*/
 
            

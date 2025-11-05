@@ -26,6 +26,6 @@
         public int Cantidad { get; set; }
 
         public Alquiler Alquiler { get; set; }
-        public string DescripcionHerramienta { get; set; }
+        
     }
 }
