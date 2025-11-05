@@ -34,4 +34,12 @@ public class ApplicationUser : IdentityUser
     public List<Compra> Compras { get; set; }
 
     public List<Alquiler> Alquileres { get; set; }
+
+    public ApplicationUser(string nombreCliente, string apellidoCliente, string? numTelefono, string correoElectronico)
+    {
+        NombreCliente = nombreCliente;
+        ApellidoCliente = apellidoCliente;
+        NumTelefono = numTelefono;
+        CorreoElectronico = correoElectronico;
+    }
 }
