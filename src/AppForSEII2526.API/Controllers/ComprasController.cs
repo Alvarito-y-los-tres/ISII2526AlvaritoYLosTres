@@ -22,7 +22,7 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("Compra-Detalle")]
         [ProducesResponseType(typeof(IList<CompraDetalleDTO>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetCompraDetalle()
+        public async Task<IActionResult> GetCompraDetalle(int id)
         {
             if (_context.Compras == null)
             {
@@ -30,37 +30,36 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
-            IList<CompraDetalleDTO> compraDetalles = await _context.Compras
-                .Include(o => o.ApplicationUser)
-                .Include(o => o.CompraItems)
-                    .ThenInclude(oi => oi.Herramienta)
-                    .ThenInclude(h => h.Fabricante)
+            var compra = await _context.Compras
+                 .Where(c => c.Id == id)
+                     .Include(c => c.CompraItems)
+                         .ThenInclude(ci => ci.Herramienta)
+                             .ThenInclude(h => h.Fabricante)
 
+                 .Select(c => new CompraDetalleDTO(
+                     //c.Id,
+                     c.ApplicationUser.NombreCliente,
+                     c.ApplicationUser.ApellidoCliente,
+                     c.DireccionEnvio,
+                     c.PrecioTotal,
+                     c.FechaCompra,
+                     c.CompraItems
 
-                .Select(o => new CompraDetalleDTO(
-                    o.ApplicationUser.NombreCliente,
-                    o.ApplicationUser.ApellidoCliente,
-                    o.DireccionEnvio,
-                    o.PrecioTotal,
-                    o.FechaCompra,
-                    o.CompraItems.Select(oi => new CompraItemDTO(
-                        oi.Herramienta.Nombre,
-                        oi.Herramienta.Material,
-                        oi.Herramienta.Precio,
-                        oi.Descripcion,
-                        oi.Cantidad
-                        )).ToList()
-                ))
-                .ToListAsync();
+                         .Select(ci => new CompraItemDTO(
+                             ci.HerramientaId,
+                             ci.Herramienta.Nombre,
+                             ci.Herramienta.Material,
+                             ci.Precio,
+                             ci.Descripcion,
+                             ci.Cantidad)).ToList<CompraItemDTO>()))
 
-
-            if (compraDetalles == null)
+                 .FirstOrDefaultAsync();
+            if (compra == null)
             {
-                _logger.LogError("No se encontraron compras en la base de datos.");
+                _logger.LogError($"No se encontró la compra con ID {id}.");
                 return NotFound();
             }
-
-            return Ok(compraDetalles);
+            return Ok(compra);
 
         }
 
@@ -94,15 +93,7 @@ namespace AppForSEII2526.API.Controllers
             if (crearCompraDTO.DireccionEnvio == null)
                 ModelState.AddModelError("Dirección de envío", "Error: La dirección de envío no puede ser nula, es obligatoria.");
 
-            /*
-            if(crearCompraDTO.MetodoPagoId == null)
-            {
-                ModelState.AddModelError("Método de pago", "Error: El método de pago no puede ser nulo, es obligatorio.");
-            }
-            */
-
-
-
+            
             TiposMetodosPago metodoPago;
             if (crearCompraDTO.MetodoPagoId == 0)
             {
@@ -228,6 +219,7 @@ namespace AppForSEII2526.API.Controllers
                 compraNueva.PrecioTotal,
                 compraNueva.FechaCompra,
                 compraNueva.CompraItems.Select(ci => new CompraItemDTO(
+                    ci.HerramientaId,
                     ci.Herramienta.Nombre,
                     ci.Herramienta.Material,
                     ci.Herramienta.Precio,
