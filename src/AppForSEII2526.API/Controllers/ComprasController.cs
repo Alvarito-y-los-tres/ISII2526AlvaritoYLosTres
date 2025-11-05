@@ -64,12 +64,12 @@ namespace AppForSEII2526.API.Controllers
 
         }
 
-       [HttpPost]
-       [Route("Crear-Compra")]
-       [ProducesResponseType(typeof(CompraDetalleDTO), (int)HttpStatusCode.Created)]
-       [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
-       [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-       public async Task<IActionResult> CrearCompra(CrearCompraDTO crearCompraDTO)
+        [HttpPost]
+        [Route("Crear-Compra")]
+        [ProducesResponseType(typeof(CompraDetalleDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+        public async Task<IActionResult> CrearCompra(CrearCompraDTO crearCompraDTO)
         {
             if (_context.Compras == null || _context.Herramientas == null)
             {
@@ -103,7 +103,6 @@ namespace AppForSEII2526.API.Controllers
 
 
 
-            
             TiposMetodosPago metodoPago;
             if (crearCompraDTO.MetodoPagoId == 0)
             {
@@ -122,9 +121,9 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
                 return ValidationProblem(ModelState);
             }
-            
 
-            
+
+
             //buscamos el usuario
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearCompraDTO.NombreCliente && u.ApellidoCliente == crearCompraDTO.ApellidoCliente);
             if (usuario == null)
@@ -208,7 +207,7 @@ namespace AppForSEII2526.API.Controllers
             compraNueva.PrecioTotal = compraNueva.CompraItems.Sum(ci => ci.Precio);
 
 
-           
+
 
             _context.Compras.Add(compraNueva);
             try
@@ -222,7 +221,22 @@ namespace AppForSEII2526.API.Controllers
                 return Conflict("Error al guardar la compra." + ex.Message);
             }
 
+            var compraDTOResp = new CompraDetalleDTO(
+                compraNueva.ApplicationUser.NombreCliente,
+                compraNueva.ApplicationUser.ApellidoCliente,
+                compraNueva.DireccionEnvio,
+                compraNueva.PrecioTotal,
+                compraNueva.FechaCompra,
+                compraNueva.CompraItems.Select(ci => new CompraItemDTO(
+                    ci.Herramienta.Nombre,
+                    ci.Herramienta.Material,
+                    ci.Herramienta.Precio,
+                    ci.Descripcion,
+                    ci.Cantidad
+                    )).ToList()
+                    );
 
+            return Ok(compraDTOResp);
 
 
 
