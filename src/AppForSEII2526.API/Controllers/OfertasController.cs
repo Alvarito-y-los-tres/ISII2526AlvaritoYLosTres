@@ -20,7 +20,7 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("Oferta-Detalle")]
         [ProducesResponseType(typeof(IList<OfertaDetalleDTO>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetOfertaDetalle()
+        public async Task<IActionResult> GetOfertaDetalle(int id)
         {
             if (_context.Ofertas == null)
             {
@@ -29,6 +29,7 @@ namespace AppForSEII2526.API.Controllers
             }
 
             IList<OfertaDetalleDTO> ofertaDetalles = await _context.Ofertas
+                .Where(o => o.Id == id)
                 .Include(o => o.OfertaItems)
                 .ThenInclude(oi => oi.Herramienta)
                 .Select(o => new OfertaDetalleDTO(
