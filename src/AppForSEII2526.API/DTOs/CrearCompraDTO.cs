@@ -1,4 +1,5 @@
-﻿namespace AppForSEII2526.API.DTOs
+﻿
+namespace AppForSEII2526.API.DTOs
 {
     public class CrearCompraDTO
     {
@@ -26,6 +27,25 @@
             CorreoElectronico = correoElectronico;
             PrecioTotal = precioTotal;
             CompraItems = compraItems;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is CrearCompraDTO dTO &&
+                   NombreCliente == dTO.NombreCliente &&
+                   ApellidoCliente == dTO.ApellidoCliente &&
+                   DireccionEnvio == dTO.DireccionEnvio &&
+                   MetodoPagoId == dTO.MetodoPagoId &&
+                   NumTelefono == dTO.NumTelefono &&
+                   CorreoElectronico == dTO.CorreoElectronico &&
+                   PrecioTotal == dTO.PrecioTotal &&
+                   CompraItems.SequenceEqual(dTO.CompraItems);
+            
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(NombreCliente, ApellidoCliente, DireccionEnvio, MetodoPagoId, NumTelefono, CorreoElectronico, PrecioTotal, CompraItems);
         }
     }
 }
