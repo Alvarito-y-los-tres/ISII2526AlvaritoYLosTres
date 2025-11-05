@@ -30,11 +30,10 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("Para-Oferta")]
         [ProducesResponseType(typeof(IList<HerramientasParaOfertarDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetHerramientaParaOferta(string? fabricante, decimal? precio)
+        public async Task<IActionResult> GetHerramientaParaOferta(string? fabricante, decimal? precio)
         {
             IList<HerramientasParaOfertarDTO> selectHerramienta = await _context.Herramientas
                 .Include(h => h.Fabricante)
-                .Include(h => h.OfertaItems).ThenInclude(pi => pi.Oferta)
                 .Where(h => (fabricante == null || h.Fabricante.Nombre == fabricante) &&
                             (precio == null || h.Precio <= precio))
                 .Select(h => new HerramientasParaOfertarDTO(h.Nombre, h.Material, h.Fabricante.Nombre, h.Precio))
