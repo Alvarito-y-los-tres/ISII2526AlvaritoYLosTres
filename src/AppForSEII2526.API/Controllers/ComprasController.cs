@@ -49,7 +49,7 @@ namespace AppForSEII2526.API.Controllers
                              ci.HerramientaId,
                              ci.Herramienta.Nombre,
                              ci.Herramienta.Material,
-                             ci.Precio,
+                             ci.Herramienta.Precio,
                              ci.Descripcion,
                              ci.Cantidad)).ToList<CompraItemDTO>()))
 
