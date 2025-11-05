@@ -26,6 +26,16 @@ namespace AppForSEII2526.API.DTOs
             Items = items;
         }
 
+        public CompraDetalleDTO()
+        {
+
+        }
+
+        protected bool CompareDate(DateTime date1, DateTime date2)
+        {
+            return (date1.Subtract(date2) < new TimeSpan(0, 1, 0));
+        }
+
         public override bool Equals(object? obj)
         {
             return obj is CompraDetalleDTO dTO &&
@@ -34,7 +44,8 @@ namespace AppForSEII2526.API.DTOs
                    DireccionEnvio == dTO.DireccionEnvio &&
                    PrecioTotal == dTO.PrecioTotal &&
                    FechaCompra == dTO.FechaCompra &&
-                   EqualityComparer<IList<CompraItemDTO>>.Default.Equals(Items, dTO.Items);
+                   Items.SequenceEqual(dTO.Items);
+          
         }
 
         public override int GetHashCode()
