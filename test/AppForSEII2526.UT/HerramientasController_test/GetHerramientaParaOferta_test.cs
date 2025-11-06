@@ -21,9 +21,9 @@ namespace AppForSEII2526.UT.HerramientasController_test
 
             var herramientas = new List<Herramienta>
             {
-                new Herramienta ("Martillo", "Madera", 35, 3, fabricante[0]),
-                new Herramienta ("Alicates", "Acero", 12, 1, fabricante[1]),
-                new Herramienta ("Tijeras", "Plastico", 3, 1, fabricante[2])
+                new Herramienta ("Martillo", "Madera", 5, 3, fabricante[0]),
+                new Herramienta ("Taladro", "Acero", 30, 14, fabricante[1]),
+                new Herramienta ("Alicates", "Hierro", 4, 5, fabricante[2])
             };
 
             _context.AddRange(fabricante);
@@ -36,9 +36,9 @@ namespace AppForSEII2526.UT.HerramientasController_test
         {
             var herramientasDTOs = new List<HerramientasParaOfertarDTO>
             {
-                new HerramientasParaOfertarDTO ("Martillo", "Madera", "Ferretería López", 35),
-                new HerramientasParaOfertarDTO ("Alicates", "Acero", "Ferretería García", 12),
-                new HerramientasParaOfertarDTO ("Tijeras", "Plastico", "Ferretería Ruiz", 3)
+                new HerramientasParaOfertarDTO ("Martillo", "Madera", "Ferretería López", 5),
+                new HerramientasParaOfertarDTO ("Taladro", "Acero", "Ferretería García", 30),
+                new HerramientasParaOfertarDTO ("Alicates", "Hierro", "Ferretería Ruiz", 4)
             };
 
             var herramientasDTOs_TC1 = new List<HerramientasParaOfertarDTO> { herramientasDTOs[0], herramientasDTOs[1], herramientasDTOs[2] };
@@ -50,7 +50,7 @@ namespace AppForSEII2526.UT.HerramientasController_test
             {
                 new object[] { null, null, herramientasDTOs_TC1 },
                 new object[] { "Ferretería García", null, herramientasDTOs_TC2 },
-                new object[] { null, 5, herramientasDTOs_TC3 }
+                new object[] { null, 4, herramientasDTOs_TC3 }
             };
             return allTestCases;
         }
@@ -61,10 +61,13 @@ namespace AppForSEII2526.UT.HerramientasController_test
         [Trait("LevelTesting", "Unit Testing")]
         public async Task GetHerramientaParaOferta_OK_test(string? fabricante, int? precio, IList<HerramientasParaOfertarDTO>herramientasDTOEsperado)
         {
-            var controller = new HerramientaController(_context, null);   
+            // Arrange
+            var controller = new HerramientaController(_context, null);
 
+            // Act
             var result = await controller.GetHerramientaParaOferta(fabricante, precio);
 
+            // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var herramientasDTOActual = Assert.IsType<List<HerramientasParaOfertarDTO>>(okResult.Value);
             Assert.Equal(herramientasDTOEsperado, herramientasDTOActual);

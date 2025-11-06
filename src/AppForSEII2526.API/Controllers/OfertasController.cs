@@ -10,8 +10,8 @@ namespace AppForSEII2526.API.Controllers
     public class OfertasController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<HerramientaController> _logger;
-        public OfertasController(ApplicationDbContext context, ILogger<HerramientaController> logger)
+        private readonly ILogger<OfertasController> _logger;
+        public OfertasController(ApplicationDbContext context, ILogger<OfertasController> logger)
         {
             _context = context;
             _logger = logger;
@@ -28,7 +28,7 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
-            IList<OfertaDetalleDTO> ofertaDetalles = await _context.Ofertas
+            var ofertaDetalles = await _context.Ofertas
                 .Where(o => o.Id == id)
                 .Include(o => o.OfertaItems)
                 .ThenInclude(oi => oi.Herramienta)
@@ -48,11 +48,11 @@ namespace AppForSEII2526.API.Controllers
                         oi.OfertaId
                         )).ToList()
                 ))
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
             if (ofertaDetalles == null)
             {
-                _logger.LogError("Error: No se encontraron ofertas.");
+                _logger.LogError($"No se encontró ninguna oferta con ID {id}.");
                 return NotFound();
             }
 

@@ -30,13 +30,15 @@
 
         public ApplicationUser ApplicationUser { get; set; }
 
-        public Oferta(DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, TiposMetodosPago metodoPago, TiposDirigidaOferta paraSocio)
+        public Oferta(DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, List<OfertaItem> ofertaItems, TiposMetodosPago metodoPago, TiposDirigidaOferta paraSocio, ApplicationUser applicationUser)
         {
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             FechaOferta = fechaOferta;
+            OfertaItems = ofertaItems;
             MetodoPago = metodoPago;
             ParaSocio = paraSocio;
+            ApplicationUser = applicationUser;
         }
     }
 }

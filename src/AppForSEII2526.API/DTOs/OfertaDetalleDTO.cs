@@ -29,7 +29,7 @@ namespace AppForSEII2526.API.DTOs
                    FechaOferta == dTO.FechaOferta &&
                    ParaSocios == dTO.ParaSocios &&
                    MetodoPago == dTO.MetodoPago &&
-                   EqualityComparer<IList<OfertaItemDTO>>.Default.Equals(Items, dTO.Items);
+                   Items.SequenceEqual(dTO.Items);
         }
 
         public override int GetHashCode()
