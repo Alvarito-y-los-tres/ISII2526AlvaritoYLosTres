@@ -45,8 +45,7 @@ namespace AppForSEII2526.API.Controllers
                     r.FechaRecogida,
                     r.ItemsReparacion.Select(ri => new ReparacionItemDTO(
                         ri.Herramienta.Nombre,
-                        ri.Herramienta.Precio,
-                        ri.DescripcionProblema,
+                        ri.Descripcion,
                         ri.Cantidad
                     )).ToList()
                 ))
@@ -63,92 +62,125 @@ namespace AppForSEII2526.API.Controllers
         //post
         [HttpPost]
         [Route("Crear-Reparacion")]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(ReparacionDetalleDTO), (int)HttpStatusCode.Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<IActionResult> CrearReparacion([FromBody] CrearReparacionDTO dto)
         {
-            _logger.LogInformation("Iniciando creación de una nueva reparación...");
-
-            if (!ModelState.IsValid)
+            if (_context.Reparaciones == null || _context.Herramientas == null)
             {
-                _logger.LogWarning("Datos inválidos al crear reparación.");
-                return BadRequest(ModelState);
+                _logger.LogError("Error: Faltan DbSets.");
+                return StatusCode(500, "Error interno");
             }
+
+            if (dto == null)
+                ModelState.AddModelError("CrearReparacionDTO", "El objeto no puede ser nulo.");
+
+            if (dto.Items == null || !dto.Items.Any())
+                ModelState.AddModelError("Items", "Debe incluir al menos una herramienta para reparar.");
+
+            if (string.IsNullOrWhiteSpace(dto.NombreCliente))
+                ModelState.AddModelError("NombreCliente", "El nombre del cliente es obligatorio.");
+
+            if (string.IsNullOrWhiteSpace(dto.ApellidoCliente))
+                ModelState.AddModelError("ApellidoCliente", "El apellido del cliente es obligatorio.");
+
+            // Validar método de pago
+            if (!Enum.IsDefined(typeof(TiposMetodosPago), dto.MetodoPago))
+            {
+                ModelState.AddModelError("MetodoPago", "Método de pago inválido.");
+                return ValidationProblem(ModelState);
+            }
+            var metodoPago = (TiposMetodosPago)dto.MetodoPago;
+
+            // Buscar el usuario por nombre y apellido
+            var usuario = await _context.Users
+                .FirstOrDefaultAsync(u => u.NombreCliente == dto.NombreCliente && u.ApellidoCliente == dto.ApellidoCliente);
+
+            if (usuario == null)
+            {
+                _logger.LogWarning($"Usuario '{dto.NombreCliente} {dto.ApellidoCliente}' no encontrado.");
+                return NotFound($"El usuario '{dto.NombreCliente} {dto.ApellidoCliente}' no existe.");
+            }
+
+            if (ModelState.ErrorCount > 0)
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            // Buscar todas las herramientas mencionadas
+            var nombresHerramientas = dto.Items.Select(i => i.NombreHerramienta).Distinct().ToList();
+            var herramientas = await _context.Herramientas
+                .Include(h => h.Fabricante)
+                .Where(h => nombresHerramientas.Contains(h.Nombre))
+                .ToListAsync();
+
+            // Validar que todas las herramientas existan
+            foreach (var item in dto.Items)
+            {
+                if (!herramientas.Any(h => h.Nombre == item.NombreHerramienta))
+                {
+                    ModelState.AddModelError("Items", $"La herramienta '{item.NombreHerramienta}' no existe.");
+                }
+            }
+
+            if (ModelState.ErrorCount > 0)
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            // Crear items de reparación y calcular precio total
+            decimal precioTotal = 0;
+            var itemsReparacion = new List<ReparacionItem>();
+
+            foreach (var item in dto.Items)
+            {
+                var herramienta = herramientas.First(h => h.Nombre == item.NombreHerramienta);
+                decimal subtotal = herramienta.Precio * item.Cantidad;
+                precioTotal += subtotal;
+
+                itemsReparacion.Add(new ReparacionItem
+                {
+                    Herramienta = herramienta,
+                    Descripcion = item.DescripcionProblema,
+                    Cantidad = item.Cantidad
+                });
+            }
+
+            // Crear reparación con fecha de recogida = un día por cada herramienta
+            var reparacion = new Reparacion
+            {
+                FechaEntrega = dto.FechaEntrega,
+                MetodoPago = metodoPago,
+                PrecioTotal = precioTotal,
+                ApplicationUser = usuario,
+                ItemsReparacion = itemsReparacion,
+                FechaRecogida = dto.FechaEntrega.AddDays(dto.Items.Count) // cálculo automático
+            };
+
+            _context.Reparaciones.Add(reparacion);
 
             try
             {
-                if (dto.Items == null || !dto.Items.Any())
-                {
-                    _logger.LogWarning("La lista de herramientas está vacía.");
-                    return BadRequest("Debe incluir al menos una herramienta para reparar.");
-                }
-
-                var nombresHerramientas = dto.Items.Select(i => i.NombreHerramienta).ToList();
-
-                var herramientas = await _context.Herramientas
-                    .Include(h => h.Fabricante)
-                    .Where(h => nombresHerramientas.Contains(h.Nombre))
-                    .ToListAsync();
-
-                if (herramientas.Count != dto.Items.Count)
-                {
-                    _logger.LogWarning("Una o más herramientas indicadas no existen en la base de datos.");
-                    return BadRequest("Una o más herramientas seleccionadas no existen.");
-                }
-
-                _logger.LogInformation("Herramientas validadas correctamente.");
-
-                decimal precioTotal = 0;
-                var itemsReparacion = new List<ReparacionItem>();
-
-                foreach (var item in dto.Items)
-                {
-                    var herramienta = herramientas.FirstOrDefault(h => h.Nombre == item.NombreHerramienta);
-                    if (herramienta == null)
-                    {
-                        _logger.LogWarning($"La herramienta '{item.NombreHerramienta}' no fue encontrada.");
-                        continue;
-                    }
-
-                    decimal subtotal = herramienta.Precio * item.Cantidad;
-                    precioTotal += subtotal;
-
-                    itemsReparacion.Add(new ReparacionItem
-                    {
-                        Herramienta = herramienta,
-                        DescripcionProblema = item.DescripcionProblema,
-                        Cantidad = item.Cantidad
-                    });
-
-                    _logger.LogInformation($"Añadida herramienta '{herramienta.Nombre}' x{item.Cantidad}. Subtotal: {subtotal:C2}");
-                }
-
-                var reparacion = new Reparacion
-                {
-                    FechaEntrega = dto.FechaEntrega,
-                    MetodoPago = (TiposMetodosPago)dto.MetodoPago,
-                    PrecioTotal = precioTotal,
-                    ApplicationUser = new ApplicationUser
-                    {
-                        NombreCliente = dto.NombreCliente,
-                        ApellidoCliente = dto.ApellidoCliente,
-                        NumTelefono = dto.Telefono
-                    },
-                    ItemsReparacion = itemsReparacion
-                };
-
-                _context.Reparaciones.Add(reparacion);
                 await _context.SaveChangesAsync();
-
-                _logger.LogInformation($"Reparación creada correctamente para {dto.NombreCliente} {dto.ApellidoCliente}. Total: {precioTotal:C2}");
-
-                return Ok("Reparación creada correctamente.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al crear la reparación.");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error interno al crear la reparación.");
+                _logger.LogError(ex, "Error al guardar la reparación en la base de datos.");
+                return Conflict("Error al guardar la reparación: " + ex.Message);
             }
+
+            // DTO de salida con precio calculado
+            var reparacionDTOResp = new ReparacionDetalleDTO(
+                usuario.NombreCliente,
+                usuario.ApellidoCliente,
+                precioTotal,
+                reparacion.FechaEntrega,
+                reparacion.FechaRecogida,
+                itemsReparacion.Select(ri => new ReparacionItemDTO(
+                    ri.Herramienta.Nombre,
+                    ri.Descripcion,
+                    ri.Cantidad
+                )).ToList()
+            );
+
+            return Ok(reparacionDTOResp);
         }
         //post
     }
