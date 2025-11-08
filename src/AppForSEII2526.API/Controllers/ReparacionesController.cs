@@ -21,8 +21,8 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("Reparacion-Detalle")]
-        [ProducesResponseType(typeof(IList<ReparacionDetalleDTO>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetReparacionDetalle()
+        [ProducesResponseType(typeof(ReparacionDetalleDTO), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetReparacionDetalle(int ID)
         {
             if (_context.Reparaciones == null)
             {
@@ -30,8 +30,8 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
-            IList<ReparacionDetalleDTO> reparacionDetalles = await _context.Reparaciones
-
+            var reparacionDetalles = await _context.Reparaciones
+                .Where(r => r.Id == ID)
                 .Include(r => r.ApplicationUser)
                 .Include(r => r.ItemsReparacion)
                     .ThenInclude(ri => ri.Herramienta)
@@ -49,11 +49,11 @@ namespace AppForSEII2526.API.Controllers
                         ri.Cantidad
                     )).ToList()
                 ))
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
-            if (reparacionDetalles == null || !reparacionDetalles.Any())
+            if (reparacionDetalles == null)
             {
-                _logger.LogError("Error: No se encontraron reparaciones.");
+                _logger.LogError($"Error: No se encontraron reparaciones con ese id : {ID}.");
                 return NotFound();
             }
 
@@ -72,7 +72,6 @@ namespace AppForSEII2526.API.Controllers
                 _logger.LogError("Error: Faltan DbSets.");
                 return StatusCode(500, "Error interno");
             }
-
             if (dto == null)
                 ModelState.AddModelError("CrearReparacionDTO", "El objeto no puede ser nulo.");
 
@@ -85,6 +84,8 @@ namespace AppForSEII2526.API.Controllers
             if (string.IsNullOrWhiteSpace(dto.ApellidoCliente))
                 ModelState.AddModelError("ApellidoCliente", "El apellido del cliente es obligatorio.");
 
+            if (dto.FechaEntrega < DateTime.UtcNow.Date)
+                ModelState.AddModelError("FechaEntrega", "La fecha de entrega no puede ser en el pasado.");
             // Validar método de pago
             if (!Enum.IsDefined(typeof(TiposMetodosPago), dto.MetodoPago))
             {
