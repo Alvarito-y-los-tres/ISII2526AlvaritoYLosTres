@@ -13,11 +13,11 @@ namespace AppForSEII2526.API.Models
         public int Cantidad { get; set; }
 
         [StringLength(200, ErrorMessage = "La descripción no puede superar los 200 caracteres")]
-        public string? Descripcion { get; set; }
+        public string? DescripcionProblema { get; set; }
 
         [Precision(8, 2)]
         [DataType(DataType.Currency)]
-        public decimal Precio { get; set; }
+        public decimal PrecioReparacion { get; set; }
 
         // Relaciones
         public int HerramientaId { get; set; }
