@@ -4,7 +4,7 @@ namespace AppForSEII2526.API.DTOs
     {
         public string Nombre { get; set; }
         public string Material { get; set; }
-        public string Fabricante { get; set; }
+        public string NombreFabricante { get; set; }
         public decimal Precio { get; set; }
 
         public float TiempoReparacion { get; set; }
@@ -14,7 +14,7 @@ namespace AppForSEII2526.API.DTOs
         {
             Nombre = nombre;
             Material = material;
-            Fabricante = fabricante;
+            NombreFabricante = fabricante;
             Precio = precio;
             TiempoReparacion = diasHabilesReparacion;
         }
@@ -24,14 +24,14 @@ namespace AppForSEII2526.API.DTOs
             return obj is HerramientaRepararDTO dTO &&
                    Nombre == dTO.Nombre &&
                    Material == dTO.Material &&
-                   Fabricante == dTO.Fabricante &&
+                   NombreFabricante == dTO.NombreFabricante &&
                    Precio == dTO.Precio &&
                    TiempoReparacion == dTO.TiempoReparacion;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Nombre, Material, Fabricante, Precio, TiempoReparacion);
+            return HashCode.Combine(Nombre, Material, NombreFabricante, Precio, TiempoReparacion);
         }
     }
 }
