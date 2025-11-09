@@ -31,5 +31,13 @@ namespace AppForSEII2526.API.Models
         public List<ReparacionItem> ItemsReparacion { get; set; }
         
         public ApplicationUser ApplicationUser { get; set; }
+
+        public Reparacion(ApplicationUser applicationUser, DateTime fechaEntrega, DateTime fechaRecogida)
+        {
+            ApplicationUser = applicationUser;
+            FechaEntrega = fechaEntrega;
+            FechaRecogida = fechaRecogida;
+            ItemsReparacion = new List<ReparacionItem>();
+        }
     }
 }
