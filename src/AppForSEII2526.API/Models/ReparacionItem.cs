@@ -25,7 +25,19 @@ namespace AppForSEII2526.API.Models
 
         public int ReparacionId { get; set; }
         public Reparacion Reparacion { get; set; }
+
+        public ReparacionItem(Herramienta herramienta, Reparacion reparacion, int cantidad, decimal precio, string? descripcion = null)
+        {
+            Herramienta = herramienta;
+            
+            Reparacion = reparacion;
+            
+            Cantidad = cantidad;
+            Precio = precio;
+            Descripcion = descripcion;
+        }
     }
     
+
 
 }    
