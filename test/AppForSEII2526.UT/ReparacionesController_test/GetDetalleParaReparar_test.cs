@@ -73,8 +73,8 @@ namespace AppForSEII2526.UT.ReparacionesController_test
             var reparacion = new Reparacion(usuario, DateTime.Today.AddDays(2), DateTime.Today.AddDays(5));
 
             //Crear el item correctamente
-            var item = new ReparacionItem(herramienta, reparacion, 2, herramienta.Precio, "Cambio de mango");
-            reparacion.ItemsReparacion.Add(item);
+            var itemm = new ReparacionItem(herramienta, reparacion, 2, herramienta.Precio, "Cambio de mango");
+            reparacion.ItemsReparacion.Add(itemm);
 
             // Calcular precio total 
             decimal precioTotal = 0;
@@ -106,7 +106,7 @@ namespace AppForSEII2526.UT.ReparacionesController_test
                 new List<ReparacionItemDTO>
                 {
                     new ReparacionItemDTO(
-                        reparacion.ItemsReparacion[0].herramienta.Nombre,
+                        reparacion.ItemsReparacion[0].Herramienta.Nombre,
                         reparacion.ItemsReparacion[0].Descripcion,
                         reparacion.ItemsReparacion[0].Cantidad)
                 });
@@ -117,7 +117,7 @@ namespace AppForSEII2526.UT.ReparacionesController_test
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var dtoActual = Assert.IsType<ReparacionDetalleDTO>(okResult.Value);
-
+            Assert.Equal(expected.FechaRecogida, dtoActual.FechaRecogida);
             Assert.Equal(expected, dtoActual);
         }
     }

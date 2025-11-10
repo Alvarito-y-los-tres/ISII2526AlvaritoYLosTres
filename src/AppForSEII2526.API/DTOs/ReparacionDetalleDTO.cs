@@ -33,7 +33,7 @@ namespace AppForSEII2526.API.DTOs
                    PrecioTotal == dTO.PrecioTotal &&
                    FechaEntrega == dTO.FechaEntrega &&
                    FechaRecogida == dTO.FechaRecogida &&
-                   EqualityComparer<IList<ReparacionItemDTO>>.Default.Equals(items, dTO.items);
+                   items.SequenceEqual(dTO.items);
         }
 
         public override int GetHashCode()
