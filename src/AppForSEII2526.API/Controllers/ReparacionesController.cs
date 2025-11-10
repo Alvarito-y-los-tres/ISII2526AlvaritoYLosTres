@@ -73,8 +73,10 @@ namespace AppForSEII2526.API.Controllers
                 return StatusCode(500, "Error interno");
             }
             if (dto == null)
+            {
                 ModelState.AddModelError("CrearReparacionDTO", "El objeto no puede ser nulo.");
-
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
             if (dto.Items == null || !dto.Items.Any())
                 ModelState.AddModelError("Items", "Debe incluir al menos una herramienta para reparar.");
 
@@ -90,9 +92,12 @@ namespace AppForSEII2526.API.Controllers
             if (!Enum.IsDefined(typeof(TiposMetodosPago), dto.MetodoPago))
             {
                 ModelState.AddModelError("MetodoPago", "Método de pago inválido.");
-                return ValidationProblem(ModelState);
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
             var metodoPago = (TiposMetodosPago)dto.MetodoPago;
+
+            if (ModelState.ErrorCount > 0)
+                return BadRequest(new ValidationProblemDetails(ModelState));
 
             // Buscar el usuario por nombre y apellido
             var usuario = await _context.Users
@@ -103,9 +108,6 @@ namespace AppForSEII2526.API.Controllers
                 _logger.LogWarning($"Usuario '{dto.NombreCliente} {dto.ApellidoCliente}' no encontrado.");
                 return NotFound($"El usuario '{dto.NombreCliente} {dto.ApellidoCliente}' no existe.");
             }
-
-            if (ModelState.ErrorCount > 0)
-                return BadRequest(new ValidationProblemDetails(ModelState));
 
             // Buscar todas las herramientas mencionadas
             var nombresHerramientas = dto.Items.Select(i => i.NombreHerramienta).Distinct().ToList();
