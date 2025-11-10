@@ -93,40 +93,38 @@ namespace AppForSEII2526.API.Controllers
             if (crearCompraDTO.DireccionEnvio == null)
                 ModelState.AddModelError("Dirección de envío", "Error: La dirección de envío no puede ser nula, es obligatoria.");
 
-            
-            TiposMetodosPago metodoPago;
-            if (crearCompraDTO.MetodoPagoId == 0)
+            if (ModelState.ErrorCount > 0)
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            TiposMetodosPago metodoPago = crearCompraDTO.MetodoPagoId switch
             {
-                metodoPago = TiposMetodosPago.TarjetaCredito;
-            }
-            else if (crearCompraDTO.MetodoPagoId == 1)
-            {
-                metodoPago = TiposMetodosPago.Paypal;
-            }
-            else if (crearCompraDTO.MetodoPagoId == 2)
-            {
-                metodoPago = TiposMetodosPago.Cash;
-            }
-            else
+                0 => TiposMetodosPago.TarjetaCredito,
+                1 => TiposMetodosPago.Paypal,
+                2 => TiposMetodosPago.Cash,
+                _ => default
+            };
+            if (!Enum.IsDefined(typeof(TiposMetodosPago), crearCompraDTO.MetodoPagoId))
             {
                 ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
-                return ValidationProblem(ModelState);
+                return BadRequest(new ValidationProblemDetails(ModelState));
             }
+
+            var metodo = (TiposMetodosPago)crearCompraDTO.MetodoPagoId;
 
 
 
             //buscamos el usuario
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearCompraDTO.NombreCliente && u.ApellidoCliente == crearCompraDTO.ApellidoCliente);
             if (usuario == null)
-                if (usuario == null)
-                {
-                    _logger.LogWarning($"Usuario '{crearCompraDTO.NombreCliente}' no encontrado.");
-                    return NotFound($"El usuario '{crearCompraDTO.NombreCliente}' no existe.");
-                }
+            {
 
-
-            if (ModelState.ErrorCount > 0)
+                ModelState.AddModelError("Usuario", $"El usuario '{crearCompraDTO.NombreCliente}' no existe.");
+                _logger.LogWarning($"Usuario '{crearCompraDTO.NombreCliente}' no encontrado.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
+
+            }
+
+            
 
             var nombreHerramienta = crearCompraDTO.CompraItems.Select(h => h.NombreHerramienta).Distinct().ToList();
 
@@ -138,7 +136,7 @@ namespace AppForSEII2526.API.Controllers
             var compraNueva = new Compra
             {
                 DireccionEnvio = crearCompraDTO.DireccionEnvio,
-                FechaCompra = DateTime.UtcNow,
+                FechaCompra = DateTime.Today,
                 PrecioTotal = 0m,
                 MetodoPago = metodoPago,
                 CompraItems = new List<CompraItem>(),
@@ -156,23 +154,23 @@ namespace AppForSEII2526.API.Controllers
 
                 if (itemDTO.Cantidad == null)
                 {
-                    ModelState.AddModelError("CompraItems", $"La cantidad para la herramienta {itemDTO.NombreHerramienta} es un campo obligatorio.");
+                    ModelState.AddModelError("CompraItems", "La cantidad de cada item es obligatoria.");
                 }
                 if (itemDTO.Cantidad <= 0)
                 {
-                    ModelState.AddModelError("CompraItems", $"La cantidad para la herramienta {itemDTO.NombreHerramienta} debe ser mayor a cero.");
+                    ModelState.AddModelError("CompraItems", "La cantidad de cada item debe ser mayor que cero.");
                 }
                 if (itemDTO.DescripcionHerramienta == null)
                 {
-                    ModelState.AddModelError("CompraItems", $"La descripción para la herramienta {itemDTO.NombreHerramienta} no puede ser nula.");
+                    ModelState.AddModelError("CompraItems", "La descripción de cada item es obligatoria.");
                 }
 
                 var herramienta = herramientas.FirstOrDefault(h => h.Nombre == itemDTO.NombreHerramienta);
 
                 if (herramienta == null)
                 {
-                    ModelState.AddModelError("Items", $"La herramienta '{itemDTO.NombreHerramienta}' no existe.");
-                    return ValidationProblem(ModelState);
+                    ModelState.AddModelError("Items", "La cantidad de cada item debe ser mayor que cero.");
+                    continue;
                 }
                 else
                 {
@@ -208,7 +206,7 @@ namespace AppForSEII2526.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al guardar la compra en la base de datos.");
-                ModelState.AddModelError("Database", "Error al guardar la compra en la base de datos.");
+               
                 return Conflict("Error al guardar la compra." + ex.Message);
             }
 
@@ -228,9 +226,9 @@ namespace AppForSEII2526.API.Controllers
                     )).ToList()
                     );
 
-            return Ok(compraDTOResp);
+            
 
-
+            return CreatedAtAction(nameof(GetCompraDetalle), new { id = compraNueva.Id }, compraDTOResp);
 
         }
     }
