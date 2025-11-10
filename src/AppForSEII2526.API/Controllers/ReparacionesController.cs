@@ -12,8 +12,8 @@ namespace AppForSEII2526.API.Controllers
     public class ReparacionesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<HerramientaController> _logger;
-        public ReparacionesController(ApplicationDbContext context, ILogger<HerramientaController> logger)
+        private readonly ILogger<ReparacionesController> _logger;
+        public ReparacionesController(ApplicationDbContext context, ILogger<ReparacionesController> logger)
         {
             _context = context;
             _logger = logger;
