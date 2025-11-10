@@ -45,7 +45,7 @@ public class GetHerramientaParaReparar_test : AppForSEII25264SqliteUT
 		{
 			new object[] { null, null, herramientasDTOs_TC1 },
 			new object[] { "Taladro", null, herramientasDTOs_TC2 },
-			new object[] { null, 5, herramientasDTOs_TC3 }
+			new object[] { null, 5f, herramientasDTOs_TC3 }
 		};
 		return allTestCases;
 	}
