@@ -6,6 +6,17 @@
         {
             
         }
+
+        public Alquiler(string direcciondeenvio, DateTime today, decimal preciototal, TiposMetodosPago tarjetaCredito, List<AlquilerItem> alquilerItems, ApplicationUser usuario)
+        {
+            DireccionEnvio = direcciondeenvio;
+            FechaAlquiler = today;
+            PrecioTotal = preciototal;
+            TarjetaCredito = tarjetaCredito;
+            AlquilerItems = alquilerItems;
+            Usuario = usuario;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -38,5 +49,9 @@
 
         public List<AlquilerItem> AlquilerItems { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        
+        
+        public TiposMetodosPago TarjetaCredito { get; }
+        public ApplicationUser Usuario { get; }
     }
 }
