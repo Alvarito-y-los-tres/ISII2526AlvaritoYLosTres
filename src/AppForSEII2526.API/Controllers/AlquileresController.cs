@@ -16,8 +16,8 @@ namespace AppForSEII2526.API.Controllers
     public class AlquileresController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<HerramientaController> _logger;
-        public AlquileresController(ApplicationDbContext context, ILogger<HerramientaController> logger)
+        private readonly ILogger<AlquileresController> _logger;
+        public AlquileresController(ApplicationDbContext context, ILogger<AlquileresController> logger)
         {
             _context = context;
             _logger = logger;
@@ -25,8 +25,10 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("Alquiler-Detalle")]
-        [ProducesResponseType(typeof(IList<AlquilerDetalleDTO>), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetAlquilerDetalle()
+        // FIX 1: El tipo de respuesta es UN solo DTO, no una lista.
+        [ProducesResponseType(typeof(AlquilerDetalleDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)] // Añadido para documentar el 404
+        public async Task<IActionResult> GetAlquilerDetalle(int id)
         {
             if (_context.Alquileres == null)
             {
@@ -34,36 +36,40 @@ namespace AppForSEII2526.API.Controllers
                 return NotFound();
             }
 
-            IList<AlquilerDetalleDTO> alquilerDetalles = await _context.Alquileres
+            
+            var alquiler = await _context.Alquileres
+                .Where(o => o.Id == id) // <-- Filtra por ID aquí
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.AlquilerItems)
                     .ThenInclude(oi => oi.Herramienta)
                     .ThenInclude(h => h.Fabricante)
-                .Select(o => new AlquilerDetalleDTO(
-                    o.ApplicationUser.NombreCliente,
-                    o.ApplicationUser.ApellidoCliente,
-                    o.DireccionEnvio,
-                    o.FechaAlquiler,
-                    o.PrecioTotal,
-                    o.FechaInicio,
-                    o.FechaFin,
+                .FirstOrDefaultAsync(); 
 
-                    o.AlquilerItems.Select(oi => new AlquilerItemDTO(
-                        oi.Herramienta.Nombre,
-                        oi.Herramienta.Material,
-                        oi.Herramienta.Precio,
-         
-                        oi.Cantidad
-                        )).ToList()
-                ))
-                .ToListAsync();
-            if (alquilerDetalles == null)
+            // FIX 3: Esta es la comprobación de 'null' que SÍ funciona.
+            if (alquiler == null)
             {
-                _logger.LogError("No se encontraron alquileres en la base de datos.");
-                return NotFound();
+                _logger.LogWarning("No se encontró alquiler con ID: {Id}", id);
+                return NotFound(); // <-- Esto hará que tu test pase
             }
 
-            return Ok(alquilerDetalles);
+            // FIX 4: Mapear a DTO *después* de confirmar que existe.
+            var alquilerDetalleDTO = new AlquilerDetalleDTO(
+                alquiler.ApplicationUser.NombreCliente,
+                alquiler.ApplicationUser.ApellidoCliente,
+                alquiler.DireccionEnvio,
+                alquiler.FechaAlquiler,
+                alquiler.PrecioTotal,
+                alquiler.FechaInicio,
+                alquiler.FechaFin,
+                alquiler.AlquilerItems.Select(oi => new AlquilerItemDTO(
+                    oi.Herramienta.Nombre,
+                    oi.Herramienta.Material,
+                    oi.Herramienta.Precio,
+                    oi.Cantidad
+                    )).ToList()
+            );
+
+            return Ok(alquilerDetalleDTO);
         }
 
         [HttpPost]
@@ -73,21 +79,21 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<IActionResult> CrearAlquiler([FromBody] CrearAlquilerDTO crearAlquilerDTO)
         {
-            
+
             if (_context.Alquileres == null || _context.Herramientas == null)
             {
                 _logger.LogError("Error: La tabla no existe.");
                 return StatusCode(500, "Error al configurar la base de datos.");
             }
 
-            
+
             if (crearAlquilerDTO == null)
             {
                 ModelState.AddModelError("CrearAlquilerDTO", "El objeto no puede ser nulo.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            
+
             if (crearAlquilerDTO.AlquilerItems == null || crearAlquilerDTO.AlquilerItems.Count == 0)
             {
                 ModelState.AddModelError(nameof(crearAlquilerDTO.AlquilerItems), "El alquiler debe contener al menos una herramienta.");
@@ -113,20 +119,20 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError(nameof(crearAlquilerDTO.FechaFin), "La fecha de fin debe ser posterior a la fecha de inicio.");
             }
 
-            
+
             if (ModelState.ErrorCount > 0)
             {
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
 
-            
+
             var nombreHerramienta = crearAlquilerDTO.AlquilerItems!.Select(h => h.NombreHerramienta).Distinct().ToList();
             var herramientas = await _context.Herramientas
                 .Include(f => f.Fabricante)
                 .Where(h => nombreHerramienta.Contains(h.Nombre))
                 .ToListAsync();
 
-            
+
             TiposMetodosPago metodoPago = TiposMetodosPago.TarjetaCredito;
             if (crearAlquilerDTO.MetodoPago == 0)
             {
@@ -158,7 +164,7 @@ namespace AppForSEII2526.API.Controllers
             var NuevoAlquiler = new Alquiler
             {
                 ApplicationUser = usuario!,
-                DireccionEnvio = crearAlquilerDTO.DireccionEnvio!, 
+                DireccionEnvio = crearAlquilerDTO.DireccionEnvio!,
                 FechaAlquiler = DateTime.Now,
                 FechaInicio = crearAlquilerDTO.FechaInicio,
                 FechaFin = crearAlquilerDTO.FechaFin,
@@ -179,12 +185,12 @@ namespace AppForSEII2526.API.Controllers
                     Herramienta = herramienta,
                     Cantidad = itemDTO.Cantidad,
                     Precio = herramienta.Precio * itemDTO.Cantidad,
-                   
+
                 };
                 NuevoAlquiler.AlquilerItems.Add(alquilerItem);
             }
 
-           
+
             NuevoAlquiler.PrecioTotal = NuevoAlquiler.AlquilerItems.Sum(ai => ai.Precio);
             NuevoAlquiler.Periodo = (int)(NuevoAlquiler.FechaFin - NuevoAlquiler.FechaInicio).TotalDays;
 
@@ -207,7 +213,8 @@ namespace AppForSEII2526.API.Controllers
                     )).ToList()
             );
 
-            return CreatedAtAction(nameof(GetAlquilerDetalle), null, alquilerDetalleDTO);
+            // FIX 5: Añadir el 'id' del nuevo alquiler a la respuesta 'CreatedAtAction'.
+            return CreatedAtAction(nameof(GetAlquilerDetalle), new { id = NuevoAlquiler.Id }, alquilerDetalleDTO);
         }
     }
 }

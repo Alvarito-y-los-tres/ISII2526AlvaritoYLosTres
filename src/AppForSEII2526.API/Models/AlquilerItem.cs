@@ -4,11 +4,18 @@
     public class AlquilerItem
     {
         
-
         public AlquilerItem()
         {
         }
-        
+
+        public AlquilerItem(int cantidad, string descripcion, decimal precio, Herramienta herramienta, Alquiler alquiler)
+        {
+            this.Cantidad = cantidad;
+            this.Precio = precio;
+            Herramienta = herramienta;
+            Alquiler = alquiler;
+        }
+
         public int HerramientaId { get; set; }
         public Herramienta Herramienta { get; set; }
 
