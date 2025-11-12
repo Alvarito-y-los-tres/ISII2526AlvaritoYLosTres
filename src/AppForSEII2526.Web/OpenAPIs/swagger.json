@@ -13,6 +13,1913 @@
     },
     "version": "v1"
   },
-  "paths": { },
-  "components": { }
+  "paths": {
+    "/api/Alquileres/Alquiler-Detalle": {
+      "get": {
+        "tags": [
+          "Alquileres"
+        ],
+        "operationId": "GetAlquilerDetalle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlquilerDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlquilerDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlquilerDetalleDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Alquileres/Crear-Alquiler": {
+      "post": {
+        "tags": [
+          "Alquileres"
+        ],
+        "operationId": "CrearAlquiler",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearAlquilerDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearAlquilerDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearAlquilerDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlquilerDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlquilerDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlquilerDetalleDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Compras/Compra-Detalle": {
+      "get": {
+        "tags": [
+          "Compras"
+        ],
+        "operationId": "GetCompraDetalle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompraDetalleDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompraDetalleDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CompraDetalleDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Compras/Crear-Compra": {
+      "post": {
+        "tags": [
+          "Compras"
+        ],
+        "operationId": "CrearCompra",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearCompraDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearCompraDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearCompraDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompraDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompraDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompraDetalleDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Herramienta/GetAllHerramientas": {
+      "get": {
+        "tags": [
+          "Herramienta"
+        ],
+        "operationId": "GetAllHerramientas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Herramienta"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Herramienta"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Herramienta"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Herramienta/Para-Oferta": {
+      "get": {
+        "tags": [
+          "Herramienta"
+        ],
+        "operationId": "GetHerramientaParaOferta",
+        "parameters": [
+          {
+            "name": "fabricante",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "precio",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientasParaOfertarDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientasParaOfertarDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientasParaOfertarDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Herramienta/Para-Comprar": {
+      "get": {
+        "tags": [
+          "Herramienta"
+        ],
+        "operationId": "GetHerramientaParaComprar",
+        "parameters": [
+          {
+            "name": "material",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "precio",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientasParaComprarDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientasParaComprarDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientasParaComprarDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Herramienta/Para-Alquilar": {
+      "get": {
+        "tags": [
+          "Herramienta"
+        ],
+        "operationId": "GetHerramientasParaAlquilar",
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "material",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientaAlquilarDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientaAlquilarDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientaAlquilarDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Herramienta/Para-Reparar": {
+      "get": {
+        "tags": [
+          "Herramienta"
+        ],
+        "operationId": "GetHerramientasParaReparar",
+        "parameters": [
+          {
+            "name": "nombre",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tiempoReparacion",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientaRepararDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientaRepararDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HerramientaRepararDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Ofertas/Oferta-Detalle": {
+      "get": {
+        "tags": [
+          "Ofertas"
+        ],
+        "operationId": "GetOfertaDetalle",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfertaDetalleDTO"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfertaDetalleDTO"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OfertaDetalleDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Ofertas/Crear-Oferta": {
+      "post": {
+        "tags": [
+          "Ofertas"
+        ],
+        "operationId": "CrearOferta",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearOfertaDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearOfertaDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearOfertaDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Reparaciones/Reparacion-Detalle": {
+      "get": {
+        "tags": [
+          "Reparaciones"
+        ],
+        "operationId": "GetReparacionDetalle",
+        "parameters": [
+          {
+            "name": "ID",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReparacionDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReparacionDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReparacionDetalleDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Reparaciones/Crear-Reparacion": {
+      "post": {
+        "tags": [
+          "Reparaciones"
+        ],
+        "operationId": "CrearReparacion",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearReparacionDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearReparacionDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearReparacionDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReparacionDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReparacionDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReparacionDetalleDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Alquiler": {
+        "required": [
+          "direccionEnvio"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "direccionEnvio": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "fechaAlquiler": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaInicio": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaFin": {
+            "type": "string",
+            "format": "date"
+          },
+          "periodo": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "precioTotal": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "metodoPago": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "alquilerItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlquilerItem"
+            },
+            "nullable": true
+          },
+          "applicationUser": {
+            "$ref": "#/components/schemas/ApplicationUser"
+          },
+          "tarjetaCredito": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "usuario": {
+            "$ref": "#/components/schemas/ApplicationUser"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlquilerDetalleDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "direccionCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaAlquiler": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "fechaInicioAlquiler": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaFinAlquiler": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlquilerItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlquilerItem": {
+        "required": [
+          "cantidad"
+        ],
+        "type": "object",
+        "properties": {
+          "herramientaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "herramienta": {
+            "$ref": "#/components/schemas/Herramienta"
+          },
+          "alquilerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precio": {
+            "type": "number",
+            "format": "currency"
+          },
+          "cantidad": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "alquiler": {
+            "$ref": "#/components/schemas/Alquiler"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlquilerItemDTO": {
+        "type": "object",
+        "properties": {
+          "nombreHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "materialHerrramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "precioHerramienta": {
+            "type": "number",
+            "format": "double"
+          },
+          "cantidad": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApplicationUser": {
+        "required": [
+          "apellidoCliente",
+          "nombreCliente"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedUserName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "passwordHash": {
+            "type": "string",
+            "nullable": true
+          },
+          "securityStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean"
+          },
+          "twoFactorEnabled": {
+            "type": "boolean"
+          },
+          "lockoutEnd": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockoutEnabled": {
+            "type": "boolean"
+          },
+          "accessFailedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreCliente": {
+            "maxLength": 50,
+            "minLength": 0,
+            "pattern": "^[A-Z]+[a-zA-Z''-\\s]*$",
+            "type": "string"
+          },
+          "apellidoCliente": {
+            "maxLength": 50,
+            "minLength": 0,
+            "pattern": "^[A-Z]+[a-zA-Z''-\\s]*$",
+            "type": "string"
+          },
+          "numTelefono": {
+            "type": "string",
+            "format": "tel",
+            "nullable": true
+          },
+          "correoElectronico": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "reparaciones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Reparacion"
+            },
+            "nullable": true
+          },
+          "ofertas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Oferta"
+            },
+            "nullable": true
+          },
+          "compras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Compra"
+            },
+            "nullable": true
+          },
+          "alquileres": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Alquiler"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Compra": {
+        "required": [
+          "direccionEnvio",
+          "metodoPago"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "direccionEnvio": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "fechaCompra": {
+            "type": "string",
+            "format": "date"
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "currency"
+          },
+          "metodoPago": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "compraItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompraItem"
+            },
+            "nullable": true
+          },
+          "applicationUser": {
+            "$ref": "#/components/schemas/ApplicationUser"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompraDetalleDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCLiente": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "direccionEnvio": {
+            "type": "string",
+            "nullable": true
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "fechaCompra": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompraItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompraItem": {
+        "required": [
+          "cantidad",
+          "descripcion"
+        ],
+        "type": "object",
+        "properties": {
+          "cantidad": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "descripcion": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "precio": {
+            "type": "number",
+            "format": "currency"
+          },
+          "herramientaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "herramienta": {
+            "$ref": "#/components/schemas/Herramienta"
+          },
+          "compraId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "compra": {
+            "$ref": "#/components/schemas/Compra"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompraItemDTO": {
+        "type": "object",
+        "properties": {
+          "herramientaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "materialHerrramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "precioHerramienta": {
+            "type": "number",
+            "format": "double"
+          },
+          "descripcionHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "cantidad": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrearAlquilerDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellido": {
+            "type": "string",
+            "nullable": true
+          },
+          "direccionEnvio": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaInicio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaFin": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metodoPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "alquilerItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlquilerItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrearCompraDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "direccionEnvio": {
+            "type": "string",
+            "nullable": true
+          },
+          "metodoPagoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "numTelefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "correoElectronico": {
+            "type": "string",
+            "nullable": true
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "compraItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompraItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrearOfertaDTO": {
+        "type": "object",
+        "properties": {
+          "fechaInicio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaFin": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaOferta": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfertaItemDTO"
+            },
+            "nullable": true
+          },
+          "metodoPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paraSocio": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombreUsuario": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrearReparacionDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaEntrega": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metodoPago": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "telefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReparacionItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Fabricante": {
+        "required": [
+          "nombre"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "maxLength": 30,
+            "minLength": 0,
+            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
+            "type": "string"
+          },
+          "herramientas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Herramienta"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Herramienta": {
+        "required": [
+          "material",
+          "nombre"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "maxLength": 30,
+            "minLength": 0,
+            "pattern": "^[A-Z]+[a-zA-Z''-'\\s]*$",
+            "type": "string"
+          },
+          "material": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string"
+          },
+          "precio": {
+            "type": "number",
+            "format": "currency"
+          },
+          "tiempoReparacion": {
+            "type": "number",
+            "format": "float"
+          },
+          "fabricante": {
+            "$ref": "#/components/schemas/Fabricante"
+          },
+          "compraItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompraItem"
+            },
+            "nullable": true
+          },
+          "ofertaItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfertaItem"
+            },
+            "nullable": true
+          },
+          "reparacionItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReparacionItem"
+            },
+            "nullable": true
+          },
+          "alquilerItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlquilerItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "HerramientaAlquilarDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "fabricante": {
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HerramientaRepararDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "nombreFabricante": {
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "tiempoReparacion": {
+            "type": "number",
+            "format": "float"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HerramientasParaComprarDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "fabricante": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "HerramientasParaOfertarDTO": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "fabricante": {
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Oferta": {
+        "required": [
+          "metodoPago"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaInicio": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaFin": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaOferta": {
+            "type": "string",
+            "format": "date"
+          },
+          "ofertaItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfertaItem"
+            },
+            "nullable": true
+          },
+          "metodoPago": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "paraSocio": {
+            "$ref": "#/components/schemas/TiposDirigidaOferta"
+          },
+          "applicationUser": {
+            "$ref": "#/components/schemas/ApplicationUser"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfertaDetalleDTO": {
+        "type": "object",
+        "properties": {
+          "fechaInicio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaFin": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaOferta": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paraSocios": {
+            "$ref": "#/components/schemas/TiposDirigidaOferta"
+          },
+          "metodoPago": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OfertaItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfertaItem": {
+        "required": [
+          "porcentaje"
+        ],
+        "type": "object",
+        "properties": {
+          "herramientaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "herramienta": {
+            "$ref": "#/components/schemas/Herramienta"
+          },
+          "ofertaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "oferta": {
+            "$ref": "#/components/schemas/Oferta"
+          },
+          "porcentaje": {
+            "type": "number",
+            "format": "float"
+          },
+          "precioFinal": {
+            "type": "number",
+            "format": "currency"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfertaItemDTO": {
+        "type": "object",
+        "properties": {
+          "nombreHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "materialHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "fabricanteHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "precioFinal": {
+            "type": "number",
+            "format": "double"
+          },
+          "porcentaje": {
+            "type": "number",
+            "format": "float"
+          },
+          "ofertaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "Reparacion": {
+        "required": [
+          "fechaEntrega",
+          "metodoPago"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaEntrega": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaRecogida": {
+            "type": "string",
+            "format": "date"
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "currency"
+          },
+          "metodoPago": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "itemsReparacion": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReparacionItem"
+            },
+            "nullable": true
+          },
+          "applicationUser": {
+            "$ref": "#/components/schemas/ApplicationUser"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReparacionDetalleDTO": {
+        "type": "object",
+        "properties": {
+          "nombreCLiente": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidoCliente": {
+            "type": "string",
+            "nullable": true
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "double"
+          },
+          "fechaEntrega": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaRecogida": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReparacionItemDTO"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReparacionItem": {
+        "required": [
+          "cantidad"
+        ],
+        "type": "object",
+        "properties": {
+          "cantidad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descripcion": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "currency"
+          },
+          "herramientaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "herramienta": {
+            "$ref": "#/components/schemas/Herramienta"
+          },
+          "reparacionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reparacion": {
+            "$ref": "#/components/schemas/Reparacion"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReparacionItemDTO": {
+        "type": "object",
+        "properties": {
+          "nombreHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "descripcionProblema": {
+            "type": "string",
+            "nullable": true
+          },
+          "cantidad": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TiposDirigidaOferta": {
+        "enum": [
+          "Socios",
+          "Clientes"
+        ],
+        "type": "string"
+      },
+      "TiposMetodosPago": {
+        "enum": [
+          "TarjetaCredito",
+          "Paypal",
+          "Cash"
+        ],
+        "type": "string"
+      },
+      "ValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      }
+    }
+  }
 }
