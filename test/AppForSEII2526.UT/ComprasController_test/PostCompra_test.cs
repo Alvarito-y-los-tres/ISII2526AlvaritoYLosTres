@@ -29,15 +29,14 @@ namespace AppForSEII2526.UT.ComprasController_test
 
             var compra = new Compra("Calle Tejares", DateTime.Today, 35, TiposMetodosPago.Paypal, new List<CompraItem>(), usuario);
 
-            var compraItems = new List<CompraItem>() { new CompraItem(1, "antiguo", 2, herramientas[0],compra) };
+            
 
-           // compra.CompraItems.Add(new CompraItem(2, "antiguo", 35, herramientas[0], compra));
+           compra.CompraItems.Add(new CompraItem(2, "antiguo", 35, herramientas[0], compra));
 
             _context.AddRange(fabricante);
             _context.AddRange(herramientas);
             _context.Add(usuario);
             _context.Add(compra);
-            _context.AddRange(compraItems);
             _context.SaveChanges();
         }
 
@@ -49,7 +48,7 @@ namespace AppForSEII2526.UT.ComprasController_test
 
             var compraNoNombre = new CrearCompraDTO(null, "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es", 70, compraItems);
 
-            var compraNoApellido = new CrearCompraDTO("Ana", null, "Calle Tejares", 0, "671222333", "ana.lopez@web.es", 70, compraItems);
+			var compraNoApellido = new CrearCompraDTO("Ana", null, "Calle Tejares", 0, "671222333", "ana.lopez@web.es", 70, compraItems);
 
             var compraNoDireccion = new CrearCompraDTO("Ana", "Lopez", null, 0, "671222333", "ana.lopez@web.es", 70, compraItems);
 
@@ -63,7 +62,7 @@ namespace AppForSEII2526.UT.ComprasController_test
             {
                 new object[] { compraNoItem, "Error: La compra debe contener al menos un ítem." },
                 new object[] { compraNoNombre, "Error: El nombre del cliente no puede ser nulo, es obligatorio." },
-                new object[] { compraNoApellido, "Error: El apellido del cliente no puede ser nulo, es obligatorio." },
+				new object[] { compraNoApellido, "Error: El apellido del cliente no puede ser nulo, es obligatorio." },
                 new object[] { compraNoDireccion, "Error: La dirección de envío no puede ser nula, es obligatoria." },
                 new object[] { compraCantidadCero, "La cantidad de cada item debe ser mayor que cero." },
                 new object[] { compraHerramienteInexistente, "La cantidad de cada item debe ser mayor que cero." },
