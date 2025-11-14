@@ -1,6 +1,7 @@
 ﻿using AppForSEII2526.API.DTOs;
 using AppForSEII2526.API.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AppForSEII2526.API.Controllers
@@ -88,6 +89,7 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("Items", "La oferta debe contener al menos una herramienta.");
             }
 
+
             var nombreHerramienta = crearOfertaDTO.Items.Select(h => h.NombreHerramienta).Distinct().ToList();
 
             var herramientas = await _context.Herramientas
@@ -95,8 +97,8 @@ namespace AppForSEII2526.API.Controllers
                 .Where(h => nombreHerramienta.Contains(h.Nombre))
                 .ToListAsync();
 
-            TiposMetodosPago metodoPago;
-            if(crearOfertaDTO.MetodoPago == 0)
+            TiposMetodosPago metodoPago = TiposMetodosPago.TarjetaCredito;
+            if (crearOfertaDTO.MetodoPago == 0)
             {
                 metodoPago = TiposMetodosPago.TarjetaCredito;
             }
@@ -111,10 +113,9 @@ namespace AppForSEII2526.API.Controllers
             else
             {
                 ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
-                return ValidationProblem(ModelState);
             }
 
-            TiposDirigidaOferta tiposDirigidaOferta;
+            TiposDirigidaOferta tiposDirigidaOferta = TiposDirigidaOferta.Clientes;
             if(crearOfertaDTO.ParaSocio == 0)
             {
                 tiposDirigidaOferta = TiposDirigidaOferta.Socios;
@@ -126,14 +127,12 @@ namespace AppForSEII2526.API.Controllers
             else
             {
                 ModelState.AddModelError("ParaSocio", "El tipo de oferta especificado no es válido. ¡Utilice el 0 o 1!");
-                return ValidationProblem(ModelState);
             }
 
-            var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearOfertaDTO.nombreUsuario);
+            var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearOfertaDTO.NombreUsuario);
             if (usuario == null)
             {
-                _logger.LogWarning($"Usuario '{crearOfertaDTO.nombreUsuario}' no encontrado.");
-                return NotFound($"El usuario '{crearOfertaDTO.nombreUsuario}' no existe.");
+                ModelState.AddModelError("Usuario", "El usuario no existe.");
             }
 
             if (ModelState.ErrorCount > 0)
@@ -159,9 +158,12 @@ namespace AppForSEII2526.API.Controllers
 
                 if (herramienta == null)
                 {
-                    ModelState.AddModelError("Items", $"La herramienta '{itemDTO.NombreHerramienta}' no existe.");
-                    return ValidationProblem(ModelState);
+                    ModelState.AddModelError("Items", "La herramienta no existe.");
+                    continue;
                 }
+
+                if (itemDTO.Porcentaje < 0 || itemDTO.Porcentaje > 100)
+                    ModelState.AddModelError("Porcentaje", "El porcentaje debe estar entre 0 y 100.");
 
                 var ofertaItem = new OfertaItem
                 {
@@ -173,8 +175,22 @@ namespace AppForSEII2526.API.Controllers
                 nuevaOferta.OfertaItems.Add(ofertaItem);
             }
 
+            if (ModelState.ErrorCount > 0)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
             _context.Ofertas.Add(nuevaOferta);
-            await _context.SaveChangesAsync();
+            
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error al guardar la nueva oferta en la base de datos.");
+                return Conflict("Error" + ex.Message);
+            }
 
 
             var ofertaDetalleDTO = new OfertaDetalleDTO(
@@ -193,7 +209,7 @@ namespace AppForSEII2526.API.Controllers
                     oi.OfertaId
                     )).ToList()
             );
-            return Ok(ofertaDetalleDTO);
+            return CreatedAtAction(nameof(GetOfertaDetalle), new { id = nuevaOferta.Id }, ofertaDetalleDTO);
 
 
         }
