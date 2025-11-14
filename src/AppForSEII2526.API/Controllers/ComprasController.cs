@@ -93,40 +93,45 @@ namespace AppForSEII2526.API.Controllers
             if (crearCompraDTO.DireccionEnvio == null)
                 ModelState.AddModelError("Dirección de envío", "Error: La dirección de envío no puede ser nula, es obligatoria.");
 
-            if (ModelState.ErrorCount > 0)
-                return BadRequest(new ValidationProblemDetails(ModelState));
+            
 
-            TiposMetodosPago metodoPago = crearCompraDTO.MetodoPagoId switch
-            {
-                0 => TiposMetodosPago.TarjetaCredito,
-                1 => TiposMetodosPago.Paypal,
-                2 => TiposMetodosPago.Cash,
-                _ => default
-            };
-            if (!Enum.IsDefined(typeof(TiposMetodosPago), crearCompraDTO.MetodoPagoId))
-            {
-                ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
-                return BadRequest(new ValidationProblemDetails(ModelState));
-            }
 
-            var metodo = (TiposMetodosPago)crearCompraDTO.MetodoPagoId;
+
+			TiposMetodosPago metodoPago = TiposMetodosPago.TarjetaCredito;
+			if (crearCompraDTO.MetodoPagoId == 0)
+			{
+				metodoPago = TiposMetodosPago.TarjetaCredito;
+			}
+			else if (crearCompraDTO.MetodoPagoId == 1)
+			{
+				metodoPago = TiposMetodosPago.Paypal;
+			}
+			else if (crearCompraDTO.MetodoPagoId == 2)
+			{
+				metodoPago = TiposMetodosPago.Cash;
+			}
+			else
+			{
+				ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
+			}
+
+			
 
 
 
             //buscamos el usuario
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearCompraDTO.NombreCliente && u.ApellidoCliente == crearCompraDTO.ApellidoCliente);
-            if (usuario == null)
-            {
+			if (usuario == null)
+			{
+				return BadRequest(new ValidationProblemDetails(ModelState));
+			}
 
-                ModelState.AddModelError("Usuario", $"El usuario '{crearCompraDTO.NombreCliente}' no existe.");
-                _logger.LogWarning($"Usuario '{crearCompraDTO.NombreCliente}' no encontrado.");
-                return BadRequest(new ValidationProblemDetails(ModelState));
+			if (ModelState.ErrorCount > 0)
+				return BadRequest(new ValidationProblemDetails(ModelState));
 
-            }
 
-            
 
-            var nombreHerramienta = crearCompraDTO.CompraItems.Select(h => h.NombreHerramienta).Distinct().ToList();
+			var nombreHerramienta = crearCompraDTO.CompraItems.Select(h => h.NombreHerramienta).Distinct().ToList();
 
             var herramientas = await _context.Herramientas
                 .Include(f => f.Fabricante)
