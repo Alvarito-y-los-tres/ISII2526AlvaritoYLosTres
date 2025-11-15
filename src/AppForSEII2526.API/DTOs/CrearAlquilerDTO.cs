@@ -7,11 +7,24 @@
         public string DireccionEnvio { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
+        
         public int MetodoPago { get; set; }
         public List<AlquilerItemDTO> AlquilerItems { get; set; }
         public CrearAlquilerDTO()
         {
             AlquilerItems = new List<AlquilerItemDTO>();
+        }
+        public CrearAlquilerDTO(string nombre, string apellido, string direccionEnvio, DateTime fechaInicio, DateTime fechaFin, int metodoPago, List<AlquilerItemDTO> alquilerItems)
+        {
+            Nombre = nombre;
+            Apellido = apellido;
+            DireccionEnvio = direccionEnvio;
+            FechaInicio = fechaInicio;
+   
+            FechaFin = fechaFin;
+            MetodoPago = metodoPago;
+            
+            AlquilerItems = alquilerItems;
         }
     }
 }
