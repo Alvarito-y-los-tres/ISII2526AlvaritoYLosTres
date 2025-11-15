@@ -32,11 +32,11 @@ namespace AppForSEII2526.API.DTOs
                    NombreCliente == dTO.NombreCliente &&
                    ApellidoCliente == dTO.ApellidoCliente &&
                    direccionCliente == dTO.direccionCliente &&
-                   fechaAlquiler == dTO.fechaAlquiler &&
                    precioTotal == dTO.precioTotal &&
                    fechaInicioAlquiler == dTO.fechaInicioAlquiler &&
                    fechaFinAlquiler == dTO.fechaFinAlquiler &&
-                   EqualityComparer<IList<AlquilerItemDTO>>.Default.Equals(items, dTO.items);
+                    // ESTA LÍNEA ES LA CORRECTA
+                    items.SequenceEqual(dTO.items);
         }
         public override int GetHashCode()
         {

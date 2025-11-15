@@ -7,7 +7,7 @@
             
         }
 
-        public Alquiler(string direcciondeenvio, DateTime today, decimal preciototal, TiposMetodosPago tarjetaCredito, List<AlquilerItem> alquilerItems, ApplicationUser usuario)
+        public Alquiler(string direcciondeenvio, DateTime today, DateTime dateTime, decimal preciototal, TiposMetodosPago tarjetaCredito, List<AlquilerItem> alquilerItems, ApplicationUser usuario)
         {
             DireccionEnvio = direcciondeenvio;
             FechaAlquiler = today;

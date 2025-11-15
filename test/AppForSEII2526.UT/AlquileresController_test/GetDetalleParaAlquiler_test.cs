@@ -21,7 +21,11 @@ namespace AppForSEII2526.UT.AlquileresController_test
                 new Herramienta ("Alicates", "Acero", 12, 1, fabricante),
             };
             ApplicationUser usuario = new ApplicationUser("Ana", "López", "642892748", "Daniel@gmail.com");
-            var alquiler = new Alquiler("Calle Falsa 123", DateTime.Today, 47, TiposMetodosPago.TarjetaCredito, new List<AlquilerItem>(), usuario);
+            // Línea original:
+            // var alquiler = new Alquiler("Calle Falsa 123", DateTime.Today, 47, TiposMetodosPago.TarjetaCredito, new List<AlquilerItem>(), usuario);
+
+            // Línea corregida:
+            var alquiler = new Alquiler("Calle Falsa 123", DateTime.Today, DateTime.Today, 47, 0, new List<AlquilerItem>(), usuario);
 
             alquiler.AlquilerItems.Add(new AlquilerItem(3, "grande", 35, herramientas[0], alquiler));
             _context.Add(fabricante);

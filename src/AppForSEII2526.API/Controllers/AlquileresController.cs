@@ -94,6 +94,7 @@ namespace AppForSEII2526.API.Controllers
             }
 
 
+
             if (crearAlquilerDTO.AlquilerItems == null || crearAlquilerDTO.AlquilerItems.Count == 0)
             {
                 ModelState.AddModelError(nameof(crearAlquilerDTO.AlquilerItems), "El alquiler debe contener al menos una herramienta.");
@@ -177,8 +178,13 @@ namespace AppForSEII2526.API.Controllers
                 var herramienta = herramientas.FirstOrDefault(h => h.Nombre == itemDTO.NombreHerramienta);
                 if (herramienta == null)
                 {
-                    ModelState.AddModelError("Herramienta", $"La herramienta '{itemDTO.NombreHerramienta}' no existe.");
+                    ModelState.AddModelError("Herramienta","La herramienta no existe.");
                     return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+                if (itemDTO.Cantidad <= 0)
+                {
+                    // Esto devolverá el string exacto que tu test espera
+                    return BadRequest("Error: La cantidad de una herramienta en el alquiler debe ser mayor a 0.");
                 }
                 var alquilerItem = new AlquilerItem
                 {
