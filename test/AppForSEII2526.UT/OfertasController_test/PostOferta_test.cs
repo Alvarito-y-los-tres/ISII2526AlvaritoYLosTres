@@ -38,7 +38,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var ofertaNoItem = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = new List<OfertaItemDTO>(),
                 ParaSocio = 1,
@@ -56,7 +56,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var ofertaFromBeforeToday = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(-1),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = ofertaItems,
                 ParaSocio = 1,
@@ -75,10 +75,21 @@ namespace AppForSEII2526.UT.OfertasController_test
                 NombreUsuario = "Álvaro"
             };
 
-            var ofertaApplicationUser = new CrearOfertaDTO
+            var ofertaFechaFinInvalida = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
                 FechaFin = DateTime.Today.AddDays(3),
+                FechaOferta = DateTime.Today,
+                Items = ofertaItems,
+                ParaSocio = 1,
+                MetodoPago = 0,
+                NombreUsuario = "Álvaro"
+            };
+
+            var ofertaApplicationUser = new CrearOfertaDTO
+            {
+                FechaInicio = DateTime.Today.AddDays(2),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = ofertaItems,
                 ParaSocio = 1,
@@ -89,7 +100,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var ofertaNoDisponible = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = new List<OfertaItemDTO> { new OfertaItemDTO("Apisonadora", "Madera", "Ferretería López", 5, 4, 20, 1) },
                 ParaSocio = 1,
@@ -100,7 +111,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var ofertaMetodoPagoInvalido = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = ofertaItems,
                 ParaSocio = 1,
@@ -111,7 +122,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var ofertaTipoInvalido = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = ofertaItems,
                 ParaSocio = 33,
@@ -122,7 +133,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var ofertaPorcentajeInvalido = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = new List<OfertaItemDTO> { new OfertaItemDTO("Martillo", "Madera", "Ferretería López", 5, 4, 120, 1) },
                 ParaSocio = 1,
@@ -136,6 +147,7 @@ namespace AppForSEII2526.UT.OfertasController_test
                 new object[] { ofertaNoItem, "La oferta debe contener al menos una herramienta." },
                 new object[] { ofertaFromBeforeToday, "La fecha de inicio debe ser futura." },
                 new object[] { ofertaToBeforeFrom, "La fecha de fin debe ser posterior a la fecha de inicio." },
+                new object[] { ofertaFechaFinInvalida, "¡Error!, la oferta debe durar al menos una semana." },
                 new object[] { ofertaApplicationUser, "El usuario no existe." },
                 new object[] { ofertaNoDisponible, "La herramienta no existe." },
                 new object[] { ofertaMetodoPagoInvalido, "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!" },
@@ -191,7 +203,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var oferta = new CrearOfertaDTO
             {
                 FechaInicio = DateTime.Today.AddDays(2),
-                FechaFin = DateTime.Today.AddDays(3),
+                FechaFin = DateTime.Today.AddDays(10),
                 FechaOferta = DateTime.Today,
                 Items = ofertaItems,
                 ParaSocio = 1,
@@ -199,7 +211,7 @@ namespace AppForSEII2526.UT.OfertasController_test
                 NombreUsuario = "Álvaro"
             };
 
-            var expectedOfertaDetalleDTO = new OfertaDetalleDTO(DateTime.Today.AddDays(2), DateTime.Today.AddDays(3), DateTime.Today, TiposDirigidaOferta.Clientes, TiposMetodosPago.TarjetaCredito, ofertaItems);
+            var expectedOfertaDetalleDTO = new OfertaDetalleDTO(DateTime.Today.AddDays(2), DateTime.Today.AddDays(10), DateTime.Today, TiposDirigidaOferta.Clientes, TiposMetodosPago.TarjetaCredito, ofertaItems);
 
             // Act
             var result = await controller.CrearOferta(oferta);
