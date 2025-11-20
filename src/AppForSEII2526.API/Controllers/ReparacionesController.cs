@@ -77,6 +77,28 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("CrearReparacionDTO", "El objeto no puede ser nulo.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
+
+
+
+
+
+
+
+            if(dto.Telefono != null && !dto.Telefono.StartsWith("+34"))
+            {
+                ModelState.AddModelError("CrearReparacionDTO", "Error,el telefono debe empezar por +34");
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+
+
+
+
+
+
+
+
+
             if (dto.Items == null || !dto.Items.Any())
                 ModelState.AddModelError("Items", "Debe incluir al menos una herramienta para reparar.");
 

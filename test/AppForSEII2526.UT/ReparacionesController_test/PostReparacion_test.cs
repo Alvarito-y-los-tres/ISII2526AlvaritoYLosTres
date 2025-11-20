@@ -190,6 +190,20 @@ namespace AppForSEII2526.UT.ReparacionesController_test
 
 
 
+            //Caso 8: Numero de telefono no empieza por +34
+            var NumeroIncorrecto = new CrearReparacionDTO
+            {
+                NombreCliente = "Martín",
+                ApellidoCliente = "Álvarez",
+                FechaEntrega = DateTime.Today,
+                MetodoPago = 1,
+                Telefono = "9876",
+                Items = items
+            };
+            yield return new object[] { NumeroIncorrecto, "Error,el telefono debe empezar por +34" };
+
+
+
         }
 
         [Theory]
