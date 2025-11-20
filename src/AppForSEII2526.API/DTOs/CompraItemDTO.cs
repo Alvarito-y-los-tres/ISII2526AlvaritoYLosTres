@@ -9,7 +9,8 @@ namespace AppForSEII2526.API.DTOs
         public string NombreHerramienta { get; set; }
         public string MaterialHerrramienta { get; set; }
         public decimal PrecioHerramienta { get; set; }
-        public string DescripcionHerramienta { get; set; }
+        
+        public string? DescripcionHerramienta { get; set; }
         public int Cantidad { get; set; }
 
         public CompraItemDTO(int herramientaId, string nombreHerramienta, string materialHerrramienta, decimal precioHerramienta, string descripcionHerramienta, int cantidad)
