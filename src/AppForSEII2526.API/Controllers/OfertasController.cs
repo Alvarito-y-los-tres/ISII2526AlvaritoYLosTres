@@ -89,6 +89,10 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("Items", "La oferta debe contener al menos una herramienta.");
             }
 
+            if (crearOfertaDTO.FechaFin < crearOfertaDTO.FechaInicio.AddDays(7)){
+                ModelState.AddModelError("FechaFin", "¡Error!, la oferta debe durar al menos una semana.");
+            }
+
 
             var nombreHerramienta = crearOfertaDTO.Items.Select(h => h.NombreHerramienta).Distinct().ToList();
 
