@@ -56,7 +56,11 @@ namespace AppForSEII2526.UT.ComprasController_test
        
             var compraHerramienteInexistente = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70, new List<CompraItemDTO>() { new CompraItemDTO(3, "LLave inglesa", "Hierro", 25, "nuevo", 4) });
 
+            var compraNoDescripcionCantidad3 = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es", 70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, null,3) });
+
             var compraNoDescripcion = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, null, 2) });
+
+            
 
             var allTest = new List<object[]>
             {
@@ -66,7 +70,9 @@ namespace AppForSEII2526.UT.ComprasController_test
                 new object[] { compraNoDireccion, "Error: La dirección de envío no puede ser nula, es obligatoria." },
                 new object[] { compraCantidadCero, "La cantidad de cada item debe ser mayor que cero." },
                 new object[] { compraHerramienteInexistente, "La cantidad de cada item debe ser mayor que cero." },
-                new object[] { compraNoDescripcion, "La descripción de cada item es obligatoria." },
+                new object[] { compraNoDescripcionCantidad3, "¡Error!.Estás comprando demasiadas herramientas sin descripción." },
+                new object[] { compraNoDescripcion, "La descripción de cada item es obligatoria." }
+               
             };
 
             return allTest;

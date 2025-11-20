@@ -1,5 +1,6 @@
 using AppForSEII2526.API.DTOs;
 using AppForSEII2526.API.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -165,10 +166,21 @@ namespace AppForSEII2526.API.Controllers
                 {
                     ModelState.AddModelError("CompraItems", "La cantidad de cada item debe ser mayor que cero.");
                 }
-                if (itemDTO.DescripcionHerramienta == null)
+               
+                
+                    if (itemDTO.DescripcionHerramienta == null && itemDTO.Cantidad == 3)
+                {
+                    ModelState.AddModelError("CompraItems", "¡Error!.Estás comprando demasiadas herramientas sin descripción.");
+                }
+                
+               
+                    if (itemDTO.DescripcionHerramienta == null)
                 {
                     ModelState.AddModelError("CompraItems", "La descripción de cada item es obligatoria.");
                 }
+                
+                
+                
 
                 var herramienta = herramientas.FirstOrDefault(h => h.Nombre == itemDTO.NombreHerramienta);
 
