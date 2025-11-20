@@ -111,6 +111,9 @@ namespace AppForSEII2526.API.Controllers
             {
                 ModelState.AddModelError(nameof(crearAlquilerDTO.DireccionEnvio), "La dirección de envío es obligatoria.");
             }
+            if (!crearAlquilerDTO.DireccionEnvio.Contains("Calle")){
+                ModelState.AddModelError(nameof(crearAlquilerDTO.DireccionEnvio), "La direccion de envio tiene que contener la palabra Calle.");
+            }
             if (crearAlquilerDTO.FechaInicio <= DateTime.Now)
             {
                 ModelState.AddModelError(nameof(crearAlquilerDTO.FechaInicio), "La fecha de inicio debe ser futura.");

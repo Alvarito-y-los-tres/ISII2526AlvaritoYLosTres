@@ -48,9 +48,11 @@ namespace AppForSEII2526.UT.AlquileresController_test
             var alquilerNoItem = new CrearAlquilerDTO("Daniel", "de la Cruz", "Calle Tejares", fechaInicioValida, fechaFinValida, 0, new List<AlquilerItemDTO>());
             var alquilerNoNombre = new CrearAlquilerDTO(null, "de la Cruz", "Calle Tejares", fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
             var alquilerNoApellido = new CrearAlquilerDTO("Daniel", null, "Calle Tejares", fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
-            var alquilerNoDireccion = new CrearAlquilerDTO("Daniel", "de la Cruz", null, fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
+            var alquilerNoDireccion = new CrearAlquilerDTO("Daniel", "de la Cruz", "", fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
             var alquilerCantidadCero = new CrearAlquilerDTO("Daniel", "de la Cruz", "Calle Tejares", fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, new List<AlquilerItemDTO>() { new AlquilerItemDTO("Martillo", "Madera", 35, 0) });
             var alquilerHerramienteInexistente = new CrearAlquilerDTO("Daniel", "de la Cruz", "Calle Tejares", fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, new List<AlquilerItemDTO>() { new AlquilerItemDTO("LLave inglesa", "Hierro", 25, 4) });
+            var alquilerDireccionNoValido = new CrearAlquilerDTO("Daniel", "de la Cruz", "Sin nombre", fechaInicioValida, fechaFinValida, (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
+
 
             // Este se deja con las fechas mal a propósito para probar esa regla
             var alquilerFechaInvalida = new CrearAlquilerDTO("Daniel", "de la Cruz", "Calle Tejares", DateTime.Today.AddDays(5), DateTime.Today.AddDays(1), (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
@@ -70,8 +72,10 @@ namespace AppForSEII2526.UT.AlquileresController_test
                 new object[] { alquilerCantidadCero, "Error: La cantidad de una herramienta en el alquiler debe ser mayor a 0." }, 
                
                 new object[] { alquilerHerramienteInexistente, "La herramienta no existe." }, 
+                new object[]{ alquilerDireccionNoValido, "La direccion de envio tiene que contener la palabra Calle." },
                 
                 new object[] { alquilerFechaInvalida, "La fecha de fin debe ser posterior a la fecha de inicio." },
+                
             };
             return allTest;
         }
