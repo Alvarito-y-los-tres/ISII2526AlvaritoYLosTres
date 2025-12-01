@@ -7,6 +7,7 @@ using AppForSEII2526.Web.Components.Account;
 using AppForSEII2526.Web.Data;
 using AppForSEII2526.Web.API;
 using ApplicationUser = AppForSEII2526.Web.Data.ApplicationUser;
+using AppForSEII2526.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,11 @@ string? URI2API = builder.Configuration.GetValue(typeof(string),
 
 builder.Services.AddScoped<AppForSEII2526APIClient>(sp => new AppForSEII2526APIClient(URI2API, new HttpClient()));
 
+
 builder.Services.AddScoped<ReparacionStateContainer>();
+
+builder.Services.AddScoped<CompraStateContainer>();
+
 
 var app = builder.Build();
 
