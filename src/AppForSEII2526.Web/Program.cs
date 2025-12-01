@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using AppForSEII2526.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using AppForSEII2526.Web.Components;
@@ -42,6 +43,8 @@ string? URI2API = builder.Configuration.GetValue(typeof(string),
     "AppForHerramientas_API") as string;
 
 builder.Services.AddScoped<AppForSEII2526APIClient>(sp => new AppForSEII2526APIClient(URI2API, new HttpClient()));
+
+builder.Services.AddScoped<ReparacionStateContainer>();
 
 var app = builder.Build();
 
