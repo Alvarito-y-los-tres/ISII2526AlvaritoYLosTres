@@ -1,0 +1,134 @@
+@using AppForSEII2526.Web.API
+@using NuGet.Configuration
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectItemReparacion> logger
+@inject ReparacionStateContainer ReparacionState
+@inject NavigationManager navigation
+
+
+@page "/Reparacion/SelectItemReparacion"
+<h3>Select Items for Reparacion</h3>
+
+
+<div class="container-fluid">
+
+	<div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+		<p id="ErrorsShown"> Errors: @errors<p>
+	</div>
+
+	<div class="row">
+
+		<div class="col-8">
+			<div class="row">
+				<div class="col">
+				<div class="input-group mb-3">
+					<span class="input-group-text" id="basic-addon1">Nombre</span>
+					<input type="text" id="inputTitle" @bind=NombreHerramienta class="form-control" placeholder="Nombre" aria-label="Nombre" aria-describedby="basic-addon1">
+				</div>
+			</div>
+			<div class="col">
+				<div class="input-group mb-3">
+					<span class="input-group-text" id="basic-addon1">Tiempo</span>
+					<input type="text" id="inputGenre" @bind=TiempoReparacionMax class="form-control" placeholder="Tiempo" aria-label="Tiempo" aria-describedby="basic-addon1">
+				</div>
+			</div>
+			</div>
+				<div class="col">
+					<button class="btn btn-primary" @onclick=@SearchItems id="searchitems" >Search Items</button>
+				</div>	
+			</div>
+			<div class="row">
+				@if ( items == null){
+					<p> uploading items... </p>
+				}
+				else{
+					<div class="mh-100 table-responsive">
+                    	<table class="table table-condensed table-hover" id="TableOfMovies">
+                        	<thead>
+                            	<tr>
+									<th>Nombre</th>
+									<th>DescripcionProblema</th>
+									<th>Cantidad</th>
+                            	</tr>
+                        	</thead>
+                        	<tbody>
+                            	@foreach (var ReparacionItemDTO item in items)
+                            	{
+                                	<tr id="MovieData_@item.NombreHerramienta">
+                                    	<td>@item.NombreHerramienta</td>
+                                    	<td>@mitem.DescripcionProblema</td>
+                                    	<td>@item.Cantidad</td>
+                                    	<td>
+                                        	<button class="btn btn-outline-secondary" id="movieToRent_@item.NombreHerramienta" @onclick="@(()=>AddItem(item))">Add</button>
+                                    	</td>
+                                	</tr>
+                            	}
+                        	</tbody>
+                    	</table>
+                	</div>
+				}
+			</div>
+		</div>
+
+		<div class="col-2" hidden="@hiddenRentingCart">	
+			<div class="row">
+				<h3>Shopping cart</h3>
+			</div>
+			@foreach (var ReparacionItemDTO item in reparacion.Items)
+			{
+				<div class="row">
+					<button class="btn btn-light" @onclick "@(()=>RemoveReparacionItem(item))">@item.NombreHerramienta borrar</button>
+				</div>
+			}
+			<div class="row">
+				<button type="button" class="btn btn-primary" @onclick=@Pagar>Pagar</button>
+			</div>
+	</div>		
+		
+</div>
+
+@code {
+
+	private ICollection<ReparacionItemDTO> items;
+	private bool hideErrors = {get { return errors.length == 0; } };
+	private string errors = "";
+	private string NombreHerramienta { get; set; };
+	private int TiempoReparacionMax { get; set; };
+	private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
+	private bool hiddenRentingCart = true;
+
+	private void AddItem(ReparacionItemDTO item)
+    {
+        ReparacionState.AddItemReparacion(item);
+    }
+
+    private void RemoveReparacionItem(ReparacionItemDTO item)
+    {
+        ReparacionState.RemoveItemReparacion(item);
+        if (rental.RentalItems.Count == 0) hiddenRentingCart = true;
+    }
+
+	protected override async Task OnInitializedAsync(){
+		SearchItems();
+		return base.OnInitializedAsync();
+	}
+
+	public async void SearchItems()
+	{
+		try{
+			Reparacion = await apiclient.GetHerramientasParaReparar(NombreHerramienta, TiempoReparacionMax);
+		}
+		catch (ApiException ex){
+			logger.LogError($"{DateTime.Now} - Error searching items for reparacion: {ex.Message}");
+			errors = "Error searching items for reparacion";
+		}
+		StateHasChanged();
+	}	
+
+	private void Pagar()
+	{
+		navigation.NavigateTo("/Reparacion/ConfirmReparacion");
+	}
+	
+
+}
