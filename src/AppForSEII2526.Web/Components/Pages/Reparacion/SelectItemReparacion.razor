@@ -1,0 +1,141 @@
+@page "/Reparacion/SelectItemReparacion"
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<SelectItemReparacion> logger
+@inject ReparacionStateContainer ReparacionState
+@inject NavigationManager navigation
+
+<h3>Select Items for Reparacion</h3>
+
+<div class="container-fluid">
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShown"> Errors: @errors</p>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Nombre</span>
+                        <input type="text" id="inputTitle" @bind="NombreHerramienta" class="form-control" placeholder="Nombre">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon2">Tiempo</span>
+                        <input type="number" id="inputGenre" @bind="TiempoReparacionMax" class="form-control" placeholder="Tiempo">
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary" @onclick="SearchItems" id="searchitems">Search Items</button>
+                </div>
+            </div>
+
+            <div class="row">
+                @if (items == null)
+                {
+                    <p> esperando búsqueda... </p>
+                }
+                else
+                {
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfRepairs">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in items)
+                                {
+                                    <tr id="MovieData_@item.Nombre">
+                                        <td>@item.Nombre</td>
+                                        <td>
+                                            <button class="btn btn-outline-secondary" id="btnAdd_@item.Nombre" @onclick="@(()=>AddItem(item))">Add</button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-2" hidden="@hiddenCart">
+            <div class="row">
+                <h3>Shopping cart</h3>
+            </div>
+            @if(reparacion.Items != null)
+            {
+                @foreach (var item in reparacion.Items)
+                {
+                    <div class="row mb-2">
+                        <div class="col">
+                            <span>@item.NombreHerramienta</span>
+                            <button class="btn btn-sm btn-danger float-end" @onclick="@(()=>RemoveReparacionItem(item))">Borrar</button>
+                        </div>
+                    </div>
+                }
+            }
+            <div class="row mt-3">
+                <button type="button" class="btn btn-primary" @onclick="Pagar">Pagar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ICollection<HerramientaRepararDTO>? items;
+    private string errors = "";
+    
+    // Propiedades de visibilidad automáticas
+    private bool hideErrors => string.IsNullOrEmpty(errors);
+    
+    // ESTA es la forma correcta de ocultar el carrito automáticamente
+    private bool hiddenCart => reparacion.Items.Count == 0;
+
+    private string NombreHerramienta { get; set; } = string.Empty;
+    private float TiempoReparacionMax { get; set; } // Asegúrate de que la API acepte float o double
+
+    private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await SearchItems(); 
+    }
+
+    private void AddItem(HerramientaRepararDTO item)
+    {
+        ReparacionState.AddItemReparacion(item);
+        // No hace falta tocar variables booleanas manualmente
+    }
+
+    private void RemoveReparacionItem(ReparacionItemDTO item)
+    {
+        ReparacionState.RemoveItemReparacion(item);
+        // La propiedad hiddenCart se actualiza sola
+    }
+
+    public async Task SearchItems()
+    {
+        errors = "";
+        try
+        {
+            items = await apiclient.GetHerramientasParaRepararAsync(NombreHerramienta, TiempoReparacionMax);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"{DateTime.Now} - Error: {ex.Message}");
+            errors = "Error searching items for reparacion";
+        }
+        StateHasChanged();
+    }
+
+    private void Pagar()
+    {
+        navigation.NavigateTo("/Reparacion/ConfirmReparacion");
+    }
+}
