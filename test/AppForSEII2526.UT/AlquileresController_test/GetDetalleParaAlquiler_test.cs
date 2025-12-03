@@ -1,12 +1,6 @@
 ﻿using AppForSEII2526.API.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit; // <--- Asegúrate de tener este
-using Moq; // <--- TE FALTA ESTE
-using Microsoft.Extensions.Logging;
+using AppForSEII2526.API.DTOs;
+
 
 namespace AppForSEII2526.UT.AlquileresController_test
 {
@@ -17,37 +11,76 @@ namespace AppForSEII2526.UT.AlquileresController_test
             var fabricante = new Fabricante("Ferretería López");
             var herramientas = new List<Herramienta>()
             {
-                new Herramienta ("Martillo", "Madera", 35, 3, fabricante),
-                new Herramienta ("Alicates", "Acero", 12, 1, fabricante),
+                new Herramienta("Martillo", "Madera", 35, 3, fabricante),
+                new Herramienta("Alicates", "Acero", 12, 1, fabricante),
             };
-            ApplicationUser usuario = new ApplicationUser("Ana", "López", "642892748", "Daniel@gmail.com");
-            // Línea original:
-            // var alquiler = new Alquiler("Calle Falsa 123", DateTime.Today, 47, TiposMetodosPago.TarjetaCredito, new List<AlquilerItem>(), usuario);
 
-            // Línea corregida:
-            var alquiler = new Alquiler("Calle Falsa 123", DateTime.Today, DateTime.Today, 47, 0, new List<AlquilerItem>(), usuario);
+            ApplicationUser usuario = new ApplicationUser("Daniel", "de la Cruz", "642892748", "Daniel@gmail.com");
 
-            alquiler.AlquilerItems.Add(new AlquilerItem(3, "grande", 35, herramientas[0], alquiler));
+            var alquiler = new Alquiler("Calle Falsa 123", DateTime.Today, DateTime.Today, 47, TiposMetodosPago.TarjetaCredito, new List<AlquilerItem>(), usuario)
+            {
+                Id = 1,
+                FechaInicio = DateTime.Today,
+                FechaFin = DateTime.Today,
+                ApplicationUser = usuario
+            };
+
+            var itemAlquiler = new AlquilerItem(3, "grande", 35, herramientas[0], alquiler);
+            alquiler.AlquilerItems.Add(itemAlquiler);
+
             _context.Add(fabricante);
             _context.AddRange(herramientas);
+            _context.Add(usuario);
             _context.Add(alquiler);
+            _context.Add(itemAlquiler);
+
             _context.SaveChanges();
         }
+
         [Fact]
         [Trait("Database", "WithoutFixture")]
         [Trait("LevelTesting", "Unit testing")]
         public async Task GetAlquilerDetalle_NotFound_test()
         {
-            //arange
             var mock = new Mock<ILogger<AlquileresController>>();
             ILogger<AlquileresController> logger = mock.Object;
             var controller = new AlquileresController(_context, logger);
-            //act
+
             var result = await controller.GetAlquilerDetalle(0);
-            //assert
+
             Assert.IsType<NotFoundResult>(result);
         }
 
-        // Setup code for the test class can be added here
+        [Fact]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit testing")]
+        public async Task GetAlquilerDetalle_Ok_test()
+        {
+            var mock = new Mock<ILogger<AlquileresController>>();
+            ILogger<AlquileresController> logger = mock.Object;
+            var controller = new AlquileresController(_context, logger);
+
+            var expectedAlquiler = new AlquilerDetalleDTO(
+                "Daniel",
+                "de la Cruz",
+                "Calle Falsa 123",
+                DateTime.Today,
+                47,
+                DateTime.Today,
+                DateTime.Today,
+                1,
+                new List<AlquilerItemDTO>
+                {
+                    new AlquilerItemDTO("Martillo", "Madera", 35, 3)
+                }
+            );
+
+            var result = await controller.GetAlquilerDetalle(1);
+
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var alquilerActual = Assert.IsType<AlquilerDetalleDTO>(okResult.Value);
+
+            Assert.Equal(expectedAlquiler, alquilerActual);
+        }
     }
 }

@@ -13,8 +13,9 @@ namespace AppForSEII2526.API.DTOs
         public DateTime fechaInicioAlquiler { get; set; }
         public DateTime fechaFinAlquiler { get; set; }
         public IList<AlquilerItemDTO> items { get; set; }
+        public int id { get; set; }
 
-        public AlquilerDetalleDTO(string nombreCliente, string apellidoCliente, string direccionCliente, DateTime fechaAlquiler, decimal precioTotal, DateTime fechaInicioALquiler, DateTime fechaFinAlquiler, IList<AlquilerItemDTO> items)
+        public AlquilerDetalleDTO(string nombreCliente, string apellidoCliente, string direccionCliente, DateTime fechaAlquiler, decimal precioTotal, DateTime fechaInicioALquiler, DateTime fechaFinAlquiler,int id, IList<AlquilerItemDTO> items)
         {
             NombreCliente = nombreCliente;
             ApellidoCliente = apellidoCliente;
@@ -24,6 +25,7 @@ namespace AppForSEII2526.API.DTOs
             this.fechaInicioAlquiler = fechaInicioALquiler;
             this.fechaFinAlquiler = fechaFinAlquiler;
             this.items = items;
+            this.id = id;
         }
 
         public override bool Equals(object? obj)
@@ -36,6 +38,7 @@ namespace AppForSEII2526.API.DTOs
                    fechaInicioAlquiler == dTO.fechaInicioAlquiler &&
                    fechaFinAlquiler == dTO.fechaFinAlquiler &&
                     // ESTA LÍNEA ES LA CORRECTA
+                    id == dTO.id &&
                     items.SequenceEqual(dTO.items);
         }
         public override int GetHashCode()
