@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251012172139_CreateIdentitySchema")]
+    [Migration("20251203172744_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -55,8 +55,8 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<int>("Periodo")
                         .HasColumnType("int");
 
-                    b.Property<int>("PrecioTotal")
-                        .HasColumnType("int");
+                    b.Property<decimal>("PrecioTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -538,7 +538,7 @@ namespace AppForSEII2526.API.Migrations
             modelBuilder.Entity("AppForSEII2526.API.Models.AlquilerItem", b =>
                 {
                     b.HasOne("AppForSEII2526.API.Models.Alquiler", "Alquiler")
-                        .WithMany("AlquilerItem")
+                        .WithMany("AlquilerItems")
                         .HasForeignKey("AlquilerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -702,7 +702,7 @@ namespace AppForSEII2526.API.Migrations
 
             modelBuilder.Entity("AppForSEII2526.API.Models.Alquiler", b =>
                 {
-                    b.Navigation("AlquilerItem");
+                    b.Navigation("AlquilerItems");
                 });
 
             modelBuilder.Entity("AppForSEII2526.API.Models.ApplicationUser", b =>
