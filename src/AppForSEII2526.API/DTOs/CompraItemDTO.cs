@@ -13,17 +13,20 @@ namespace AppForSEII2526.API.DTOs
         public string? DescripcionHerramienta { get; set; }
         public int Cantidad { get; set; }
 
-        public CompraItemDTO(int herramientaId, string nombreHerramienta, string materialHerrramienta, decimal precioHerramienta, string descripcionHerramienta, int cantidad)
-        {
-            this.herramientaId = herramientaId;
-            NombreHerramienta = nombreHerramienta;
-            MaterialHerrramienta = materialHerrramienta;
-            PrecioHerramienta = precioHerramienta;
-            DescripcionHerramienta = descripcionHerramienta;
-            Cantidad = cantidad;
-        }
+        public int CompraId { get; set; }
 
-        public CompraItemDTO()
+		public CompraItemDTO(int herramientaId, string nombreHerramienta, string materialHerrramienta, decimal precioHerramienta, string? descripcionHerramienta, int cantidad, int compraId)
+		{
+			this.herramientaId = herramientaId;
+			NombreHerramienta = nombreHerramienta;
+			MaterialHerrramienta = materialHerrramienta;
+			PrecioHerramienta = precioHerramienta;
+			DescripcionHerramienta = descripcionHerramienta;
+			Cantidad = cantidad;
+			CompraId = compraId;
+		}
+
+		public CompraItemDTO()
         {
         }
 
