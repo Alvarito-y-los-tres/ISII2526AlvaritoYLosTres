@@ -44,7 +44,7 @@ namespace AppForSEII2526.UT.ComprasController_test
         {
             var compraNoItem = new CrearCompraDTO("Ana", "López", "Calle Tejares", 0, "671222333", "ana.lopez@web.es", 70, new List<CompraItemDTO>());
 
-            var compraItems = new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2) };
+            var compraItems = new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2,1) };
 
             var compraNoNombre = new CrearCompraDTO(null, "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es", 70, compraItems);
 
@@ -52,13 +52,13 @@ namespace AppForSEII2526.UT.ComprasController_test
 
             var compraNoDireccion = new CrearCompraDTO("Ana", "Lopez", null, 0, "671222333", "ana.lopez@web.es", 70, compraItems);
 
-            var compraCantidadCero = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70,  new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 0) });
+            var compraCantidadCero = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70,  new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 0,1) });
        
-            var compraHerramienteInexistente = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70, new List<CompraItemDTO>() { new CompraItemDTO(3, "LLave inglesa", "Hierro", 25, "nuevo", 4) });
+            var compraHerramienteInexistente = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70, new List<CompraItemDTO>() { new CompraItemDTO(3, "LLave inglesa", "Hierro", 25, "nuevo", 4,1) });
 
-            var compraNoDescripcionCantidad3 = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es", 70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, null,3) });
+            var compraNoDescripcionCantidad3 = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es", 70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, null,3,1) });
 
-            var compraNoDescripcion = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, null, 2) });
+            var compraNoDescripcion = new CrearCompraDTO("Ana", "López", "Calle Tejares", (int)TiposMetodosPago.Paypal, "671222333", "ana.lopez@web.es",70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, null, 2,1) });
 
             
 
@@ -115,11 +115,11 @@ namespace AppForSEII2526.UT.ComprasController_test
 
             var controller = new ComprasController(_context, logger);
 
-            var compraItems = new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2) };
+            var compraItems = new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2,1) };
 
-            var compraDTO = new CrearCompraDTO("Ana", "López", "Calle Tejares", 0, "671222333", "ana.lopez@web.es", 70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2) });
+            var compraDTO = new CrearCompraDTO("Ana", "López", "Calle Tejares", 0, "671222333", "ana.lopez@web.es", 70, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2,1) });
 
-            var expectedCompraDetailDTO = new CompraDetalleDTO("Ana", "López", "Calle Tejares", 70, DateTime.Today, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2) });
+            var expectedCompraDetailDTO = new CompraDetalleDTO("Ana", "López", "Calle Tejares", 70, DateTime.Today, new List<CompraItemDTO>() { new CompraItemDTO(1, "Martillo", "Madera", 35, "antigo", 2,1) });
 
             //Act
             var result = await controller.CrearCompra(compraDTO);
