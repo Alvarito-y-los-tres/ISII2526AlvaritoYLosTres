@@ -585,26 +585,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OfertaDetalleDTO"
-                  }
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OfertaDetalleDTO"
-                  }
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/OfertaDetalleDTO"
-                  }
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
                 }
               }
             }
@@ -1739,7 +1730,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "Reparacion": {
         "required": [
@@ -1918,7 +1909,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       }
     }
   }
