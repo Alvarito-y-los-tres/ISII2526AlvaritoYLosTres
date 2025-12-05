@@ -1,0 +1,135 @@
+﻿@page "/compra/detallecompra"
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiclient
+
+<h3>DetalleCompra</h3>
+<div class="container-fluid mb-3">
+	<div class="row">
+		<div class="col">
+			<div class="input-group">
+				<span class="input-group-text" id="basic-addon1">Id</span>
+				<input type="text" id="inputId" @bind="CompraId" class="form-control" placeholder="Id de la Compra" aria-label="Id" aria-describedby="basic-addon1">
+			</div>
+		</div>
+		<div class="col">
+			<button type="button" class="btn btn-primary" @onclick="BuscarCompra" id="buscarCompra">Buscar Compra</button>
+		</div>
+	</div>
+</div>
+
+@*attribute [Authorize]*@
+
+
+
+
+
+
+@if(compra == null){
+	<p>@error</p>
+}else
+	{
+	<table class="table table-borderless table-sm">
+		<tr>
+			<th>Nombre y Apellidos</th>
+			<td id="NombreApellido">@compra.NombreCLiente @compra.ApellidoCliente</td>
+		</tr>
+		<tr>
+			<th>Direccion de envío</th>
+			<td id="DireccionCompra">@compra.DireccionEnvio</td>
+		</tr>
+		<tr>
+			<th>Fecha de la compra</th>
+			<td id="FechaCompra">@compra.FechaCompra.ToString("dd/MM/yyyy hh:mm:ss")</td>
+		</tr>
+	</table>
+
+	<h4>Herramientas Compradas</h4>
+	<table class="table" id="ComprasHerramientas">
+		<thead>
+			<tr>
+				<th scope="col">Nombre</th>
+				<th scope="col">Material</th>
+				<th scope="col">Cantidad</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Descripción</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (CompraItemDTO item in compra.Items)
+			{
+				<tr id="CompraItem_@item.NombreHerramienta">
+					<td>@item.NombreHerramienta</td>
+					<td>@item.MaterialHerrramienta</td>
+					<td>@item.Cantidad</td>
+					<td>@item.PrecioHerramienta €</td>
+					<td>@item.DescripcionHerramienta</td>
+				</tr>
+			}
+		</tbody>
+
+		<tfoot>
+
+			<tr>
+		<th scope="row" colspan="2" class="text-end">Precio Total</th>
+		<td id="PrecioTotal">
+		<td id="PrecioTotal">@compra.PrecioTotal.ToString("0.00") €</td>
+		</td>
+		</tr>
+		</tfoot>
+
+	</table>
+
+	}
+
+@code {
+	[Parameter]
+	[SupplyParameterFromQuery]
+	public int CompraId { get; set; }
+
+	private CompraDetalleDTO compra;
+
+	private string error = "";
+
+
+	[CascadingParameter]
+	private Task<AuthenticationState>? authenticationState {get; set;}
+
+	public async void BuscarCompra()
+	{
+		try
+		{
+			
+			compra = await apiclient.GetCompraDetalleAsync(CompraId);
+			error = "";
+		}
+		catch(ApiException ex)
+		{
+			compra = null;
+			error = $"Error al cargar la compra";
+			StateHasChanged();
+			return;
+		}
+		StateHasChanged();
+	}
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		if(CompraId > 0)
+		{
+			BuscarCompra();
+		}
+		else
+		{
+			error = "Ingresa un ID de compra válido";
+		}
+	}
+
+
+
+	
+	
+
+}

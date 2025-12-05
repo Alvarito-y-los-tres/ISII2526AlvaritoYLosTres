@@ -8,8 +8,8 @@
 
 <h3>SelectHerramientaParaComprar</h3>
 <div class="container-fluid">
-    <div class="row" hidden="@hideErrors">
-        <p>Aquí mostraré los errores</p>
+    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
+        <p id="ErrorsShow">Errors: @errors</p>     
     </div>
     <div class="row">
         <div class="col-8">
@@ -58,7 +58,7 @@
                                         <td>@herramienta.Fabricante</td>
                                       
                                         <td>
-                                            <button class="btn btn-outline-secondary" id="HerramientaParaComprar_@herramienta.Nombre" @onclick="@(() => AddHerramienta(herramienta))">Add</button>
+                                            <button class="btn btn-outline-secondary" id="HerramientaParaComprar_@herramienta.Nombre" @onclick="@(() => AddHerramienta(herramienta))">Añadir</button>
                                         </td>
                                     </tr>
                                 }
@@ -75,7 +75,7 @@
             @foreach (CompraItemDTO item in compraDTO.CompraItems)
             {
                 <div class="row">
-                    <button type="button" class="btn btn-light" id="removeHerramienta_@item.MaterialHerrramienta" @onclick="@(() => RemoveCompraItem(item))"> - @item.NombreHerramienta</button>
+                    <button type="button" class="btn btn-light" id="removeHerramienta_@item.NombreHerramienta" @onclick="@(() => RemoveCompraItem(item))"> - @item.NombreHerramienta - @item.PrecioHerramienta€</button>
                 </div>
             }
             <div class="row">
@@ -129,6 +129,7 @@
 
 
                 herramientas = await apiclient.GetHerramientaParaComprarAsync(materialHerramienta, precioHerramienta);
+                errors = "";
             }
         }
         catch (ApiException ex)

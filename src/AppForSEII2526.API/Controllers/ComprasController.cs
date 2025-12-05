@@ -22,7 +22,7 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("Compra-Detalle")]
-        [ProducesResponseType(typeof(IList<CompraDetalleDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(CompraDetalleDTO), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetCompraDetalle(int id)
         {
             if (_context.Compras == null)
@@ -52,7 +52,8 @@ namespace AppForSEII2526.API.Controllers
                              ci.Herramienta.Material,
                              ci.Herramienta.Precio,
                              ci.Descripcion,
-                             ci.Cantidad)).ToList<CompraItemDTO>()))
+                             ci.Cantidad,
+                             ci.CompraId)).ToList<CompraItemDTO>()))
 
                  .FirstOrDefaultAsync();
             if (compra == null)
@@ -239,7 +240,8 @@ namespace AppForSEII2526.API.Controllers
                     ci.Herramienta.Material,
                     ci.Herramienta.Precio,
                     ci.Descripcion,
-                    ci.Cantidad
+                    ci.Cantidad,
+                    ci.CompraId
                     )).ToList()
                     );
 

@@ -99,7 +99,7 @@ namespace AppForSEII2526.API.Migrations
                     FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaFin = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Periodo = table.Column<int>(type: "int", nullable: false),
-                    PrecioTotal = table.Column<int>(type: "int", nullable: false),
+                    PrecioTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MetodoPago = table.Column<int>(type: "int", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },

@@ -61,6 +61,7 @@ namespace AppForSEII2526.API.Controllers
                 alquiler.PrecioTotal,
                 alquiler.FechaInicio,
                 alquiler.FechaFin,
+                alquiler.Id,
                 alquiler.AlquilerItems.Select(oi => new AlquilerItemDTO(
                     oi.Herramienta.Nombre,
                     oi.Herramienta.Material,
@@ -214,12 +215,15 @@ namespace AppForSEII2526.API.Controllers
                 NuevoAlquiler.AlquilerItems.Sum(ai => ai.Precio),
                 NuevoAlquiler.FechaInicio,
                 NuevoAlquiler.FechaFin,
+                NuevoAlquiler.Id,
                 NuevoAlquiler.AlquilerItems.Select(oi => new AlquilerItemDTO(
                     oi.Herramienta.Nombre,
                     oi.Herramienta.Material,
                     oi.Herramienta.Precio,
                     oi.Cantidad
                     )).ToList()
+                
+
             );
 
             // FIX 5: Añadir el 'id' del nuevo alquiler a la respuesta 'CreatedAtAction'.
