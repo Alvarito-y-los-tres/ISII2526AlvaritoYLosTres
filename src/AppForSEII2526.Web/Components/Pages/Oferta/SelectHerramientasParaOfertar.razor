@@ -23,7 +23,7 @@
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Precio</span>
-                        <input type="text" id="inputPrecio" @bind=precio class="form-control" placeholder="Precio" aria-label="Precio" aria-describedby="basic-addon1">
+                        <input type="number" id="inputPrecio" @bind=precio class="form-control" placeholder="Precio" aria-label="Precio" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
@@ -56,7 +56,7 @@
                                         <td>@herramienta.Fabricante</td>
                                         <td>@herramienta.Precio</td>
                                         <td>
-                                            <button type="button" class="btn btn-outline-secondary" id="herramientaParaOferta_@herramienta.Nombre" @onclick="@(() => añadirHerramientaAlCarrito(herramienta))">Add</button>
+                                            <button type="button" class="btn btn-outline-secondary" id="herramientaParaOferta_@herramienta.Nombre" @onclick="@(() => añadirHerramientaAlCarrito(herramienta))">Añadir</button>
                                         </td>
                                     </tr>
                                 }
@@ -90,7 +90,7 @@
     private bool hideErrors { get { return errors.Length == 0; } }
     private string errors = "";
     private string fabricante { get; set; }
-    private double precio { get; set; }
+    private double? precio { get; set; }
 
     private CrearOfertaDTO oferta => ofertaState.Oferta;
 
