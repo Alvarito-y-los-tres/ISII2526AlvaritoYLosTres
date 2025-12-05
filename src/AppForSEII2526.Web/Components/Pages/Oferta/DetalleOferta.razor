@@ -1,0 +1,152 @@
+﻿@page "/oferta/detalleoferta"
+
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiClient
+@inject ILogger<SelectHerramientasParaOfertar> logger
+
+
+<h3>Detalle Oferta</h3>
+
+<div class="container-fluid mb-3">
+    <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">ID</span>
+                <input type="number" id="inputId" @bind="ofertaId" class="form-control" placeholder="ID" aria-label="ID" aria-describedby="basic-addon1">
+            </div>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-primary" @onclick="buscarOfertas" id="buscarOfertas">Buscar Ofertas</button>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(errors))
+{
+    <div class="alert alert-warning" role="alert">
+        @errors
+    </div>
+}
+
+@if (oferta != null)
+{
+    <div class="container-fluid">
+        <table class="table table-borderless table-sm">
+            <tr>
+                <th>Fecha de inicio</th>
+                <td id="FechaInicio">@oferta.FechaInicio.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Fecha de fin</th>
+                <td id="FechaFinal">@oferta.FechaFin.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Fecha de la oferta</th>
+                <td id="FechaOferta">@oferta.FechaOferta.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Dirigido a</th>
+                <td id="MetodoPago">@oferta.ParaSocios</td>
+            </tr>
+            <tr>
+                <th>Método de pago</th>
+                <td id="TipoDirigida">@oferta.MetodoPago</td>
+            </tr>
+        </table>
+
+
+        <h4>Herramientas en la oferta</h4>
+
+        <table class="table table-striped table-hover" id="HerramientasEnOferta">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Herramienta</th>
+                    <th scope="col">Material</th>
+                    <th scope="col">Fabricante</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Porcentaje</th>
+                    <th scope="col">Precio Final</th>
+                    <th scope="col">Oferta ID</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in oferta.Items)
+                {
+                    <tr id="OfertaItem_@item.NombreHerramienta">
+                        <td>@item.NombreHerramienta</td>
+                        <td>@item.MaterialHerramienta</td>
+                        <td>@item.FabricanteHerramienta</td>
+                        <td>@item.Precio.ToString("0.00") €</td>
+                        <td>@item.Porcentaje %</td>
+                        <td>@item.PrecioFinal.ToString("0.00") €</td>
+                        <td>@item.OfertaId</td>
+                    </tr>
+                }
+            </tbody>
+
+            <tfoot class="table-light">
+                <tr>
+                    <th scope="row" colspan="6" class="text-end">Precio total de la oferta</th>
+                    <td id="TotalPrice">
+                        @calcularPrecioOferta(oferta).ToString("0.00") €
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int ofertaId { get; set; }
+    private OfertaDetalleDTO oferta;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+
+    protected decimal calcularPrecioOferta(OfertaDetalleDTO oferta)
+    {
+        decimal total = 0;
+
+        if (oferta?.Items != null)
+        {
+            foreach (var item in oferta.Items)
+            {
+                total += (decimal)item.PrecioFinal;
+            }
+        }
+        return total;
+    }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    public async void buscarOfertas()
+    {
+        try
+        {
+            oferta = await apiClient.GetOfertaDetalleAsync(ofertaId);
+            errors = "";
+        }
+        catch (ApiException ex)
+        {
+            logger.LogError($"{DateTime.Now} Error: {ex}");
+            errors = "ID no válido";
+        }
+        StateHasChanged();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ofertaId > 0)
+        {
+            buscarOfertas();
+        }
+        else
+        {
+            errors = "Por favor, introduce un ID para buscar.";
+        }
+    }
+}

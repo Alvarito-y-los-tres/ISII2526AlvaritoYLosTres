@@ -731,6 +731,25 @@
                     }
                 }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OfertaDetalleDTO"
         },
         "/api/Reparaciones/Crear-Reparacion": {
             "post": {
@@ -1705,6 +1724,133 @@
                 },
                 "additionalProperties": false
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfertaItem": {
+        "required": [
+          "porcentaje"
+        ],
+        "type": "object",
+        "properties": {
+          "herramientaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "herramienta": {
+            "$ref": "#/components/schemas/Herramienta"
+          },
+          "ofertaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "oferta": {
+            "$ref": "#/components/schemas/Oferta"
+          },
+          "porcentaje": {
+            "type": "number",
+            "format": "float"
+          },
+          "precioFinal": {
+            "type": "number",
+            "format": "currency"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OfertaItemDTO": {
+        "type": "object",
+        "properties": {
+          "nombreHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "materialHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "fabricanteHerramienta": {
+            "type": "string",
+            "nullable": true
+          },
+          "precio": {
+            "type": "number",
+            "format": "double"
+          },
+          "precioFinal": {
+            "type": "number",
+            "format": "double"
+          },
+          "porcentaje": {
+            "type": "number",
+            "format": "float"
+          },
+          "ofertaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      },
+      "Reparacion": {
+        "required": [
+          "fechaEntrega",
+          "metodoPago"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fechaEntrega": {
+            "type": "string",
+            "format": "date"
+          },
+          "fechaRecogida": {
+            "type": "string",
+            "format": "date"
+          },
+          "precioTotal": {
+            "type": "number",
+            "format": "currency"
+          },
+          "metodoPago": {
+            "$ref": "#/components/schemas/TiposMetodosPago"
+          },
+          "itemsReparacion": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReparacionItem"
             "ProblemDetails": {
                 "type": "object",
                 "properties": {
@@ -1866,6 +2012,11 @@
                 ],
                 "type": "string"
             },
+            "nullable": true
+          }
+        },
+        "additionalProperties": {}
+      }
             "TiposMetodosPago": {
                 "enum": [
                     "TarjetaCredito",
