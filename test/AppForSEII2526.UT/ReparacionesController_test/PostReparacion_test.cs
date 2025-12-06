@@ -51,13 +51,13 @@ namespace AppForSEII2526.UT.ReparacionesController_test
                     (
                         "Martillo",
                         "Mango roto",
-                        2
+                        2,5,1
                     ),
                     new ReparacionItemDTO
                     (
                         _context.Herramientas.Skip(1).First().Nombre,
                         "Mango roto",
-                        1
+                        1,30,1
                     )
                 }
             };
@@ -101,13 +101,13 @@ namespace AppForSEII2526.UT.ReparacionesController_test
                 (
                     "Martillo",
                     "Mango roto",
-                    2
+                    2,5,1
                 ),
                 new ReparacionItemDTO
                 (
                     "Taladro",
                     "Mango roto",
-                    1
+                    1,4,1
                 )
             };
 
@@ -182,7 +182,7 @@ namespace AppForSEII2526.UT.ReparacionesController_test
                     (
                         "HerramientaInexistente",
                         "Mango roto",
-                        2
+                        2,2,1
                     )
                 }
             };

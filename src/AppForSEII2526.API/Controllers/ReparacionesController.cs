@@ -46,7 +46,9 @@ namespace AppForSEII2526.API.Controllers
                     r.ItemsReparacion.Select(ri => new ReparacionItemDTO(
                         ri.Herramienta.Nombre,
                         ri.Descripcion,
-                        ri.Cantidad
+                        ri.Cantidad,
+                        ri.Precio,
+                        ri.ReparacionId
                     )).ToList()
                 ))
                 .FirstOrDefaultAsync();
@@ -164,7 +166,9 @@ namespace AppForSEII2526.API.Controllers
                 {
                     Herramienta = herramienta,
                     Descripcion = item.DescripcionProblema,
-                    Cantidad = item.Cantidad
+                    Cantidad = item.Cantidad,
+                    Precio = item.Precio,
+                    ReparacionId = item.ReparacionId,
                 });
             }
 
@@ -201,7 +205,9 @@ namespace AppForSEII2526.API.Controllers
                 itemsReparacion.Select(ri => new ReparacionItemDTO(
                     ri.Herramienta.Nombre,
                     ri.Descripcion,
-                    ri.Cantidad
+                    ri.Cantidad,
+                    ri.Herramienta.Precio,
+                    ri.ReparacionId
                 )).ToList()
             );
 
