@@ -44,6 +44,10 @@
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Material</th>
+                                    <th>Fabricante</th>
+                                    <th>Precio</th>
+                                    <th>TiempoReparacion</th>
                                     <th>Acción</th>
                                 </tr>
                             </thead>
@@ -52,6 +56,10 @@
                                 {
                                     <tr id="MovieData_@item.Nombre">
                                         <td>@item.Nombre</td>
+                                        <td>@item.Material</td>
+                                        <td>@item.NombreFabricante</td>
+                                        <td>@item.Precio.ToString(format: "C")</td>
+                                        <td>@item.TiempoReparacion</td>
                                         <td>
                                             <button class="btn btn-outline-secondary" id="btnAdd_@item.Nombre" @onclick="@(()=>AddItem(item))">Add</button>
                                         </td>
@@ -98,7 +106,7 @@
     private bool hiddenCart => reparacion.Items.Count == 0;
 
     private string NombreHerramienta { get; set; } = string.Empty;
-    private float TiempoReparacionMax { get; set; } // Asegúrate de que la API acepte float o double
+    private float? TiempoReparacionMax { get; set; } // Asegúrate de que la API acepte float o double
 
     private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
     
