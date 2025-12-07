@@ -220,22 +220,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualOfertaDetailDTO = Assert.IsType<OfertaDetalleDTO>(createdResult.Value);
 
-            Assert.Equal(expectedOfertaDetalleDTO.FechaInicio, actualOfertaDetailDTO.FechaInicio);
-            Assert.Equal(expectedOfertaDetalleDTO.FechaFin, actualOfertaDetailDTO.FechaFin);
-            Assert.Equal(expectedOfertaDetalleDTO.FechaOferta, actualOfertaDetailDTO.FechaOferta);
-            Assert.Equal(expectedOfertaDetalleDTO.ParaSocios, actualOfertaDetailDTO.ParaSocios);
-            Assert.Equal(expectedOfertaDetalleDTO.MetodoPago, actualOfertaDetailDTO.MetodoPago);
-
-            var expectedItem = expectedOfertaDetalleDTO.Items.First();
-            var actualItem = actualOfertaDetailDTO.Items.First();
-
-            // Comprobamos los valores del item
-            Assert.Equal(expectedItem.NombreHerramienta, actualItem.NombreHerramienta);
-            Assert.Equal(expectedItem.MaterialHerramienta, actualItem.MaterialHerramienta);
-            Assert.Equal(expectedItem.FabricanteHerramienta, actualItem.FabricanteHerramienta);
-            Assert.Equal(expectedItem.Precio, actualItem.Precio);
-            Assert.Equal(expectedItem.PrecioFinal, actualItem.PrecioFinal);
-            Assert.Equal(expectedItem.Porcentaje, actualItem.Porcentaje);
+            Assert.Equal(expectedOfertaDetalleDTO, actualOfertaDetailDTO);
         }
     }
 }

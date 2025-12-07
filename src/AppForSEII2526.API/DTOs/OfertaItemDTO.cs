@@ -33,8 +33,7 @@ namespace AppForSEII2526.API.DTOs
                    FabricanteHerramienta == dTO.FabricanteHerramienta &&
                    Precio == dTO.Precio &&
                    PrecioFinal == dTO.PrecioFinal &&
-                   Porcentaje == dTO.Porcentaje &&
-                   OfertaId == dTO.OfertaId;
+                   Porcentaje == dTO.Porcentaje;
         }
 
         public override int GetHashCode()
