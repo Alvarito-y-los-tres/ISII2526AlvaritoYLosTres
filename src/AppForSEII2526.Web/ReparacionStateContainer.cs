@@ -8,7 +8,7 @@ namespace AppForSEII2526.Web
     public class ReparacionStateContainer 
     {
         // Inicializamos la lista para evitar NullReferenceException
-        public CrearReparacionDTO Reparacion { get; private set; } = new CrearReparacionDTO() {
+        public CrearReparacionDTO Reparacion { get; set; } = new CrearReparacionDTO() {
             Items = new List<ReparacionItemDTO>(),
             MetodoPago=-1
         };
