@@ -56,7 +56,7 @@
         <div class="col-md">
             <div class="form-floating">
                 @*this button will be used to ask the user if he want to proceed to rent the movies*@
-                <button class="btn btn-primary" type="submit" id="Submit">
+                <button class="btn btn-primary" type="submit" id="Submit" disabled="@reparacionButtonDisabled">
                     Crar Reparacion
                 </button>
             </div>
@@ -78,7 +78,9 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Precio</th>
+                    <th>Tiempo Reparacion</th>
                     <th>Descripcion</th>
+                    <th>Cantidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,7 +89,10 @@
                     <tr id="MovieData_@item.NombreHerramienta">
                         <td>@item.NombreHerramienta</td>
                         <td>@item.Precio</td>
+                        <td>@ObtenerTiempo(item.NombreHerramienta) dias</td>
                         <td><InputText @bind-Value="item.DescripcionProblema" class="form-control" id="@($"description_{item.NombreHerramienta}")" /></td>
+                        <td><InputNumber @bind-Value="item.Cantidad" class="form-control" id="@($"cantidad_{item.NombreHerramienta}")" /></td>
+
                     </tr>
                 }
             </tbody>
@@ -108,6 +113,19 @@
 @code {
     private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
     private bool DialogIsOpen;
+    //rentalbutton will be disabled if there are not movies in the renting cart
+    private bool reparacionButtonDisabled { get { return (reparacion.Items == null || reparacion.Items.Count == 0); } }
+
+
+    private float ObtenerTiempo(string nombreitem)
+    {
+        if(ReparacionState.TiemposReparacionAux.TryGetValue(nombreitem,out float tiempo))
+        {
+            return tiempo;
+        }
+        return 404;
+    }
+
 
     private decimal TotalCost
     {
