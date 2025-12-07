@@ -1,0 +1,94 @@
+﻿@page "/Reparacion/DetalleReparacion"
+
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiclient
+
+<h3>Reparacion Detalle</h3>
+
+
+
+@if (reparacion == null)
+{
+    <p>@error</p>
+}
+else
+{
+    <table class="table table-borderless table-sm">
+        <tr>
+            <th>Name and Surname</th>
+            <td id="NameSurname">@reparacion.NombreCLiente @reparacion.ApellidoCliente</td>
+        </tr>
+        <tr>
+            <th>Fecha entrega</th>
+            <td id="DeliveryAddress">@reparacion.FechaEntrega.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+        <tr>
+            <th>Fecha recogida</th>
+            <td id="PaymentMethod">@reparacion.FechaRecogida.ToString("dd/MM/yyyy hh:mm:ss")</td>
+        </tr>
+        <tr>
+            <th>Precio Total</th>
+            <td id="RentalDate">@reparacion.PrecioTotal</td>
+        </tr>
+    </table>
+
+    <table class="table" id="ReparacionItems">
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Descripcion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (ReparacionItemDTO item in reparacion.Items)
+            {
+                <tr id="RentalItem_@item.NombreHerramienta">
+                    <td>@item.NombreHerramienta</td>
+                    <td>@item.Precio</td>
+                    <td>@item.Cantidad €</td>
+                    <td>@item.DescripcionProblema</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            @*colspan is used to state that TWO columns are collapsed*@
+        <th scope="row" colspan="2" class="text-end">Total Price</th>
+        <td id="TotalPrice">@reparacion.PrecioTotal €</td>
+        </tfoot>
+
+    </table>
+
+}
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int ReparacionID { get; set; }
+    private ReparacionDetalleDTO reparacion;
+    private string error = "";
+
+    
+
+
+
+    protected override async Task OnInitializedAsync() {
+
+
+        try {
+            reparacion = await apiclient.GetReparacionDetalleAsync(ReparacionID);
+        }
+        catch (ApiException exception) {
+            reparacion = null;
+        }
+        if ((reparacion == null) ) {
+            error = $"Error! there is not a rental with id={ReparacionID}";
+        }
+
+
+    }
+
+}
