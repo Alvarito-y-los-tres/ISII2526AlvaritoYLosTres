@@ -9,7 +9,8 @@ namespace AppForSEII2526.Web
     {
         // Inicializamos la lista para evitar NullReferenceException
         public CrearReparacionDTO Reparacion { get; private set; } = new CrearReparacionDTO() {
-            Items = new List<ReparacionItemDTO>()
+            Items = new List<ReparacionItemDTO>(),
+            MetodoPago=-1
         };
 
         public event Action? OnChange;
@@ -24,8 +25,8 @@ namespace AppForSEII2526.Web
             {
                 Reparacion.Items.Add(new ReparacionItemDTO() {
                     NombreHerramienta = item.Nombre,
-                    DescripcionProblema = "nosesabe",
-                    Cantidad = 1,
+                    DescripcionProblema = null,
+                    Cantidad = 0,
                     Precio = item.Precio
                 });
 

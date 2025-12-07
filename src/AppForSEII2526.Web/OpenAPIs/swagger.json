@@ -1353,21 +1353,28 @@
         "additionalProperties": false
       },
       "CrearReparacionDTO": {
+        "required": [
+          "apellidoCliente",
+          "fechaEntrega",
+          "nombreCliente"
+        ],
         "type": "object",
         "properties": {
           "nombreCliente": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "apellidoCliente": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "fechaEntrega": {
             "type": "string",
             "format": "date-time"
           },
           "metodoPago": {
+            "maximum": 2,
+            "minimum": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -1841,6 +1848,9 @@
         "additionalProperties": false
       },
       "ReparacionItemDTO": {
+        "required": [
+          "cantidad"
+        ],
         "type": "object",
         "properties": {
           "nombreHerramienta": {
@@ -1852,6 +1862,8 @@
             "nullable": true
           },
           "cantidad": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },

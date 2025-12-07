@@ -19,25 +19,26 @@
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="reparacion.NombreCliente" class="form-control" id="Name" />
-                <label for="Name">Nombre </label>
+                <label for="Name">Nombre* </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="reparacion.ApellidoCliente" class="form-control" id="Surname" />
-                <label for="SurName">Apellido </label>
+                <label for="SurName">Apellido* </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputDate @bind-Value="reparacion.FechaEntrega" class="form-control" id="DeliveryAddress" />
-                <label for="DeliveryAddress">Fecha Entrega</label>
+                <label for="DeliveryAddress">Fecha Entrega*</label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="reparacion.Telefono" class="form-control" id="tlf" />
-                <label for="tlf">Telefono </label>
+                <label for="tlf">Telefono (opcional)</label>
+
             </div>
         </div>
         <div class="row g-2">
@@ -45,11 +46,13 @@
                 <div class="form-floating">
                     @*a dropdown for selecting the payment method*@
                     <InputSelect class="form-select" @bind-Value="@reparacion.MetodoPago" id="PaymentMethod">
-                        <option value="@TiposMetodosPago.Paypal" default> Paypal</option>
-                        <option value="@TiposMetodosPago.Cash"> Cash</option>
-                        <option value="@TiposMetodosPago.TarjetaCredito"> Tarjeta</option>
+                        @* Opción por defecto con valor -1 (coincide con el constructor del DTO) *@
+                        <option value="-1" default>-- Seleccione método --</option>
+                        <option value=1> Paypal</option>
+                        <option value=2> Cash</option>
+                        <option value="0"> Tarjeta</option>
                     </InputSelect>
-                    <label for="PaymentMethod">Pago Method</label>
+                    <label for="PaymentMethod">Metodo de pago*</label>
                 </div>
             </div>
         </div>
@@ -79,8 +82,8 @@
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Tiempo Reparacion</th>
-                    <th>Descripcion</th>
-                    <th>Cantidad</th>
+                    <th>Descripcion(opcional)</th>
+                    <th>Cantidad*</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,7 +94,7 @@
                         <td>@item.Precio</td>
                         <td>@ObtenerTiempo(item.NombreHerramienta) dias</td>
                         <td><InputText @bind-Value="item.DescripcionProblema" class="form-control" id="@($"description_{item.NombreHerramienta}")" /></td>
-                        <td><InputNumber @bind-Value="item.Cantidad" class="form-control" id="@($"cantidad_{item.NombreHerramienta}")" /></td>
+                        <td><InputNumber @bind-Value="item.Cantidad" class="form-control" placeholder="0" id="@($"cantidad_{item.NombreHerramienta}")" /></td>
 
                     </tr>
                 }
@@ -114,7 +117,23 @@
     private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
     private bool DialogIsOpen;
     //rentalbutton will be disabled if there are not movies in the renting cart
-    private bool reparacionButtonDisabled { get { return (reparacion.Items == null || reparacion.Items.Count == 0); } }
+    private bool reparacionButtonDisabled
+    {
+        get
+        {
+            // 1. Si la lista no existe o está vacía, el botón se deshabilita.
+            if (reparacion.Items == null || reparacion.Items.Count == 0)
+            {
+                return true;
+            }
+
+            // 2. Si ALGÚN ítem (Any) tiene cantidad null o menor/igual a 0, el botón se deshabilita.
+            // Esto busca si existe al menos un "elemento inválido" en la lista.
+            bool hayItemsInvalidos = reparacion.Items.Any(item => item.Cantidad == null || item.Cantidad <= 0);
+
+            return hayItemsInvalidos;
+        }
+    }
 
 
     private float ObtenerTiempo(string nombreitem)
@@ -131,10 +150,10 @@
     {
         get
         {
-            var price = 0.0;
+            decimal price = 0;
             foreach(var item in reparacion.Items)
             {
-                price += item.Cantidad * item.Precio;
+                price += ((int?)item.Cantidad ?? 0) * (decimal)item.Precio;
             }
             return Convert.ToDecimal(price);
         }
