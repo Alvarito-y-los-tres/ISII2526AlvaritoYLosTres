@@ -1,0 +1,144 @@
+﻿@page "/Reparacion/CrearReparacion"
+
+@using AppForSEII2526.Web.API
+@using AppForSEII2526.Web.Components.Shared
+@inject NavigationManager navigation
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<CrearReparacion> logger
+@inject ReparacionStateContainer ReparacionState
+
+<h3>CrearReparacion</h3>
+
+@* rental is the object that will be edited thanks to the form *@
+<EditForm Model="reparacion" OnValidSubmit="OpenDialog">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+    </div>
+    <div class="row g-3">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="reparacion.NombreCliente" class="form-control" id="Name" />
+                <label for="Name">Nombre </label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="reparacion.ApellidoCliente" class="form-control" id="Surname" />
+                <label for="SurName">Apellido </label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputDate @bind-Value="reparacion.FechaEntrega" class="form-control" id="DeliveryAddress" />
+                <label for="DeliveryAddress">Fecha Entrega</label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="reparacion.Telefono" class="form-control" id="tlf" />
+                <label for="tlf">Telefono </label>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col-md">
+                <div class="form-floating">
+                    @*a dropdown for selecting the payment method*@
+                    <InputSelect class="form-select" @bind-Value="@reparacion.MetodoPago" id="PaymentMethod">
+                        <option value="@TiposMetodosPago.Paypal" default> Paypal</option>
+                        <option value="@TiposMetodosPago.Cash"> Cash</option>
+                        <option value="@TiposMetodosPago.TarjetaCredito"> Tarjeta</option>
+                    </InputSelect>
+                    <label for="PaymentMethod">Pago Method</label>
+                </div>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                @*this button will be used to ask the user if he want to proceed to rent the movies*@
+                <button class="btn btn-primary" type="submit" id="Submit">
+                    Crar Reparacion
+                </button>
+            </div>
+        </div>
+    </div>
+
+        <h4>Rental detail</h4>
+        <p><b>Date from:</b> @reparacion.FechaEntrega.ToString("dd/MM/yyyy") <b>to:</b> @reparacion.NombreCliente</p>
+        <p>
+            <b>Total price:</b> @TotalCost €
+            <button class="btn btn-outline-primary" type="submit" @onclick="ModifyRentalItems" id="ModifyMovies">
+                Modify movies
+            </button>
+        </p>
+
+    <div class="mh-100 table-responsive">
+        <table class="table table-condensed table-hover" id="TableOfRentalItems">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in reparacion.Items)
+                {
+                    <tr id="MovieData_@item.NombreHerramienta">
+                        <td>@item.NombreHerramienta</td>
+                        <td>@item.Precio</td>
+                        <td><InputText @bind-Value="item.DescripcionProblema" class="form-control" id="@($"description_{item.NombreHerramienta}")" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+@*a modal popup dialog for checking if user wants to proceed to rent*@
+@if (DialogIsOpen)
+{
+    <Dialog Caption="Items Reparacion"
+            Message="Do you want to proceed to create repareision?"
+            OnClose="@OnDialogClose"
+            Type=Dialog.Category.SaveNot>
+    </Dialog>
+}
+
+@code {
+    private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
+    private bool DialogIsOpen;
+
+    private decimal TotalCost
+    {
+        get
+        {
+            var price = 0.0;
+            foreach(var item in reparacion.Items)
+            {
+                price += item.Cantidad * item.Precio;
+            }
+            return Convert.ToDecimal(price);
+        }
+    }
+    private void ModifyRentalItems()
+    {
+        navigation.NavigateTo("/Reparacion/SelectItemReparacion");
+    }
+
+    private void OpenDialog()
+    {
+        DialogIsOpen = true;
+
+    }
+
+    private async Task OnDialogClose(bool isOk)
+    {
+
+        DialogIsOpen = false;
+        if (isOk)
+        {
+            // Process the data introduced by the user if they are valid
+        }
+    }
+}

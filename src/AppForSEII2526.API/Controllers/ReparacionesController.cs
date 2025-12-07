@@ -167,7 +167,7 @@ namespace AppForSEII2526.API.Controllers
                     Herramienta = herramienta,
                     Descripcion = item.DescripcionProblema,
                     Cantidad = item.Cantidad,
-                    Precio = item.Precio,
+                    Precio = herramienta.Precio,
                     ReparacionId = item.ReparacionId,
                 });
             }
