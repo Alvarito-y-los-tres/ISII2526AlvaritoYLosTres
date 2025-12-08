@@ -7,6 +7,7 @@
 @inject NavigationManager navigation
 
 <h3>SelectHerramientaParaComprar</h3>
+
 <div class="container-fluid">
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
         <p id="ErrorsShow">Errors: @errors</p>     
@@ -23,7 +24,7 @@
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Precio</span>
-                        <input type="text" id="inputPrecio" @bind=precioHerramienta class="form-control" placeholder="Precio" aria-label="Precio" aria-describedby="basic-addon1">
+                        <input type="number" id="inputPrecio" @bind=precioHerramienta class="form-control" placeholder="Precio" aria-label="Precio" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
@@ -94,7 +95,7 @@
     private bool hideErrors { get { return errors.Length == 0; } }
     private string errors = "";
     private string materialHerramienta { get; set; }
-    private double precioHerramienta { get; set; }
+    private double? precioHerramienta { get; set; }
 
     private CrearCompraDTO compraDTO => compraStateContainer.Compra;
     private bool hiddenCart = true;
@@ -117,37 +118,43 @@
 
     public async void BuscarHerramientas()
     {
+
         try
         {
-            if (precioHerramienta == 0)
+            if(precioHerramienta == 0)
             {
                 herramientas = await apiclient.GetHerramientaParaComprarAsync(materialHerramienta, null);
-
             }
             else
             {
-
-
                 herramientas = await apiclient.GetHerramientaParaComprarAsync(materialHerramienta, precioHerramienta);
-                errors = "";
             }
         }
-        catch (ApiException ex)
+        catch(ApiException ex)
         {
             logger.LogError($"{DateTime.Now} Error: {ex}");
             errors = "Error while connecting to the system";
         }
         StateHasChanged();
+
     }
 
+
+            
+
+    
     protected override Task OnInitializedAsync()
     {
         BuscarHerramientas();
         return base.OnInitializedAsync();
-    }
 
-    private void ComprarHerramientas()
-    {
-        navigation.NavigateTo("/compras/createcompra");
     }
+    
+    private void ComprarHerramientas()
+	{
+        navigation.NavigateTo("/compra/createcompra");
+	}
+
+
+
 }
