@@ -1,5 +1,6 @@
 
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace AppForSEII2526.API.DTOs
 {
@@ -8,7 +9,10 @@ namespace AppForSEII2526.API.DTOs
     {
         // nombre precio descripcionProblema cantidad
         public string NombreHerramienta { get; set; }
-        public string DescripcionProblema { get; set; }
+        public string? DescripcionProblema { get; set; }
+
+        [Required(ErrorMessage = "La cantidad es obligatoria")]
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")]
         public int Cantidad { get; set; }
         
         public decimal Precio { get; set; }

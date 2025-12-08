@@ -211,7 +211,7 @@ namespace AppForSEII2526.API.Controllers
                 )).ToList()
             );
 
-            return Ok(reparacionDTOResp);
+            return StatusCode(201, reparacionDTOResp);
         }
         //post
     }

@@ -86,8 +86,14 @@ namespace AppForSEII2526.UT.ReparacionesController_test
             var result = await controller.CrearReparacion(nuevaReparacionDTO);
 
             // Assert
-            var okResult = Assert.IsType<OkObjectResult>(result);
-            var reparacionCreada = Assert.IsType<ReparacionDetalleDTO>(okResult.Value);
+            // 1. Ya no es OkObjectResult, ahora es un ObjectResult genérico (porque usamos StatusCode(...))
+            var objectResult = Assert.IsType<ObjectResult>(result);
+
+            // 2. Verificamos explícitamente que el código sea 201
+            Assert.Equal(201, objectResult.StatusCode);
+
+            // 3. Extraemos el valor para seguir comparando
+            var reparacionCreada = Assert.IsType<ReparacionDetalleDTO>(objectResult.Value);
 
             Assert.Equal(detalleEsperado, reparacionCreada);
         }
