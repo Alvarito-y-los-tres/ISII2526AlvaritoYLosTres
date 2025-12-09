@@ -1,10 +1,13 @@
 ﻿
 
+
 namespace AppForSEII2526.API.DTOs
 {
     public class HerramientasParaComprarDTO
     {
-        
+        [Key]
+        public int Id { get; set; }
+
         public string Nombre { get; set; }
 
         
@@ -13,12 +16,10 @@ namespace AppForSEII2526.API.DTOs
       
         public decimal Precio { get; set; }
         public string Fabricante { get; set; }
-       
-        
-       
 
-        public HerramientasParaComprarDTO(string nombre, string material, decimal precio, string fabricante)
+        public HerramientasParaComprarDTO(int id, string nombre, string material, decimal precio, string fabricante)
         {
+            Id = id;
             Nombre = nombre;
             Material = material;
             Precio = precio;
@@ -28,6 +29,7 @@ namespace AppForSEII2526.API.DTOs
         public override bool Equals(object? obj)
         {
             return obj is HerramientasParaComprarDTO dTO &&
+                  // Id == dTO.Id &&
                    Nombre == dTO.Nombre &&
                    Material == dTO.Material &&
                    Precio == dTO.Precio &&

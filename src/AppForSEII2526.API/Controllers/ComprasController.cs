@@ -38,7 +38,7 @@ namespace AppForSEII2526.API.Controllers
                              .ThenInclude(h => h.Fabricante)
 
                  .Select(c => new CompraDetalleDTO(
-                     //c.Id,
+                     c.Id,
                      c.ApplicationUser.NombreCliente,
                      c.ApplicationUser.ApellidoCliente,
                      c.DireccionEnvio,
@@ -229,7 +229,8 @@ namespace AppForSEII2526.API.Controllers
             }
 
             var compraDTOResp = new CompraDetalleDTO(
-                compraNueva.ApplicationUser.NombreCliente,
+                compraNueva.Id,
+				compraNueva.ApplicationUser.NombreCliente,
                 compraNueva.ApplicationUser.ApellidoCliente,
                 compraNueva.DireccionEnvio,
                 compraNueva.PrecioTotal,

@@ -145,29 +145,30 @@
         DialogIsOpen = true;
     }
 
+
     private async Task OnDialogClose(bool isOk)
     {
         DialogIsOpen = false;
         if (isOk)
         {
-            if(compra.CompraItems.Count > 0)
+            if (compra.CompraItems.Count > 0)
             {
                 try
                 {
                     var comprado = await apiclient.CrearCompraAsync(compra);
                     compraStateContainer.CompraProcessed();
-                    navigation.NavigateTo($"/compra/detallecompra/?CompraID={comprado.NombreCLiente}");
+                    navigation.NavigateTo($"/compra/detallecompra/?CompraID={comprado.Id}");
                 }
-                catch(ApiException<ValidationProblemDetails> apiexceptionvalidation)
+                catch (ApiException<ValidationProblemDetails> apiexceptionvalidation)
                 {
-                    if(apiexceptionvalidation.Result.Errors.Values != null)
+                    if (apiexceptionvalidation.Result.Errors.Values != null)
                     {
                         messageError = "";
                         foreach (var errors in apiexceptionvalidation.Result.Errors.Values)
                             messageError = string.Join("(*) ", messageError, string.Join(" (*) ", errors));
                     }
                 }
-                catch(ApiException ex)
+                catch (ApiException ex)
                 {
 
                     messageError = "Error al procesar la compra";
@@ -176,31 +177,5 @@
 
         }
     }
-    /*
-    protected override async Task  OnInitializedAsync()
-    {
-        if(authenticationStateTask is not  null)
-        {
-            var authState = await authenticationStateTask;
-            var user = authState?.User;
-
-            if(user is not null)
-            {
-                if(user.Identity is not null && user.Identity.IsAuthenticated)
-                {
-                    compra.NombreCliente = user.Identity.Name;
-                }
-
-            }
-            compra.NombreCliente  =compra.NombreCliente == null ? "" : compra.NombreCliente;
-            compra.ApellidoCliente = compra.ApellidoCliente == null ? "" : compra.ApellidoCliente;
-            compra.DireccionEnvio = compra.DireccionEnvio == null ? "" : compra.DireccionEnvio;
-            
-		}
-	}
     
-
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-    */
 }

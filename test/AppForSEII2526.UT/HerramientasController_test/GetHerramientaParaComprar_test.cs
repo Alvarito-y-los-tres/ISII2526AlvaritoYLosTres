@@ -41,9 +41,9 @@ namespace AppForSEII2526.UT.HerramientasController_test
         {
             var herramientaDTOs = new List<HerramientasParaComprarDTO>()
             {
-                new HerramientasParaComprarDTO("Martillo", "Madera", 35, "Ferretería Lopez"),
-                new HerramientasParaComprarDTO("Alicates", "Acero", 12, "Feterrería García"),
-                new HerramientasParaComprarDTO("Tijeras", "Plastico", 3, "Ferretería Ruiz")
+                new HerramientasParaComprarDTO(1,"Martillo", "Madera", 35, "Ferretería Lopez"),
+                new HerramientasParaComprarDTO(2,"Alicates", "Acero", 12, "Feterrería García"),
+                new HerramientasParaComprarDTO(3,"Tijeras", "Plastico", 3, "Ferretería Ruiz")
             };
 
             var herramientaDTOsTC1 = new List<HerramientasParaComprarDTO>() { herramientaDTOs[0], herramientaDTOs[1], herramientaDTOs[2] };
