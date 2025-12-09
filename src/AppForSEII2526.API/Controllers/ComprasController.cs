@@ -17,6 +17,7 @@ namespace AppForSEII2526.API.Controllers
         {
             _context = context;
             _logger = logger;
+
         }
 
 
@@ -29,6 +30,8 @@ namespace AppForSEII2526.API.Controllers
             {
                 _logger.LogError("Error: La tabla no existe.");
                 return NotFound();
+
+
             }
 
             var compra = await _context.Compras
@@ -61,7 +64,8 @@ namespace AppForSEII2526.API.Controllers
                 _logger.LogError($"No se encontró la compra con ID {id}.");
                 return NotFound();
             }
-            return Ok(compra);
+            _logger.LogInformation($"Compra con ID {id} encontrada exitosamente.");
+			return Ok(compra);
 
         }
 

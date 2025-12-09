@@ -16,14 +16,16 @@ namespace AppForSEII2526.API.Controllers
         {
             _context = context;
             _logger = logger;
-        }
+            _logger.LogInformation("HerramientaController initialized.");
+		}
 
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<Herramienta>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllHerramientas()
         {
-            IList<Herramienta> herramientas = await _context.Herramientas.ToListAsync();
+
+			IList<Herramienta> herramientas = await _context.Herramientas.ToListAsync();
               return Ok(herramientas);
         }
 
