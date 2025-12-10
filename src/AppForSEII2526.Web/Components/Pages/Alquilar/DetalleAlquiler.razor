@@ -1,0 +1,142 @@
+﻿@page "/alquilar/detallealquiler"
+
+@using AppForSEII2526.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject AppForSEII2526APIClient apiClient
+@inject ILogger<SelectHerramientaParaAlquilar> logger
+
+<h3>DetalleAlquiler</h3>
+<div class="container-fluid mb-3">
+    <div class="row">
+        <div class="col">
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">ID</span>
+                <input type="number" id="inputId" @bind="alquilerId" class="form-control" placeholder="ID" aria-label="ID" aria-describedby="basic-addon1">
+            </div>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-primary" @onclick="BuscarAlquiler" id="buscarAlquiler">Buscar Alquiler</button>
+        </div>
+    </div>
+</div>
+@if (!string.IsNullOrEmpty(errors))
+{
+    <div class="alert alert-warning" role="alert">
+        @errors
+    </div>
+}
+
+@if (alquiler != null)
+{
+    <div class="container-fluid">
+        <table class="table table-borderless table-sm">
+            <tr>
+                <th>Nombre y Apellidos</th>
+                <td id="NombreApellidos">@alquiler.NombreCliente @alquiler.ApellidoCliente</td>
+            </tr>
+            <tr>
+                <th>Dirección de envío</th>
+                <td id="direccion">@alquiler.DireccionCliente</td>
+            </tr>
+            <tr>
+                <th>Fecha del alquiler</th>
+                <td id="FechaAlquiler">@alquiler.FechaAlquiler.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Fecha de inicio</th>
+                <td id="FechaInicio">@alquiler.FechaInicioAlquiler.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Fecha de fin</th>
+                <td id="FechaFinal">@alquiler.FechaFinAlquiler.ToString("dd/MM/yyyy")</td>
+            </tr>
+            <tr>
+                <th>Precio total</th>
+                <td id="PrecioTotal">@alquiler.PrecioTotal</td>
+            </tr>
+            <tr>
+                <th>ID del Alquiler</th>
+                <td id="alquilerid">@alquiler.Id</td>
+            </tr>
+        </table>
+
+
+        <h4>Herramientas alquiladas</h4>
+
+        <table class="table table-striped table-hover" id="HerramientasAlquiladas">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">Herramienta</th>
+                    <th scope="col">Material</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in alquiler.Items)
+                {
+                    <tr id="AlquilerItem_@item.NombreHerramienta">
+                        <td>@item.NombreHerramienta</td>
+                        <td>@item.MaterialHerrramienta</td>
+                        <td>@item.PrecioHerramienta.ToString("0.00") €</td>
+                        <td>@item.Cantidad</td>
+                    </tr>
+                }
+            </tbody>
+
+            <tfoot class="table-light">
+                <tr>
+                    <th scope="row" colspan="3" class="text-end">Precio total del Alquiler</th>
+                    <td id="TotalPrice">
+                        @alquiler.PrecioTotal.ToString("0.00") €
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+}
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public int alquilerId { get; set; }
+    private AlquilerDetalleDTO alquiler;
+    private bool hideErrors { get { return errors.Length == 0; } }
+    private string errors = "";
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    public async void BuscarAlquiler()
+    {
+        try
+        {
+
+            alquiler = await apiClient.GetAlquilerDetalleAsync(alquilerId);
+            errors = "";
+        }
+        catch (ApiException ex)
+        {
+            alquiler = null;
+            errors = $"Error al cargar el alquiler";
+            StateHasChanged();
+            return;
+        }
+        StateHasChanged();
+    }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (alquilerId > 0)
+        {
+            BuscarAlquiler();
+        }
+        else
+        {
+            errors = "Ingresa un ID de alquiler válido";
+        }
+    }
+
+}
+
