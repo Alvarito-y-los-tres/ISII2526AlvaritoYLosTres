@@ -301,7 +301,7 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<int>("MetodoPago")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParaSocio")
+                    b.Property<int?>("ParaSocio")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

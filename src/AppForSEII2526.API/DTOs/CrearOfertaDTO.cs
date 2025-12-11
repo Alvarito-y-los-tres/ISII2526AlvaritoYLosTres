@@ -7,7 +7,7 @@
         public DateTime FechaOferta { get; set; }
         public List<OfertaItemDTO> Items { get; set; }
         public int MetodoPago { get; set; }
-        public int ParaSocio { get; set; }
+        public int? ParaSocio { get; set; }
         public string NombreUsuario { get; set; }
 
         public CrearOfertaDTO()
