@@ -67,7 +67,7 @@ namespace AppForSEII2526.UT.OfertasController_test
             ILogger<OfertasController> logger = mock.Object;
             var controller = new OfertasController(_context, logger);
 
-            var expectedOferta = new OfertaDetalleDTO(DateTime.Today.AddDays(2), DateTime.Today.AddDays(3),
+            var expectedOferta = new OfertaDetalleDTO(1,DateTime.Today.AddDays(2), DateTime.Today.AddDays(3),
                         DateTime.Today, TiposDirigidaOferta.Clientes, TiposMetodosPago.Paypal,
                         new List<OfertaItemDTO>());
             expectedOferta.Items.Add(new OfertaItemDTO("Martillo", "Madera", "Ferretería López", 5, 4, 20, 1));
