@@ -126,6 +126,12 @@
         StateHasChanged();
     }
 
+    protected override Task OnInitializedAsync()
+    {
+        buscarHerramientas();
+        return base.OnInitializedAsync();
+    }
+
     public void OfertarHerramientas()
     {
         navigation.NavigateTo("/oferta/crearoferta");
