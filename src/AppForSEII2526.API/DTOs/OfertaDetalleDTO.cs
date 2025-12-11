@@ -4,15 +4,17 @@ namespace AppForSEII2526.API.DTOs
 {
     public class OfertaDetalleDTO
     {
+        public int Id { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
         public DateTime FechaOferta { get; set; }
-        public TiposDirigidaOferta ParaSocios { get; set; }
+        public TiposDirigidaOferta? ParaSocios { get; set; }
         public TiposMetodosPago MetodoPago { get; set; }
         public IList<OfertaItemDTO> Items { get; set; }
 
-        public OfertaDetalleDTO(DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, TiposDirigidaOferta paraSocios, TiposMetodosPago metodoPago, IList<OfertaItemDTO> items)
+        public OfertaDetalleDTO(int id, DateTime fechaInicio, DateTime fechaFin, DateTime fechaOferta, TiposDirigidaOferta? paraSocios, TiposMetodosPago metodoPago, IList<OfertaItemDTO> items)
         {
+            Id = id;
             FechaInicio = fechaInicio;
             FechaFin = fechaFin;
             FechaOferta = fechaOferta;

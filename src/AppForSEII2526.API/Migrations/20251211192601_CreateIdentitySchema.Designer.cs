@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII2526.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251203172744_CreateIdentitySchema")]
+    [Migration("20251211192601_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -304,7 +304,7 @@ namespace AppForSEII2526.API.Migrations
                     b.Property<int>("MetodoPago")
                         .HasColumnType("int");
 
-                    b.Property<int>("ParaSocio")
+                    b.Property<int?>("ParaSocio")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
