@@ -8,7 +8,9 @@ namespace AppForSEII2526.Web
     {
         public CrearAlquilerDTO Alquiler { get; private set; } = new CrearAlquilerDTO()
         {
-            AlquilerItems = new List<AlquilerItemDTO>()
+            AlquilerItems = new List<AlquilerItemDTO>(),
+            FechaInicio = DateTime.Now,
+            FechaFin = DateTime.Now.AddDays(1)
         };
 
         public decimal PrecioFinal
@@ -31,7 +33,8 @@ namespace AppForSEII2526.Web
                 {
                     NombreHerramienta = herramienta.Nombre,
                     MaterialHerrramienta = herramienta.Material,
-                    PrecioHerramienta = herramienta.Precio
+                    PrecioHerramienta = herramienta.Precio,
+                    Cantidad = 1
                 });
                 NotifyStateChanged();
             }
@@ -51,7 +54,9 @@ namespace AppForSEII2526.Web
         {
             Alquiler = new API.CrearAlquilerDTO()
             {
-                AlquilerItems = new List<AlquilerItemDTO>()
+                AlquilerItems = new List<AlquilerItemDTO>(),
+                FechaInicio = DateTime.Now.AddDays(1),
+                FechaFin = DateTime.Now.AddDays(2)
             };
         }
     }
