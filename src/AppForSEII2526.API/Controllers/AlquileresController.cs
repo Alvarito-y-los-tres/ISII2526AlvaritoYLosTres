@@ -56,6 +56,8 @@ namespace AppForSEII2526.API.Controllers
             var alquilerDetalleDTO = new AlquilerDetalleDTO(
                 alquiler.ApplicationUser.NombreCliente,
                 alquiler.ApplicationUser.ApellidoCliente,
+                alquiler.ApplicationUser.NumTelefono,
+                alquiler.ApplicationUser.CorreoElectronico,
                 alquiler.DireccionEnvio,
                 alquiler.FechaAlquiler,
                 alquiler.PrecioTotal,
@@ -210,6 +212,8 @@ namespace AppForSEII2526.API.Controllers
             var alquilerDetalleDTO = new AlquilerDetalleDTO(
                 usuario!.NombreCliente,
                 usuario.ApellidoCliente,
+                usuario.NumTelefono,
+                usuario.CorreoElectronico,
                 NuevoAlquiler.DireccionEnvio!,
                 NuevoAlquiler.FechaAlquiler,
                 NuevoAlquiler.AlquilerItems.Sum(ai => ai.Precio),

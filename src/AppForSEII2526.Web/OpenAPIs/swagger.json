@@ -886,6 +886,14 @@
             "type": "string",
             "nullable": true
           },
+          "numTelefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "correoElectronico": {
+            "type": "string",
+            "nullable": true
+          },
           "direccionCliente": {
             "type": "string",
             "nullable": true
@@ -1242,19 +1250,26 @@
         "additionalProperties": false
       },
       "CrearAlquilerDTO": {
+        "required": [
+          "alquilerItems",
+          "apellido",
+          "direccionEnvio",
+          "metodoPago",
+          "nombre"
+        ],
         "type": "object",
         "properties": {
           "nombre": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "apellido": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "direccionEnvio": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "fechaInicio": {
             "type": "string",
@@ -1268,12 +1283,20 @@
             "type": "integer",
             "format": "int32"
           },
+          "numTelefono": {
+            "type": "string",
+            "nullable": true
+          },
+          "correoElectronico": {
+            "type": "string",
+            "nullable": true
+          },
           "alquilerItems": {
+            "minItems": 1,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AlquilerItemDTO"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false

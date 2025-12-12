@@ -63,6 +63,8 @@ namespace AppForSEII2526.UT.AlquileresController_test
             var expectedAlquiler = new AlquilerDetalleDTO(
                 "Daniel",
                 "de la Cruz",
+                "642892748",
+                "daniicruz0005@gmail.com",
                 "Calle Falsa 123",
                 DateTime.Today,
                 47,
