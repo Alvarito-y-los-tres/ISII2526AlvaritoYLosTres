@@ -1,0 +1,213 @@
+﻿@page "/alquilar/createalquiler"
+
+@inject NavigationManager navigation
+@using AppForSEII2526.Web.Components.Shared
+@using Microsoft.AspNetCore.Components.Authorization
+@using AppForSEII2526.Web.API
+@inject AppForSEII2526APIClient apiclient
+@inject ILogger<CreateAlquiler> Logger
+@inject AlquilerStateContainer AlquilerStateContainer
+
+<h3>Crear Alquiler</h3>
+
+<EditForm Model="alquiler" OnValidSubmit="OpenDialog">
+    <div class="row">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        
+        @if (!hideErrors)
+        {
+            <div class="alert alert-danger" role="alert">
+                @messageError.Replace("(*)", " ")
+            </div>
+        }
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="alquiler.Nombre" class="form-control" id="Name" />
+                <label for="Name">Nombre(*)</label>
+                <ValidationMessage For="@(() => alquiler.Nombre)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="alquiler.Apellido" class="form-control" id="Surname" />
+                <label for="Surname">Apellido(*)</label>
+                <ValidationMessage For="@(() => alquiler.Apellido)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="alquiler.NumTelefono" class="form-control" id="Surname" />
+                <label for="Surname">Num Telefono(Opcional)</label>
+                <ValidationMessage For="@(() => alquiler.NumTelefono)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="alquiler.CorreoElectronico" class="form-control" id="Surname" />
+                <label for="Surname">Correo Electronico(Opcional)</label>
+                <ValidationMessage For="@(() => alquiler.CorreoElectronico)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="alquiler.DireccionEnvio" class="form-control" id="DeliveryAddress" />
+                <label for="DeliveryAddress">Direccion de envio(*)</label>
+                <ValidationMessage For="@(() => alquiler.DireccionEnvio)" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-2">
+        <div class="col-md">
+            <div class="form-floating">
+                <InputSelect class="form-select" @bind-Value="@alquiler.MetodoPago" id="TiposMetodoPago">
+                    <option value="@((int)TiposMetodosPago.TarjetaCredito)">Tarjeta de Crédito</option>
+                    <option value="@((int)TiposMetodosPago.Paypal)">PayPal</option>
+                    <option value="@((int)TiposMetodosPago.Cash)">Efectivo</option>
+                </InputSelect>
+                <label for="TiposMetodoPago">Metodo de pago</label>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating">
+                <button class="btn btn-primary" type="submit" id="Submit">
+                    Alquila tus herramientas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <h4>Detalle de su alquiler</h4>
+
+    <div class="row g-2">
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputDate @bind-Value="alquiler.FechaInicio" class="form-control" id="FechaInicio" />
+                <label for="FechaInicio">Fecha Inicio</label>
+                <ValidationMessage For="@(() => alquiler.FechaInicio)" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-floating mb-3">
+                <InputDate @bind-Value="alquiler.FechaFin" class="form-control" id="FechaFin" />
+                <label for="FechaFin">Fecha Fin</label>
+                <ValidationMessage For="@(() => alquiler.FechaFin)" />
+            </div>
+        </div>
+    </div>
+
+    <p>
+        <b>Precio Total</b> @PrecioTotal €
+        <button class="btn btn-outline-primary" type="button" @onclick="ModifyAlquilerItems" id="ModifyAlquilerItems">
+            Modificar Alquiler
+        </button>
+    </p>
+
+    <div class="mh-100 table-responsive">
+        <table class="table table-condensed table-hover" id="TableOfRentalItems">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Material</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in alquiler.AlquilerItems)
+                {
+                    <tr id="MovieData_@item.NombreHerramienta">
+                        <td>@item.NombreHerramienta</td>
+                        <td>@item.MaterialHerrramienta</td>
+                        <td>@item.PrecioHerramienta</td>
+                        <td><InputNumber @bind-Value="item.Cantidad" class="form-control" id="@($"cantidad_{item.NombreHerramienta}")" /></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+@if (DialogIsopen)
+{
+    <Dialog Caption="Alquiler herramientas"
+            Message="¿Esta seguro de que quieres realizar un alquiler de las herramientas seleccionadas?"
+            OnClose="@OnDialogClose"
+            Type=Dialog.Category.SaveNot>
+    </Dialog>
+}
+
+@code {
+    private string messageError = "";
+    private bool hideErrors => string.IsNullOrEmpty(messageError);
+    private bool DialogIsopen;
+    private CrearAlquilerDTO alquiler => AlquilerStateContainer.Alquiler;
+
+    private decimal PrecioTotal
+    {
+        get
+        {
+            int diasAlquiler = (alquiler.FechaFin - alquiler.FechaInicio).Days;
+            if (diasAlquiler <= 0) diasAlquiler = 1;
+            return alquiler.AlquilerItems.Sum(item => (decimal)item.PrecioHerramienta * item.Cantidad * diasAlquiler);
+        }
+    }
+
+    private void ModifyAlquilerItems()
+    {
+        navigation.NavigateTo("/alquilar/selectherramientaparaalquilar");
+    }
+
+    private void OpenDialog()
+    {
+        messageError = "";
+        DialogIsopen = true;
+    }
+
+    private async Task OnDialogClose(bool isOk)
+    {
+        DialogIsopen = false;
+        if (isOk)
+        {
+            if (alquiler.FechaInicio.Date >= DateTime.Now.Date)
+            {
+                if (alquiler.FechaFin.Date >= alquiler.FechaInicio.Date)
+                {
+                    try
+                    {
+                        var alquilado = await apiclient.CrearAlquilerAsync(alquiler);
+                        AlquilerStateContainer.AlquilerPreparado();
+                        navigation.NavigateTo($"/alquilar/detallealquiler/?alquilerId={alquilado.Id}");
+                    }
+                    catch (ApiException<ValidationProblemDetails> ex)
+                    {
+                        if (ex.Result.Errors.Values != null)
+                        {
+                            messageError = "";
+                            foreach (var errorList in ex.Result.Errors.Values)
+                            {
+                                messageError += string.Join(" | ", errorList);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        messageError = "Ha ocurrido un error inesperado al crear el alquiler.";
+                    }
+                }
+                else
+                {
+                    messageError = "La fecha de fin no puede ser anterior a la de inicio.";
+                }
+            }
+            else
+            {
+                messageError = "La fecha de inicio del alquiler no puede ser anterior a la fecha actual.";
+            }
+        }
+    }
+}
