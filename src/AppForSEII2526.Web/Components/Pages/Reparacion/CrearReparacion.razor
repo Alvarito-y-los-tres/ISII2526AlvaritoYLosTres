@@ -238,56 +238,49 @@
             {
                 if (ex.StatusCode == 400)
                 {
-                    try
+                    // TRUCO: NSwag lanza una excepción genérica ApiException<T> que contiene el objeto ya listo.
+                    // Intentamos convertir la excepción 'ex' a 'ApiException<ValidationProblemDetails>'
+                    if (ex is ApiException<ValidationProblemDetails> validationEx && validationEx.Result != null)
                     {
-                        // 1. Intentamos parsear el JSON
-                        using var doc = JsonDocument.Parse(ex.Response);
-                        JsonElement errorsElement;
+                        var errors = validationEx.Result.Errors;
 
-                        // 2. Buscamos la propiedad "errors" ignorando mayúsculas/minúsculas (el servidor puede mandar 'errors' o 'Errors')
-                        if (doc.RootElement.TryGetProperty("errors", out errorsElement) || 
-                            doc.RootElement.TryGetProperty("Errors", out errorsElement))
+                        if (errors != null && errors.Count > 0)
                         {
-                            // 3. Buscamos si hay un error específico de "FechaEntrega"
-                            if (errorsElement.TryGetProperty("FechaEntrega", out var fechaErrors) || 
-                                errorsElement.TryGetProperty("fechaEntrega", out fechaErrors))
+                            // 1. Buscamos errores específicos de la Fecha (probamos mayúscula y minúscula)
+                            if (errors.ContainsKey("FechaEntrega"))
                             {
-                                errorMessage = fechaErrors[0].GetString();
+                                errorMessage = errors["FechaEntrega"].First();
                             }
+                            else if (errors.ContainsKey("fechaEntrega"))
+                            {
+                                errorMessage = errors["fechaEntrega"].First();
+                            }
+                            // 2. Si no es la fecha, miramos si es de Items
+                            else if (errors.ContainsKey("Items"))
+                            {
+                                errorMessage = errors["Items"].First();
+                            }
+                            // 3. Si no, mostramos el primer error que haya en la lista
                             else
                             {
-                                // Si no es la fecha, cogemos el PRIMER error que encontremos en la lista
-                                foreach (var property in errorsElement.EnumerateObject())
-                                {
-                                    // property.Value es un array de strings, cogemos el primero
-                                    errorMessage = property.Value[0].GetString(); 
-                                    break; 
-                                }
+                                errorMessage = errors.First().Value.First();
                             }
                         }
                         else
                         {
-                            // Si es un JSON pero no tiene la propiedad "errors", mostramos el título si existe
-                            if (doc.RootElement.TryGetProperty("title", out var titleElement))
-                            {
-                                errorMessage = titleElement.GetString();
-                            }
-                            else
-                            {
-                                // Si no entendemos el JSON, lanzamos error para que caiga en el catch de abajo y muestre el raw
-                                throw new Exception("Formato JSON no reconocido");
-                            }
+                            // Si el objeto Result existe pero no tiene errores, mostramos el título o detalle
+                            errorMessage = validationEx.Result.Detail ?? validationEx.Result.Title ?? "Error de validación desconocido.";
                         }
                     }
-                    catch
+                    else
                     {
-                        // SOLUCIÓN CLAVE: Si falla el parseo, mostramos la respuesta "cruda" del servidor.
-                        // Así verás el texto del error aunque el JSON no se haya podido leer bien.
-                        errorMessage = $"Error Validación: {ex.Response}";
+                        // Si por alguna razón no pudimos recuperar el objeto detallado
+                        errorMessage = "Error 400: Datos incorrectos (No se pudo leer el detalle).";
                     }
                 }
                 else
                 {
+                    // Errores 500, 404, etc.
                     errorMessage = $"Error del Servidor: {ex.StatusCode}";
                 }
             }
