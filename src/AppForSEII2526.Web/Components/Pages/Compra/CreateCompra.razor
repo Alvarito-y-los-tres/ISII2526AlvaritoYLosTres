@@ -10,6 +10,13 @@
 
 <h3>Create Compra</h3>
 
+@if (!string.IsNullOrEmpty(messageError))
+{
+    <div class="alert alert-danger" role="alert">
+        @messageError
+    </div>
+}
+
 <EditForm Model="compra" OnValidSubmit="OpenDialog">
     <div class="row">
         <DataAnnotationsValidator />
@@ -20,13 +27,13 @@
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="compra.NombreCliente" class="form-control" id="Nombre" />
-                <label for="Nombre">Nombre </label>
+                <label for="Nombre">Nombre(*) </label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="compra.ApellidoCliente" class="form-control" id="Apellido" />
-                <label for="Apellido">Apellido </label>
+                <label for="Apellido">Apellido(*) </label>
             </div>
         </div>
         <div class="col-md">
@@ -38,13 +45,13 @@
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="compra.NumTelefono" class="form-control" id="NumeroTelefono" />
-                <label for="NumeroTelefono">Número de Teléfono</label>
+                <label for="NumeroTelefono">Número de Teléfono(opcional)</label>
             </div>
         </div>
         <div class="col-md">
             <div class="form-floating mb-3">
                 <InputText @bind-Value="compra.CorreoElectronico" class="form-control" id="CorreoElectrónico" />
-                <label for="CorreoElectrónico">Correo Electrónico</label>
+                <label for="CorreoElectrónico">Correo Electrónico(opcional)</label>
             </div>
         </div>
 
@@ -55,11 +62,13 @@
             <div class="form-floating">
                 @*a dropdown for selecting the payment method*@
                 <InputSelect class="form-select" @bind-Value="@compra.MetodoPagoId" id="TiposMetodoPago">
+                    <option value="0">-- Seleccione un método de pago --</option>
                     <option value="@((int)TiposMetodosPago.TarjetaCredito)">Tarjeta de Crédito</option>
                     <option value="@((int)TiposMetodosPago.Paypal)">PayPal</option>
                     <option value="@((int)TiposMetodosPago.Cash)">Efectivo</option>
                 </InputSelect>
                 <label for="TiposMetodoPago">Método de Pago</label>
+
             </div>
         </div>
         </div>

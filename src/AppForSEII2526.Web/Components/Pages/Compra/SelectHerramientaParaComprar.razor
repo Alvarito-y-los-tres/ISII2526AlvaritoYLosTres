@@ -10,7 +10,7 @@
 
 <div class="container-fluid">
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
-        <p id="ErrorsShow">Errors: @errors</p>     
+        <p id="errorMessage">Errors: @errors</p>     
     </div>
     <div class="row">
         <div class="col-8">
@@ -18,17 +18,17 @@
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Material</span>
-                        <input type="text" id="inputMaterial" @bind=materialHerramienta class="form-control" placeholder="Material" aria-label="Material" aria-describedby="basic-addon1">
+                        <input type="text" id="materialInput" @bind=materialHerramienta class="form-control" placeholder="Material" aria-label="Material" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Precio</span>
-                        <input type="number" id="inputPrecio" @bind=precioHerramienta class="form-control" placeholder="Precio" aria-label="Precio" aria-describedby="basic-addon1">
+                        <input type="number" id="precioInput" @bind=precioHerramienta class="form-control" placeholder="Precio" aria-label="Precio" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-primary" @onclick=@BuscarHerramientas id="BuscarHerramientas">Buscar Herramientas</button>
+                    <button type="button" class="btn btn-primary" @onclick=@BuscarHerramientas id="searchHerramientasButton">Buscar Herramientas</button>
                 </div>
             </div>
             <div class="row">
@@ -39,7 +39,7 @@
                 else
                 {
                     <div class="mh-100 table-responsive">
-                        <table class="table table-condensed table-hover" id="Tabla de Herramientas">
+                        <table class="table table-condensed table-hover" id="herramientasTable">
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -59,7 +59,7 @@
                                         <td>@herramienta.Fabricante</td>
                                       
                                         <td>
-                                            <button class="btn btn-outline-secondary" id="HerramientaParaComprar_@herramienta.Nombre" @onclick="@(() => AddHerramienta(herramienta))">Añadir</button>
+                                            <button class="btn btn-outline-secondary" id="herramientaToCompra_@herramienta.Nombre" @onclick="@(() => AddHerramienta(herramienta))">Añadir</button>
                                         </td>
                                     </tr>
                                 }
@@ -76,11 +76,11 @@
             @foreach (CompraItemDTO item in compraDTO.CompraItems)
             {
                 <div class="row">
-                    <button type="button" class="btn btn-light" id="removeHerramienta_@item.NombreHerramienta" @onclick="@(() => RemoveCompraItem(item))"> - @item.NombreHerramienta - @item.PrecioHerramienta€</button>
+                    <button type="button" class="btn btn-light" id="herramientaToRemove_@item.NombreHerramienta" @onclick="@(() => RemoveCompraItem(item))"> - @item.NombreHerramienta - @item.PrecioHerramienta€</button>
                 </div>
             }
             <div class="row">
-                <button type="button" class="btn btn-primary" id="purchaseHerramientaButton" @onclick=@ComprarHerramientas>Comprar herramientas</button>
+                <button type="button" class="btn btn-primary" id="comprarHerramientasButton" @onclick=@ComprarHerramientas>Comprar herramientas</button>
             </div>
         </div>
     </div>
