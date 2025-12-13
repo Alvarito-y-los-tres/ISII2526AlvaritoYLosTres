@@ -29,7 +29,8 @@
 @if (alquiler != null)
 {
     <div class="container-fluid">
-        <table class="table table-borderless table-sm">
+        <table class="table table-borderless table-sm" id="DetalleAlquilerTable">
+            <tbody>
             <tr>
                 <th>Nombre y Apellidos</th>
                 <td id="NombreApellidos">@alquiler.NombreCliente @alquiler.ApellidoCliente</td>
@@ -66,6 +67,7 @@
                 <th>ID del Alquiler</th>
                 <td id="alquilerid">@alquiler.Id</td>
             </tr>
+            </tbody>
         </table>
 
 
@@ -145,6 +147,6 @@
             errors = "Ingresa un ID de alquiler válido";
         }
     }
-
 }
+
 
