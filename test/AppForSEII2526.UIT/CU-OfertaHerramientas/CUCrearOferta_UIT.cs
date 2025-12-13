@@ -1,5 +1,4 @@
-﻿using AppForMovies.UIT.Shared;
-using AppForSEII2526.UIT.Shared;
+﻿using AppForSEII2526.UIT.Shared;
 using System;
 using System.Collections.Generic;
 using Xunit;
