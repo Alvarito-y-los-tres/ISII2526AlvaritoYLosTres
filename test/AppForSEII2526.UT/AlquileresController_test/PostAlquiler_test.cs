@@ -110,7 +110,7 @@ namespace AppForSEII2526.UT.AlquileresController_test
             var controller = new AlquileresController(_context, logger);
             var alquilerItems = new List<AlquilerItemDTO>() { new AlquilerItemDTO("Martillo", "Madera", 35, 2) };
             var alquilerDTO = new CrearAlquilerDTO("Daniel", "de la Cruz", "Calle Tejares", DateTime.Today.AddDays(1), DateTime.Today.AddDays(5), (int)TiposMetodosPago.TarjetaCredito, alquilerItems);
-            var ExpectedAlquiler = new AlquilerDetalleDTO("Daniel", "de la Cruz", "Calle Tejares", DateTime.Now, 70, DateTime.Today.AddDays(1), DateTime.Today.AddDays(5),5, alquilerItems);
+            var ExpectedAlquiler = new AlquilerDetalleDTO("Daniel", "de la Cruz","628195100","daniicruz0005@gmail.com", "Calle Tejares", DateTime.Now, 70, DateTime.Today.AddDays(1), DateTime.Today.AddDays(5),5, alquilerItems);
             // Act
             var result = await controller.CrearAlquiler(alquilerDTO);
             // Assert

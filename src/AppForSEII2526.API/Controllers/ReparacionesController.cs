@@ -86,7 +86,7 @@ namespace AppForSEII2526.API.Controllers
 
 
 
-            if(dto.Telefono != null && !dto.Telefono.StartsWith("+34"))
+            if(!string.IsNullOrEmpty(dto.Telefono) && !dto.Telefono.StartsWith("+34"))
             {
                 ModelState.AddModelError("CrearReparacionDTO", "Error,el telefono debe empezar por +34");
                 return BadRequest(new ValidationProblemDetails(ModelState));

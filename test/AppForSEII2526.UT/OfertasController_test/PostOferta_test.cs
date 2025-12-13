@@ -211,7 +211,7 @@ namespace AppForSEII2526.UT.OfertasController_test
                 NombreUsuario = "Álvaro"
             };
 
-            var expectedOfertaDetalleDTO = new OfertaDetalleDTO(DateTime.Today.AddDays(2), DateTime.Today.AddDays(10), DateTime.Today, TiposDirigidaOferta.Clientes, TiposMetodosPago.TarjetaCredito, ofertaItems);
+            var expectedOfertaDetalleDTO = new OfertaDetalleDTO(1,DateTime.Today.AddDays(2), DateTime.Today.AddDays(10), DateTime.Today, TiposDirigidaOferta.Clientes, TiposMetodosPago.TarjetaCredito, ofertaItems);
 
             // Act
             var result = await controller.CrearOferta(oferta);

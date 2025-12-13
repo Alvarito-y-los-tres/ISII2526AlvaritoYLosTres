@@ -7,6 +7,8 @@ namespace AppForSEII2526.API.DTOs
     {
         public string NombreCliente { get; set; }
         public string ApellidoCliente { get; set; }
+        public string? NumTelefono { get; set; }
+        public string? CorreoElectronico { get; set; }
         public string direccionCliente { get; set; }
         public DateTime fechaAlquiler { get; set; }
         public decimal precioTotal { get; set; }
@@ -15,10 +17,12 @@ namespace AppForSEII2526.API.DTOs
         public IList<AlquilerItemDTO> items { get; set; }
         public int id { get; set; }
 
-        public AlquilerDetalleDTO(string nombreCliente, string apellidoCliente, string direccionCliente, DateTime fechaAlquiler, decimal precioTotal, DateTime fechaInicioALquiler, DateTime fechaFinAlquiler,int id, IList<AlquilerItemDTO> items)
+        public AlquilerDetalleDTO(string nombreCliente, string apellidoCliente, string? numTelefono, string? CorreoElectronico, string direccionCliente, DateTime fechaAlquiler, decimal precioTotal, DateTime fechaInicioALquiler, DateTime fechaFinAlquiler,int id, IList<AlquilerItemDTO> items)
         {
             NombreCliente = nombreCliente;
             ApellidoCliente = apellidoCliente;
+            this.NumTelefono = numTelefono;
+            this.CorreoElectronico = CorreoElectronico;
             this.direccionCliente = direccionCliente;
             this.fechaAlquiler = fechaAlquiler;
             this.precioTotal = precioTotal;

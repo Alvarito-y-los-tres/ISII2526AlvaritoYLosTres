@@ -230,7 +230,7 @@ namespace AppForSEII2526.API.Migrations
                     FechaFin = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaOferta = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MetodoPago = table.Column<int>(type: "int", nullable: false),
-                    ParaSocio = table.Column<int>(type: "int", nullable: false),
+                    ParaSocio = table.Column<int>(type: "int", nullable: true),
                     ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>

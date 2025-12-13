@@ -1,5 +1,6 @@
 ﻿@page "/Reparacion/CrearReparacion"
 
+@using System.Text.Json
 @using AppForSEII2526.Web.API
 @using AppForSEII2526.Web.Components.Shared
 @inject NavigationManager navigation
@@ -8,23 +9,27 @@
 @inject ReparacionStateContainer ReparacionState
 
 <h3>CrearReparacion</h3>
-@* --- BLOQUE NUEVO PARA VER ERRORES --- *@
+
+@* --- BLOQUE CORREGIDO CON ID PARA SELENIUM --- *@
 @if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger" role="alert" id="ErrorsShown">
         @errorMessage
     </div>
 }
 @* ------------------------------------- *@
-@* rental is the object that will be edited thanks to the form *@
+
 <EditForm Model="reparacion" OnValidSubmit="OpenDialog">
     <div class="row">
         <DataAnnotationsValidator />
         <ValidationSummary />
     </div>
+
+    @* He quitado el id="ErrorsShown" de aquí abajo para no tener duplicados, ya que usaremos el de arriba *@
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
-        <p id="ErrorsShown">Errors: @messageError</p>
+        <p>Errors: @messageError</p>
     </div>
+
     <div class="row g-3">
         <div class="col-md">
             <div class="form-floating mb-3">
@@ -48,15 +53,12 @@
             <div class="form-floating mb-3">
                 <InputText @bind-Value="reparacion.Telefono" class="form-control" id="tlf" />
                 <label for="tlf">Telefono (opcional)</label>
-
             </div>
         </div>
         <div class="row g-2">
             <div class="col-md">
                 <div class="form-floating">
-                    @*a dropdown for selecting the payment method*@
                     <InputSelect class="form-select" @bind-Value="@reparacion.MetodoPago" id="PaymentMethod">
-                        @* Opción por defecto con valor -1 (coincide con el constructor del DTO) *@
                         <option value="-1" default>-- Seleccione método --</option>
                         <option value=1> Paypal</option>
                         <option value=2> Cash</option>
@@ -68,22 +70,21 @@
         </div>
         <div class="col-md">
             <div class="form-floating">
-                @*this button will be used to ask the user if he want to proceed to rent the movies*@
                 <button class="btn btn-primary" type="submit" id="Submit" disabled="@reparacionButtonDisabled">
-                    Crar Reparacion
+                    Crear Reparacion
                 </button>
             </div>
         </div>
     </div>
 
-        <h4>Rental detail</h4>
-        <p><b>Date from:</b> @reparacion.FechaEntrega.ToString("dd/MM/yyyy") <b>to:</b> @reparacion.NombreCliente</p>
-        <p>
-            <b>Total price:</b> @TotalCost €
-            <button class="btn btn-outline-primary" type="submit" @onclick="ModifyRentalItems" id="ModifyMovies">
-                Modify movies
-            </button>
-        </p>
+    <h4>Rental detail</h4>
+    <p><b>Date from:</b> @reparacion.FechaEntrega.ToString("dd/MM/yyyy") <b>to:</b> @reparacion.NombreCliente</p>
+    <p>
+        <b>Total price:</b> @TotalCost €
+        <button class="btn btn-outline-primary" type="submit" @onclick="ModifyRentalItems" id="ModifyMovies">
+            Modify movies
+        </button>
+    </p>
 
     <div class="mh-100 table-responsive">
         <table class="table table-condensed table-hover" id="TableOfRentalItems">
@@ -105,7 +106,6 @@
                         <td>@ObtenerTiempo(item.NombreHerramienta) dias</td>
                         <td><InputText @bind-Value="item.DescripcionProblema" class="form-control" id="@($"description_{item.NombreHerramienta}")" /></td>
                         <td><InputNumber @bind-Value="item.Cantidad" class="form-control" placeholder="0" id="@($"cantidad_{item.NombreHerramienta}")" /></td>
-
                     </tr>
                 }
             </tbody>
@@ -113,7 +113,6 @@
     </div>
 </EditForm>
 
-@*a modal popup dialog for checking if user wants to proceed to rent*@
 @if (DialogIsOpen)
 {
     <Dialog Caption="Items Reparacion"
@@ -124,62 +123,51 @@
 }
 
 @code {
-    // 1. Variable para guardar el mensaje de error
     private string errorMessage = "";
     private string messageError = "";
     private bool hideErrors { get { return messageError.Length == 0; } }
+
     private CrearReparacionDTO reparacion => ReparacionState.Reparacion;
     private bool DialogIsOpen;
-    //rentalbutton will be disabled if there are not movies in the renting cart
+
     private bool reparacionButtonDisabled
     {
         get
         {
-            // 1. Si la lista no existe o está vacía, el botón se deshabilita.
             if (reparacion.Items == null || reparacion.Items.Count == 0)
             {
                 return true;
             }
-
-            // 2. Si ALGÚN ítem (Any) tiene cantidad null o menor/igual a 0, el botón se deshabilita.
-            // Esto busca si existe al menos un "elemento inválido" en la lista.
             bool hayItemsInvalidos = reparacion.Items.Any(item => item.Cantidad == null || item.Cantidad <= 0);
-
             return hayItemsInvalidos;
         }
     }
 
-
     private float ObtenerTiempo(string nombreitem)
     {
-        if(ReparacionState.TiemposReparacionAux.TryGetValue(nombreitem,out float tiempo))
+        if (ReparacionState.TiemposReparacionAux.TryGetValue(nombreitem, out float tiempo))
         {
             return tiempo;
         }
         return 404;
     }
 
-
     private decimal TotalCost
     {
         get
         {
             decimal price = 0;
-
-            // 1. PROTECCIÓN CONTRA EL CRASH (NullReferenceException)
-            // Si la lista es nula, no entramos al bucle y devolvemos 0.
             if (reparacion.Items != null)
             {
                 foreach (var item in reparacion.Items)
                 {
-                    // 2. PROTECCIÓN DE TIPOS (Decimal vs Double vs Int?)
                     price += ((int?)item.Cantidad ?? 0) * (decimal)item.Precio;
                 }
             }
-
             return price;
         }
     }
+
     private void ModifyRentalItems()
     {
         navigation.NavigateTo("/Reparacion/SelectItemReparacion");
@@ -188,7 +176,6 @@
     private void OpenDialog()
     {
         DialogIsOpen = true;
-
     }
 
     private async Task OnDialogClose(bool isOk)
@@ -200,48 +187,80 @@
         {
             try
             {
-                // PASO A: Llamar a la API.
-                // Tu API devuelve un objeto 'ReparacionDetalleDTO', NO un int.
                 var resultado = await apiclient.CrearReparacionAsync(reparacion);
 
-                // PASO B: Sacar el ID de la respuesta.
-                // Como el DTO tiene una lista de items, y cada item tiene el 'ReparacionId', lo sacamos del primero.
                 int nuevoId = 0;
-
                 if (resultado.Items != null && resultado.Items.Count > 0)
                 {
-                    // Cogemos el ID de la primera herramienta
                     nuevoId = resultado.Items.First().ReparacionId;
                 }
 
-                // PASO C: Verificar si tenemos ID y navegar
                 if (nuevoId > 0)
                 {
-                    // Reseteamos el formulario para la próxima vez
                     ReparacionState.Reparacion = new CrearReparacionDTO
                     {
                         Items = new List<ReparacionItemDTO>()
                     };
-                    ReparacionState.Reparacion.MetodoPago = -1; // Tu truco del select
+                    ReparacionState.Reparacion.MetodoPago = -1;
 
-                    // ¡Navegamos!
                     navigation.NavigateTo($"/Reparacion/DetalleReparacion?ReparacionID={nuevoId}");
                 }
                 else
                 {
-                    // Si llegamos aquí, la API respondió OK pero no pudimos leer el ID
                     errorMessage = "Error: La reparación se guardó, pero no se pudo recuperar el ID para redirigir.";
                 }
             }
             catch (ApiException ex)
             {
-                // Este error salta si la API devuelve 400 Bad Request (validaciones fallidas)
-                // IMPORTANTE: Aquí verás si falla por el Teléfono +34 o Fechas
-                errorMessage = $"Error del Servidor: {ex.StatusCode} - {ex.Response}";
+                if (ex.StatusCode == 400)
+                {
+                    if (ex is ApiException<ValidationProblemDetails> validationEx && validationEx.Result != null)
+                    {
+                        var errors = validationEx.Result.Errors;
+                        if (errors != null && errors.Count > 0)
+                        {
+                            if (errors.ContainsKey("FechaEntrega"))
+                            {
+                                errorMessage = errors["FechaEntrega"].First();
+                            }
+                            else if (errors.ContainsKey("fechaEntrega"))
+                            {
+                                errorMessage = errors["fechaEntrega"].First();
+                            }
+                            else if (errors.ContainsKey("Items"))
+                            {
+                                errorMessage = errors["Items"].First();
+                            }
+                            else
+                            {
+                                errorMessage = errors.First().Value.First();
+                            }
+                        }
+                        else
+                        {
+                            errorMessage = validationEx.Result.Detail ?? validationEx.Result.Title ?? "Error de validación desconocido.";
+                        }
+                    }
+                    else
+                    {
+                        errorMessage = "Error 400: Datos incorrectos (No se pudo leer el detalle).";
+                    }
+                }
+                else
+                {
+                    // --- CORRECCIÓN AQUÍ: Leemos el mensaje del servidor para errores como 404 ---
+                    if (!string.IsNullOrEmpty(ex.Response))
+                    {
+                        errorMessage = ex.Response;
+                    }
+                    else
+                    {
+                        errorMessage = $"Error del Servidor: {ex.StatusCode}";
+                    }
+                }
             }
             catch (Exception ex)
             {
-                // Cualquier otro error (red, código, etc)
                 errorMessage = $"Error inesperado: {ex.Message}";
                 logger.LogError($"Excepción: {ex}");
             }

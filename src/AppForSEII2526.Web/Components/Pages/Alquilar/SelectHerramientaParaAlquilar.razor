@@ -73,7 +73,7 @@
             @foreach (AlquilerItemDTO item in alquiler.AlquilerItems)
             {
                 <div class="row">
-                    <button type="button" class="btn btn-light" id="eliminarHerramienta_@item.NombreHerramienta" @onclick="@(() => eliminarAlquilerItem(item))">x @item.NombreHerramienta - @item.MaterialHerrramienta€</button>
+                    <button type="button" class="btn btn-light" id="eliminarHerramienta_@item.NombreHerramienta" @onclick="@(() => eliminarAlquilerItem(item))">x @item.NombreHerramienta - @item.PrecioHerramienta€</button>
                 </div>
             }
             <div class="row">
@@ -126,6 +126,6 @@
 
     public void AlquilarHerramientas()
     {
-        navigation.NavigateTo("/oferta/crearoferta");
+        navigation.NavigateTo("/alquilar/createalquiler");
     }
 }

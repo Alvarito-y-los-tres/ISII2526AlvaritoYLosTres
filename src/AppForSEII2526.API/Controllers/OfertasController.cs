@@ -34,6 +34,7 @@ namespace AppForSEII2526.API.Controllers
                 .Include(o => o.OfertaItems)
                 .ThenInclude(oi => oi.Herramienta)
                 .Select(o => new OfertaDetalleDTO(
+                    o.Id,
                     o.FechaInicio,
                     o.FechaFin,
                     o.FechaOferta,
@@ -63,7 +64,7 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpPost]
         [Route("Crear-Oferta")]
-        [ProducesResponseType(typeof(OfertaDetalleDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(OfertaDetalleDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<IActionResult> CrearOferta([FromBody] CrearOfertaDTO crearOfertaDTO)
@@ -119,18 +120,20 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError("MetodoPago", "El método de pago especificado no es válido. ¡Utilice 0, 1 o 2!");
             }
 
-            TiposDirigidaOferta tiposDirigidaOferta = TiposDirigidaOferta.Clientes;
-            if(crearOfertaDTO.ParaSocio == 0)
-            {
-                tiposDirigidaOferta = TiposDirigidaOferta.Socios;
-            }
-            else if(crearOfertaDTO.ParaSocio == 1)
-            {
-                tiposDirigidaOferta = TiposDirigidaOferta.Clientes;
-            }
-            else
-            {
-                ModelState.AddModelError("ParaSocio", "El tipo de oferta especificado no es válido. ¡Utilice el 0 o 1!");
+            TiposDirigidaOferta? tiposDirigidaOferta = null;
+            if (crearOfertaDTO.ParaSocio.HasValue) {
+                if (crearOfertaDTO.ParaSocio.Value == 0)
+                {
+                    tiposDirigidaOferta = TiposDirigidaOferta.Socios;
+                }
+                else if (crearOfertaDTO.ParaSocio.Value == 1)
+                {
+                    tiposDirigidaOferta = TiposDirigidaOferta.Clientes;
+                }
+                else
+                {
+                    ModelState.AddModelError("ParaSocio", "El tipo de oferta especificado no es válido. ¡Utilice el 0 o 1!");
+                }
             }
 
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearOfertaDTO.NombreUsuario);
@@ -198,6 +201,7 @@ namespace AppForSEII2526.API.Controllers
 
 
             var ofertaDetalleDTO = new OfertaDetalleDTO(
+                nuevaOferta.Id,
                 nuevaOferta.FechaInicio,
                 nuevaOferta.FechaFin,
                 nuevaOferta.FechaOferta,
