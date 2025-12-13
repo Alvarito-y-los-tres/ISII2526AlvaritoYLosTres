@@ -45,7 +45,8 @@ namespace AppForSEII2526.UIT.Shared {
         }
 
 
-        public bool CheckBodyTable(List<string[]> expectedRows, By IdTable) {
+        public bool CheckBodyTable(List<string[]> expectedRows, By IdTable)
+        {
             string expectedRow, actualRow;
             int i, j;
             bool result = true;
@@ -58,12 +59,14 @@ namespace AppForSEII2526.UIT.Shared {
                 .FindElements(By.TagName("tr"))//we obtain just the rows of the body of the table
                 .ToList();
 
-            if (actualrows.Count != expectedRows.Count) {
+            if (actualrows.Count != expectedRows.Count)
+            {
                 _output.WriteLine($"Error: \n Expected number of rows:{expectedRows.Count} \n Actual number of rows:{actualrows.Count}");
                 return false;
             }
 
-            for (i = 0; i < expectedRows.Count; i++) {
+            for (i = 0; i < expectedRows.Count; i++)
+            {
                 expectedRow = expectedRows[i][0];
                 for (j = 1; j < expectedRows[i].Count(); j++)
                     expectedRow = expectedRow + " " + expectedRows[i][j];
@@ -71,7 +74,8 @@ namespace AppForSEII2526.UIT.Shared {
                     .Select(m => m.Text) //we return the text of the row
                     .ToList()[i];
 
-                if (!actualRow.StartsWith(expectedRow)) {
+                if (!actualRow.StartsWith(expectedRow))
+                {
                     _output.WriteLine($"Error: \n \t expected row:{expectedRow} \n \t actual row:{actualRow}");
                     result = false;
 
@@ -103,14 +107,38 @@ namespace AppForSEII2526.UIT.Shared {
 
 
 
-        public void WaitForBeingClickable(By IdElement) {
-            //used whenever the webelement needs a delay for being clickable
-            var wait = new WebDriverWait(_driver, new TimeSpan(0, 0, 30));
-            wait.Until(ExpectedConditions.ElementToBeClickable(IdElement));
+        public IWebElement WaitForBeingClickable(By locator)
+        {
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
 
+            // Ignoramos StaleElementReferenceException para que vuelva a intentar
+            wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException));
+
+            return wait.Until(driver =>
+            {
+                try
+                {
+                    var element = driver.FindElement(locator);
+
+                    // Si el elemento no está visible o no está enabled, no lo devolvemos todavía
+                    if (element.Displayed && element.Enabled)
+                    {
+                        return element;
+                    }
+
+                    return null; // hace que WebDriverWait siga esperando
+                }
+                catch (StaleElementReferenceException)
+                {
+                    // El DOM ha cambiado en medio del check, volvemos a intentar en el siguiente ciclo
+                    return null;
+                }
+            });
         }
 
-        public void WaitForBeingVisible(By IdElement) {
+
+        public void WaitForBeingVisible(By IdElement)
+        {
             //used whenever the webelement needs a delay for being clickable
             var wait = new WebDriverWait(_driver, new TimeSpan(0, 0, 30));
             wait.Until(ExpectedConditions.ElementIsVisible(IdElement));
