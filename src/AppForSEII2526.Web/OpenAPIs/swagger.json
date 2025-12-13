@@ -620,8 +620,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "content": {
                             "text/plain": {
                                 "schema": {
@@ -883,6 +883,14 @@
                         "nullable": true
                     },
                     "apellidoCliente": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "numTelefono": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "correoElectronico": {
                         "type": "string",
                         "nullable": true
                     },
@@ -1247,19 +1255,26 @@
                 "additionalProperties": false
             },
             "CrearAlquilerDTO": {
+                "required": [
+                    "alquilerItems",
+                    "apellido",
+                    "direccionEnvio",
+                    "metodoPago",
+                    "nombre"
+                ],
                 "type": "object",
                 "properties": {
                     "nombre": {
-                        "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "apellido": {
-                        "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "direccionEnvio": {
-                        "type": "string",
-                        "nullable": true
+                        "minLength": 1,
+                        "type": "string"
                     },
                     "fechaInicio": {
                         "type": "string",
@@ -1273,12 +1288,20 @@
                         "type": "integer",
                         "format": "int32"
                     },
+                    "numTelefono": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "correoElectronico": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "alquilerItems": {
+                        "minItems": 1,
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/AlquilerItemDTO"
-                        },
-                        "nullable": true
+                        }
                     }
                 },
                 "additionalProperties": false
@@ -1357,7 +1380,8 @@
                     },
                     "paraSocio": {
                         "type": "integer",
-                        "format": "int32"
+                        "format": "int32",
+                        "nullable": true
                     },
                     "nombreUsuario": {
                         "type": "string",
@@ -1573,6 +1597,10 @@
             "HerramientasParaOfertarDTO": {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "nombre": {
                         "type": "string",
                         "nullable": true
@@ -1636,6 +1664,10 @@
             "OfertaDetalleDTO": {
                 "type": "object",
                 "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
                     "fechaInicio": {
                         "type": "string",
                         "format": "date-time"
@@ -1649,7 +1681,8 @@
                         "format": "date-time"
                     },
                     "paraSocios": {
-                        "$ref": "#/components/schemas/TiposDirigidaOferta"
+                        "$ref": "#/components/schemas/TiposDirigidaOferta",
+                        "nullable": true
                     },
                     "metodoPago": {
                         "$ref": "#/components/schemas/TiposMetodosPago"
