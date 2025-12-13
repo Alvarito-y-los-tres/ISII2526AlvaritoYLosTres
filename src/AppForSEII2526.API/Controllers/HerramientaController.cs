@@ -46,6 +46,7 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<HerramientasParaComprarDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetHerramientaParaComprar(string? material, decimal? precio)
         {
+            
             IList<HerramientasParaComprarDTO> selectHerramienta = await _context.Herramientas
                 .Include(h => h.Fabricante)
                 .Include(h => h.CompraItems).ThenInclude(pi => pi.Compra)
@@ -54,6 +55,8 @@ namespace AppForSEII2526.API.Controllers
                 .Select(h => new HerramientasParaComprarDTO(h.Id,h.Nombre, h.Material, h.Precio, h.Fabricante.Nombre))
                 .ToListAsync();
             return Ok(selectHerramienta);
+            
+            
         }
         [HttpGet]
         [Route("Para-Alquilar")]

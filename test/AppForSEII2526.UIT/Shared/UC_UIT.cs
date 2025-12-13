@@ -11,7 +11,8 @@ namespace AppForSEII2526.UIT.Shared {
         //establish which browser you would like to use
         //private string _browser = "Chrome";
         //private string _browser = "Firefox";
-        private string _browser = "Edge";
+        // private string _browser = "Edge";
+        private string _browser = "Chrome";
 
         protected IWebDriver _driver;
         protected readonly ITestOutputHelper _output;
