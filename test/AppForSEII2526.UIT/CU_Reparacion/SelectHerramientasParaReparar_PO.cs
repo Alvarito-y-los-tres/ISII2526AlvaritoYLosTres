@@ -110,5 +110,51 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             // Si falló 5 veces, ejecutamos una última vez para que lance la excepción original
             accion();
         }
+        // Añade estos métodos a tu clase SelectHerramientasParaReparar_PO existente
+
+        public int ContarResultadosEnTabla()
+        {
+            // [cite: 53] La tabla tiene id "TableOfRepairs"
+            try
+            {
+                // Esperamos un momento a que renderice
+                System.Threading.Thread.Sleep(500); 
+                var filas = _driver.FindElements(By.XPath("//table[@id='TableOfRepairs']/tbody/tr"));
+                return filas.Count;
+            }
+            catch (NoSuchElementException)
+            {
+                return 0;
+            }
+        }
+
+        public void BorrarDelCarrito(string nombreHerramienta)
+        {
+            // [cite: 65] El botón de borrar está dentro del foreach del carrito
+            // Buscamos el botón rojo dentro del div del carrito
+            By btnBorrar = By.XPath($"//div[contains(., '{nombreHerramienta}')]//button[contains(text(),'Borrar')]");
+            
+            WaitForBeingClickable(btnBorrar);
+            _driver.FindElement(btnBorrar).Click();
+            
+            // Esperar a que Blazor actualice el DOM
+            System.Threading.Thread.Sleep(500);
+        }
+
+        public bool EsVisibleBotonContinuar()
+        {
+            // El div col-2 tiene hidden="@hiddenCart". 
+            // Si hiddenCart es true, el botón no es visible para el usuario.
+            try 
+            {
+                // Buscamos el botón por su texto o clase
+                var btn = _driver.FindElement(_btnContinuar);
+                return btn.Displayed && btn.Enabled;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
+        }
     }
 }
