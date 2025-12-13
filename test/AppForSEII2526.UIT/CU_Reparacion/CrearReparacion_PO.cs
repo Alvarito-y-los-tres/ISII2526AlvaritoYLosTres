@@ -11,7 +11,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         // IDs extraídos de CrearReparacion.razor
         private By _nombreCliente = By.Id("Name");
         private By _apellidoCliente = By.Id("Surname");
-        private By _fechaEntrega = By.Id("DeliveryAddress"); // Tu razor usaba este ID para la fecha
+        private By _fechaEntrega = By.Id("DeliveryAddress"); 
         private By _telefono = By.Id("tlf");
         private By _metodoPago = By.Id("PaymentMethod");
         private By _btnCrear = By.Id("Submit");
@@ -81,6 +81,45 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             catch (WebDriverTimeoutException)
             {
                 return false;
+            }
+        }
+        
+
+        public bool EstaBotonCrearDeshabilitado()
+        {
+            // El botón tiene disabled="@reparacionButtonDisabled"
+            var btn = _driver.FindElement(_btnCrear);
+            // En HTML, si el atributo disabled está presente, Enabled será false en Selenium
+            return !btn.Enabled; 
+        }
+
+        public bool HayMensajesDeValidacionCampo(string campoId)
+        {
+            // Validaciones de DataAnnotations suelen aparecer cerca del input o en el ValidationSummary
+            // Aquí buscamos si el campo tiene clase 'invalid' o si hay un mensaje asociado
+            try
+            {
+                // Blazor suele poner border red o clase modified invalid
+                var input = _driver.FindElement(By.Id(campoId));
+                return input.GetAttribute("class").Contains("invalid");
+            }
+            catch
+            {
+                return false;
+            }
+        }
+       
+        public void EsperarNavegacionADetalle()
+        {
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            try
+            {
+                wait.Until(d => d.Url.Contains("DetalleReparacion"));
+            }
+            catch (WebDriverTimeoutException)
+            {
+                // Si salta el timeout, el test fallará luego en el Assert, 
+                // pero esto nos da tiempo a que la API responda.
             }
         }
     }

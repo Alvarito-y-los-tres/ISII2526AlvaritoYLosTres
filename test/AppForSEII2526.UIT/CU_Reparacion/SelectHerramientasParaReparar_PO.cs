@@ -14,7 +14,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         private By _btnBuscar = By.Id("searchitems");
 
         // El botón de continuar
-        private By _btnContinuar = By.XPath("//button[contains(text(),'Ir a la modificacion')]");
+        private By _btnContinuar = By.Id("modificacion");
 
         public SelectHerramientasParaReparar_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
@@ -109,6 +109,59 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             }
             // Si falló 5 veces, ejecutamos una última vez para que lance la excepción original
             accion();
+        }
+        // Añade estos métodos a tu clase SelectHerramientasParaReparar_PO existente
+
+        public int ContarResultadosEnTabla()
+        {
+            // [cite: 53] La tabla tiene id "TableOfRepairs"
+            try
+            {
+                // Esperamos un momento a que renderice
+                System.Threading.Thread.Sleep(500); 
+                var filas = _driver.FindElements(By.XPath("//table[@id='TableOfRepairs']/tbody/tr"));
+                return filas.Count;
+            }
+            catch (NoSuchElementException)
+            {
+                return 0;
+            }
+        }
+
+        public void BorrarDelCarrito(string nombreHerramienta)
+        {
+            // [cite: 65] El botón de borrar está dentro del foreach del carrito
+            // Buscamos el botón rojo dentro del div del carrito
+            By btnBorrar = By.XPath($"//div[contains(., '{nombreHerramienta}')]//button[contains(text(),'Borrar')]");
+            
+            WaitForBeingClickable(btnBorrar);
+            _driver.FindElement(btnBorrar).Click();
+            
+            // Esperar a que Blazor actualice el DOM
+            System.Threading.Thread.Sleep(500);
+        }
+
+        public bool EsVisibleBotonContinuar()
+        {
+            // Intentamos verificar la visibilidad con reintentos para evitar StaleElementReference
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    var btn = _driver.FindElement(_btnContinuar);
+                    return btn.Displayed && btn.Enabled;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    // El DOM cambió justo mientras consultábamos. Esperamos y reintentamos.
+                    System.Threading.Thread.Sleep(500);
+                }
+                catch (NoSuchElementException)
+                {
+                    return false;
+                }
+            }
+            return false; // Si tras los intentos sigue fallando, asumimos que no está
         }
     }
 }
