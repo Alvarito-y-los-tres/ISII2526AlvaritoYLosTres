@@ -32,7 +32,7 @@
 @if (oferta != null)
 {
     <div class="container-fluid">
-        <table class="table table-borderless table-sm">
+        <table class="table table-borderless table-sm" id="tablaOferta">
             <tr>
                 <th>Fecha de inicio</th>
                 <td id="FechaInicio">@oferta.FechaInicio.ToString("dd/MM/yyyy")</td>
@@ -47,11 +47,11 @@
             </tr>
             <tr>
                 <th>Dirigido a</th>
-                <td id="MetodoPago">@oferta.ParaSocios</td>
+                <td id="TipoDirigida">@oferta.ParaSocios</td>
             </tr>
             <tr>
                 <th>Método de pago</th>
-                <td id="TipoDirigida">@oferta.MetodoPago</td>
+                <td id="MetodoPago">@oferta.MetodoPago</td>
             </tr>
         </table>
 
