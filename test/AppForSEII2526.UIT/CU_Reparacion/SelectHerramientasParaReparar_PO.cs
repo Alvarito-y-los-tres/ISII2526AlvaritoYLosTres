@@ -1,7 +1,8 @@
 ﻿using OpenQA.Selenium;
 using AppForSEII2526.UIT.Shared;
 using Xunit.Abstractions;
-using System.Collections.Generic;
+using System;
+using System.Threading;
 
 namespace AppForSEII2526.UIT.CU_Reparacion
 {
@@ -9,11 +10,10 @@ namespace AppForSEII2526.UIT.CU_Reparacion
     {
         // IDs extraídos de SelectItemReparacion.razor
         private By _inputNombre = By.Id("inputTitle");
-        private By _inputTiempo = By.Id("inputGenre"); // En tu razor se llamaba inputGenre
+        private By _inputTiempo = By.Id("inputGenre");
         private By _btnBuscar = By.Id("searchitems");
-        private By _tableReparaciones = By.Id("TableOfRepairs");
 
-        // El botón de pagar no tenía ID en tu código, lo buscamos por el texto del botón
+        // El botón de continuar
         private By _btnContinuar = By.XPath("//button[contains(text(),'Ir a la modificacion')]");
 
         public SelectHerramientasParaReparar_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
@@ -22,38 +22,93 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 
         public void BuscarHerramienta(string nombre = "", string tiempo = "")
         {
-            WaitForBeingVisible(_inputNombre);
-            
+            // Envolvemos las interacciones en AccionSegura para evitar StaleElementReferenceException
             if (!string.IsNullOrEmpty(nombre))
             {
-                _driver.FindElement(_inputNombre).Clear();
-                _driver.FindElement(_inputNombre).SendKeys(nombre);
+                AccionSegura(() =>
+                {
+                    WaitForBeingClickable(_inputNombre);
+                    var elem = _driver.FindElement(_inputNombre);
+                    elem.Click();
+                    elem.Clear();
+                    elem.SendKeys(nombre);
+                });
             }
 
             if (!string.IsNullOrEmpty(tiempo))
             {
-                _driver.FindElement(_inputTiempo).Clear();
-                _driver.FindElement(_inputTiempo).SendKeys(tiempo);
+                AccionSegura(() =>
+                {
+                    WaitForBeingClickable(_inputTiempo);
+                    var elem = _driver.FindElement(_inputTiempo);
+                    elem.Click();
+                    elem.Clear();
+                    elem.SendKeys(tiempo);
+                });
             }
 
-            _driver.FindElement(_btnBuscar).Click();
-            // Esperamos un poco a que refresque la tabla
-            System.Threading.Thread.Sleep(500); 
+            AccionSegura(() =>
+            {
+                WaitForBeingClickable(_btnBuscar);
+                _driver.FindElement(_btnBuscar).Click();
+            });
+
+            // Esperamos a que la tabla refresque sus datos tras el clic
+            Thread.Sleep(1000);
         }
 
         public void AgregarHerramienta(string nombreHerramienta)
         {
-            // ID dinámico: btnAdd_Martillo
             By btnAddLocator = By.Id($"btnAdd_{nombreHerramienta}");
-            
-            WaitForBeingClickable(btnAddLocator);
-            _driver.FindElement(btnAddLocator).Click();
+
+            // También protegemos este clic, ya que la tabla se acaba de repintar
+            AccionSegura(() =>
+            {
+                WaitForBeingClickable(btnAddLocator);
+                _driver.FindElement(btnAddLocator).Click();
+            });
         }
 
         public void PulsarContinuar()
         {
-            WaitForBeingClickable(_btnContinuar);
-            _driver.FindElement(_btnContinuar).Click();
+            AccionSegura(() =>
+            {
+                WaitForBeingClickable(_btnContinuar);
+                _driver.FindElement(_btnContinuar).Click();
+            });
+        }
+
+        // --- MÉTODO HELPER PARA REINTENTAR SI BLAZOR REFRESCA LA PÁGINA ---
+        private void AccionSegura(Action accion)
+        {
+            int intentos = 0;
+            while (intentos < 5) // Intentamos hasta 5 veces
+            {
+                try
+                {
+                    accion();
+                    return; // Si funciona, salimos
+                }
+                catch (StaleElementReferenceException)
+                {
+                    // El elemento cambió (Blazor repintó), esperamos y reintentamos
+                    intentos++;
+                    Thread.Sleep(500);
+                }
+                catch (ElementClickInterceptedException)
+                {
+                    // Algo tapó el click, esperamos y reintentamos
+                    intentos++;
+                    Thread.Sleep(500);
+                }
+                catch (WebDriverTimeoutException)
+                {
+                    // Si es timeout, lanzamos el error porque no va a aparecer mágicamente
+                    throw;
+                }
+            }
+            // Si falló 5 veces, ejecutamos una última vez para que lance la excepción original
+            accion();
         }
     }
 }
