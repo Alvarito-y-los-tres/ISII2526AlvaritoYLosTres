@@ -41,6 +41,8 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             _crearPO.PulsarCrear();
             _crearPO.ConfirmarModal();
 
+            _crearPO.EsperarNavegacionADetalle();
+
             // 3. Verificación en Detalle
             Assert.Contains("DetalleReparacion", _driver.Url);
             Assert.Contains(nombreUser, _detallePO.GetNombreCliente());

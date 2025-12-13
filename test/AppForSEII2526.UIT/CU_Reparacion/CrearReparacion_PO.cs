@@ -108,5 +108,19 @@ namespace AppForSEII2526.UIT.CU_Reparacion
                 return false;
             }
         }
+       
+        public void EsperarNavegacionADetalle()
+        {
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            try
+            {
+                wait.Until(d => d.Url.Contains("DetalleReparacion"));
+            }
+            catch (WebDriverTimeoutException)
+            {
+                // Si salta el timeout, el test fallará luego en el Assert, 
+                // pero esto nos da tiempo a que la API responda.
+            }
+        }
     }
 }

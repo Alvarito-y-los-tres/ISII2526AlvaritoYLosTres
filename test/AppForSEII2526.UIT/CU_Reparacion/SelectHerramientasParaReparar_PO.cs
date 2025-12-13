@@ -143,18 +143,25 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 
         public bool EsVisibleBotonContinuar()
         {
-            // El div col-2 tiene hidden="@hiddenCart". 
-            // Si hiddenCart es true, el botón no es visible para el usuario.
-            try 
+            // Intentamos verificar la visibilidad con reintentos para evitar StaleElementReference
+            for (int i = 0; i < 3; i++)
             {
-                // Buscamos el botón por su texto o clase
-                var btn = _driver.FindElement(_btnContinuar);
-                return btn.Displayed && btn.Enabled;
+                try
+                {
+                    var btn = _driver.FindElement(_btnContinuar);
+                    return btn.Displayed && btn.Enabled;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    // El DOM cambió justo mientras consultábamos. Esperamos y reintentamos.
+                    System.Threading.Thread.Sleep(500);
+                }
+                catch (NoSuchElementException)
+                {
+                    return false;
+                }
             }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
+            return false; // Si tras los intentos sigue fallando, asumimos que no está
         }
     }
 }
