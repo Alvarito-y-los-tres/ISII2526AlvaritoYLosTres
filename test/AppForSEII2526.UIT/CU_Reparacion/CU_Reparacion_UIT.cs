@@ -1,7 +1,9 @@
-﻿using AppForSEII2526.UIT.Shared;
+﻿
+using AppForMovies.UIT.Shared;
 using Xunit;
 using Xunit.Abstractions;
 using System;
+
 
 namespace AppForSEII2526.UIT.CU_Reparacion
 {
