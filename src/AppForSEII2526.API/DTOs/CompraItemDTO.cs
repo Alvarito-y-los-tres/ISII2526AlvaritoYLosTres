@@ -11,6 +11,8 @@ namespace AppForSEII2526.API.DTOs
         public decimal PrecioHerramienta { get; set; }
         
         public string? DescripcionHerramienta { get; set; }
+
+        [Required, Range(1, int.MaxValue, ErrorMessage = "La cantidad debe ser un número positivo mayor que 0.")]
         public int Cantidad { get; set; }
 
         public int CompraId { get; set; }

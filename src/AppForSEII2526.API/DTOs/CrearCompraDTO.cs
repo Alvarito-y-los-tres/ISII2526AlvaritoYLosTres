@@ -3,8 +3,11 @@ namespace AppForSEII2526.API.DTOs
 {
     public class CrearCompraDTO
     {
+        [Required(ErrorMessage = "El Nombre es obligatorio.")]
         public string NombreCliente { get; set; }
+        [Required(ErrorMessage = "El Apellido es obligatorio.")]
         public string ApellidoCliente { get; set; }
+        [Required(ErrorMessage = "La DireccionEnvio es obligatoria.")]
         public string DireccionEnvio { get; set; }
         public int MetodoPagoId { get; set; }
         public string? NumTelefono { get; set; }
