@@ -3,7 +3,7 @@ using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Firefox;
 
 
-namespace AppForMovies.UIT.Shared {
+namespace AppForSEII2526.UIT.Shared {
     public class UC_UIT : IDisposable {
 
         private bool _pipeline = false;
@@ -15,12 +15,12 @@ namespace AppForMovies.UIT.Shared {
 
         protected IWebDriver _driver;
         protected readonly ITestOutputHelper _output;
-
+        
 
         public string _URI {
             get {
                 //set url of your web page 
-                return "https://localhost:7083/";
+                return "https://localhost:7081/";
 
             }
         }
