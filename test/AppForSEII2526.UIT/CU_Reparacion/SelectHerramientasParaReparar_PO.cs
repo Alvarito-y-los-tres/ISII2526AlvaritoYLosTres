@@ -14,7 +14,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         private By _btnBuscar = By.Id("searchitems");
 
         // El botón de continuar
-        private By _btnContinuar = By.XPath("//button[contains(text(),'Ir a la modificacion')]");
+        private By _btnContinuar = By.Id("modificacion");
 
         public SelectHerramientasParaReparar_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
