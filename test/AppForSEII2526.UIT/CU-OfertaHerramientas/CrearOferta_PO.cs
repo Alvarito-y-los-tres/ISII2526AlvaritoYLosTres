@@ -22,7 +22,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
         {
         }
 
-        public void RellenarDatos(DateTime fechaInicio, DateTime fechaFin, int metodoPago, string nombreUsuario, int paraSocio)
+        public void RellenarDatos(DateTime fechaInicio, DateTime fechaFin, int metodoPago, string nombreUsuario, int? paraSocio)
         {
             WaitForBeingVisible(_fechaInicio);
             InputDateInDatePicker(_fechaInicio, fechaInicio);
@@ -33,7 +33,15 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             _driver.FindElement(_nombreUsuario).Clear();
             _driver.FindElement(_nombreUsuario).SendKeys(nombreUsuario);
 
-            new SelectElement(_driver.FindElement(_paraSocio)).SelectByValue(paraSocio.ToString());
+            new SelectElement(_driver.FindElement(By.Id("DirigidaA")));
+            if (paraSocio.HasValue)
+            {
+                new SelectElement(_driver.FindElement(_paraSocio)).SelectByValue(paraSocio.Value.ToString());
+            }
+            else
+            {
+                new SelectElement(_driver.FindElement(_paraSocio)).SelectByValue("");
+            }
         }
 
         public void EstablecerPorcentaje(string nombreHerramienta, int porcentaje)
@@ -69,6 +77,11 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
         public void ConfirmarModal()
         {
             PressOkModalDialog();
+        }
+        public bool EstaActivoBotonCrear()
+        {
+            WaitForBeingVisible(_botonCrearOferta);
+            return _driver.FindElement(_botonCrearOferta).Enabled;
         }
 
         public bool CheckErroresMensaje(string message)

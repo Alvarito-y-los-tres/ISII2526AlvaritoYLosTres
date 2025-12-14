@@ -10,6 +10,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
     internal class SelectHerramientasParaOfertar_PO : PageObject
     {
         private By inputFabricante = By.Id("inputFabricante");
+        private By inputPrecio = By.Id("inputPrecio");
         private By botonBuscar = By.Id("buscarHerraminetas");
         private By tablaHerramientas = By.Id("Tabla de herramientas");
         private By botonContinuar = By.Id("ofertarHerramientasBoton");
@@ -18,14 +19,20 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
         {
         }
 
-        public void BuscarHerramientas(string fabricante)
+        public void BuscarHerramientas(string? fabricante, double? precio)
         {
-            WaitForBeingVisible(inputFabricante);
-
-            var elementoInput = _driver.FindElement(inputFabricante);
-
-            elementoInput.Clear();
-            elementoInput.SendKeys(fabricante);
+            WaitForBeingClickable(inputFabricante);
+            if (fabricante != null)
+            {
+                var fabricanteInputElement = _driver.FindElement(inputFabricante);
+                fabricanteInputElement.SendKeys(fabricante);
+            }
+            if (precio != null)
+            {
+                var precioInputElement = _driver.FindElement(inputPrecio);
+                precioInputElement.Clear();
+                precioInputElement.SendKeys(precio.ToString());
+            }
             _driver.FindElement(botonBuscar).Click();
         }
 
