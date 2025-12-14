@@ -83,14 +83,29 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
 
 
             var select = new SelectElement(_driver.FindElement(_metodoPago));
-            try
+
+            if (!string.IsNullOrWhiteSpace(metodoPagoId))
             {
-                select.SelectByValue(metodoPagoId); // por si viene "2"
+                try { select.SelectByValue(metodoPagoId); }
+                catch (NoSuchElementException) { select.SelectByText(metodoPagoId); }
             }
-            catch (NoSuchElementException)
+            else
             {
-                select.SelectByText(metodoPagoId);  // por si viene "PayPal"
+                // Intenta seleccionar la opción vacía (value="") si existe
+                var emptyOpt = select.Options.FirstOrDefault(o => (o.GetAttribute("value") ?? "") == "");
+                if (emptyOpt != null)
+                {
+                    select.SelectByValue("");
+                    _output.WriteLine("Seleccionada opción vacía (value=\"\").");
+                }
+                else
+                {
+                    // Si no existe, fuerza el placeholder (normalmente índice 0)
+                    select.SelectByIndex(0);
+                    _output.WriteLine($"Seleccionado índice 0: '{select.SelectedOption.Text}' value='{select.SelectedOption.GetAttribute("value")}'");
+                }
             }
+
 
 
         }
