@@ -9,6 +9,8 @@ namespace AppForSEII2526.API.DTOs
         public string ApellidoCliente { get; set; }
         [Required(ErrorMessage = "La DireccionEnvio es obligatoria.")]
         public string DireccionEnvio { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "El método de pago es obligatorio.")]
         public int MetodoPagoId { get; set; }
         public string? NumTelefono { get; set; }
         public string? CorreoElectronico { get; set; }
