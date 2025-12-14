@@ -20,20 +20,20 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
         private const string herramienta1Nombre = "Martillo";
         private const string herramienta1Material = "Madera";
         private const string herramienta1Precio = "5";
-        private const string herramienta1Fabricante = "Ferretería López";
+        private const string herramienta1Fabricante = "Ferreteria Lopez";
 
 
         private const string herramienta2Id = "2";
         private const string herramienta2Nombre = "Taladro";
         private const string herramienta2Material = "Acero";
         private const string herramienta2Precio = "30";
-        private const string herramienta2Fabricante = "Ferretería García";
+        private const string herramienta2Fabricante = "Ferreteria Garcia";
 
         private const string herramienta3Id = "3";
         private const string herramienta3Nombre = "Alicates";
         private const string herramienta3Material = "Hierro";
         private const string herramienta3Precio = "4";
-        private const string herramienta3Fabricante = "Ferretería Ruiz";
+        private const string herramienta3Fabricante = "Ferreteria Ruiz";
 
         public CU_ComprarHerramientas_UIT(ITestOutputHelper output) : base(output)
         {
@@ -56,15 +56,18 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
             _driver.FindElement(id).Click();
         }
 
+
+        //Flujo alternativo 1 al paso 2
         [Theory]
-        [InlineData(herramienta2Id, herramienta2Nombre, herramienta2Material, herramienta2Precio, herramienta2Fabricante, "Acero", "")]
+        [InlineData(herramienta2Id, herramienta2Nombre, herramienta2Material, herramienta2Precio, herramienta2Fabricante, "Acero", "")] 
         [InlineData(herramienta3Id, herramienta3Nombre, herramienta3Material, herramienta3Precio, herramienta3Fabricante, "", "4")]
+        [InlineData(herramienta3Id, herramienta3Nombre, herramienta3Material, herramienta3Precio, herramienta3Fabricante, "Hierro", "4")]
         [Trait("LevelTesting", "Funcional Testing")]
         public void UC1_2_3_AFO_filteringPorMaterialPrecio(string herramientaId, string herramientaNombre, string herramientaMaterial, string herramientaPrecio, string herramientaFabricante, string filtroMaterial, string filtroPrecio)
         {
             //Arrange
             InitialStepsForCompraHerramientas();
-            var expectedHerramientas = new List<string[]> { new string[] { herramientaNombre, herramientaMaterial, herramientaPrecio, herramientaFabricante }, };
+            var expectedHerramientas = new List<string[]> { new string[] { herramientaNombre, herramientaMaterial, herramientaPrecio, herramientaFabricante, "Añadir" }, };
 
 
 
@@ -77,6 +80,9 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
             Assert.True(selectHerramientasParaComprar_PO.CheckListOfHerramientasInCart(expectedHerramientas));
         }
 
+
+
+        //Flujo Alternativo 2 al paso 5
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
         public void CU1_5_FA2_ModificarCarritoCompra()
@@ -134,6 +140,7 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
 
 
         }
+
         //Flujo Básico
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
@@ -174,11 +181,12 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
 
         //Flujo Alternativo 4 al paso 6
         [Theory]
-        [InlineData("", "López", "Calle Feria", "Nombre")]
-        [InlineData("Ana", "", "Calle Feria", "Apellido")]
-        [InlineData("Ana", "López", "", "Direccion")]
+        [InlineData("", "López", "Calle Feria","PayPal", "Nombre")]
+        [InlineData("Ana", "", "Calle Feria", "PayPal", "Apellido")]
+        [InlineData("Ana", "López", "", "PayPal", "Direccion")]
+        [InlineData("Ana", "López", "Calle Feria", "", "MetodoPagoId")]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU1_6_FA5_camposNoValidos(string nombre, string apellido, string direccion, string error)
+        public void CU1_6_FA5_camposNoValidos(string nombre, string apellido, string direccion, string metodoPago,string error)
         {
 
             //Arrange
@@ -191,7 +199,7 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
             Thread.Sleep(500);
             selectHerramientasParaComprar_PO.ComprarHerramientas();
             Thread.Sleep(500);
-            crearCompra_PO.RellenarFormulario(nombre, apellido, correo: "ana.lopez@gmail.com", direccion, "PayPal", "Nueva");
+            crearCompra_PO.RellenarFormulario(nombre, apellido, correo: "ana.lopez@gmail.com", direccion, metodoPago, "Nueva");
             Thread.Sleep(500);
             crearCompra_PO.SubmitCompra();
             Thread.Sleep(500);
