@@ -125,9 +125,32 @@ namespace AppForSEII2526.UIT.CU_Alquiler
                 Assert.True(!botonHabilitado, "Correcto: El botón continuar no es accesible con la lista vacía.");
             }
         }
-        
+
+        // UC4_3: Comprobación de filtros individuales y combinados
+       
+        [Theory]
+        [Trait("LevelTesting", "Funcional Testing")]
+        [InlineData("Taladro", "", "Taladro")]
+        [InlineData("", "Acero", "Acero")]
+        [InlineData("Taladro", "Acero", "Taladro")]
+        public void UC4_3Filtrado_Progresivo(string nombre, string material, string textoEsperado)
+        {
+            // Act
+            InitialStepsForCrearAlquiler_UIT();
+            _selectPO.Buscarherramientas(nombre, material);
+            System.Threading.Thread.Sleep(1000);
+
+            // Assert
+            bool hayResultados = _selectPO.HayResultadosEnTabla();
+
+            bool textoEncontrado = _selectPO.VerificarTextoEnTabla(textoEsperado);
+
+            Assert.True(hayResultados, $"Fallo: No se encontraron resultados al filtrar por Nombre: '{nombre}' y Material: '{material}'.");
+            Assert.True(textoEncontrado, $"Fallo: Se esperaba encontrar '{textoEsperado}' pero no aparece en la tabla filtrada.");
+        }
+
         // UC4_3, UC4_4: Errores de Fechas (Esc-3) - Flujo Alternativo 6
-        
+
         public static IEnumerable<object[]> TestCasesFor_FechasInvalidas_Alquiler()
         {
             var allTests = new List<object[]>
@@ -157,6 +180,7 @@ namespace AppForSEII2526.UIT.CU_Alquiler
             // Act
             InitialStepsForCrearAlquiler_UIT();
             _selectPO.Buscarherramientas(herramientaNombre, "");
+            System.Threading.Thread.Sleep(1000);
             _selectPO.AddHerramientaToAlquilerCart(herramientaNombre);
             _selectPO.PressAlquilar();
 
@@ -307,6 +331,8 @@ namespace AppForSEII2526.UIT.CU_Alquiler
             Assert.True(_selectPO.CheckCartVisibility(false),
                 "Error: El carrito (botón alquilar) sigue visible tras borrar la única herramienta.");
         }
+
+        
 
 
 

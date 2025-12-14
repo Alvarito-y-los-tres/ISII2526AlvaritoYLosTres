@@ -81,6 +81,19 @@ namespace AppForSEII2526.UIT.CU_AlquilarHerramienta
 
             System.Threading.Thread.Sleep(500);
         }
-        
+        // --- MÉTODOS A AÑADIR ---
+
+        public bool HayResultadosEnTabla()
+        {
+            var filas = _driver.FindElements(By.CssSelector("table tbody tr"));
+            return filas.Count > 0;
+        }
+
+        public bool VerificarTextoEnTabla(string texto)
+        {
+            
+            return _driver.PageSource.Contains(texto);
+        }
+
     }
 }
