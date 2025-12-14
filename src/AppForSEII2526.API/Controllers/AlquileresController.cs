@@ -179,6 +179,9 @@ namespace AppForSEII2526.API.Controllers
                 AlquilerItems = new List<AlquilerItem>()
             };
 
+            int diasAlquiler = (int)(crearAlquilerDTO.FechaFin - crearAlquilerDTO.FechaInicio).TotalDays;
+            if (diasAlquiler <= 0) diasAlquiler = 1;
+
             foreach (var itemDTO in crearAlquilerDTO.AlquilerItems!)
             {
                 var herramienta = herramientas.FirstOrDefault(h => h.Nombre == itemDTO.NombreHerramienta);
@@ -196,7 +199,7 @@ namespace AppForSEII2526.API.Controllers
                 {
                     Herramienta = herramienta,
                     Cantidad = itemDTO.Cantidad,
-                    Precio = herramienta.Precio * itemDTO.Cantidad,
+                    Precio = herramienta.Precio * itemDTO.Cantidad * diasAlquiler,
 
                 };
                 NuevoAlquiler.AlquilerItems.Add(alquilerItem);

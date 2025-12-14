@@ -6,19 +6,6 @@
 @inject ILogger<SelectHerramientaParaAlquilar> logger
 
 <h3>DetalleAlquiler</h3>
-<div class="container-fluid mb-3">
-    <div class="row">
-        <div class="col">
-            <div class="input-group">
-                <span class="input-group-text" id="basic-addon1">ID</span>
-                <input type="number" id="inputId" @bind="alquilerId" class="form-control" placeholder="ID" aria-label="ID" aria-describedby="basic-addon1">
-            </div>
-        </div>
-        <div class="col">
-            <button type="button" class="btn btn-primary" @onclick="BuscarAlquiler" id="buscarAlquiler">Buscar Alquiler</button>
-        </div>
-    </div>
-</div>
 @if (!string.IsNullOrEmpty(errors))
 {
     <div class="alert alert-warning" role="alert">
