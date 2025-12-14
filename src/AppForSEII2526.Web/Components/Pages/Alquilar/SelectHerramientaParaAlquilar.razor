@@ -128,4 +128,9 @@
     {
         navigation.NavigateTo("/alquilar/createalquiler");
     }
+    protected override Task OnInitializedAsync()
+    {
+        buscarHerramientas();
+        return base.OnInitializedAsync();
+    }
 }
