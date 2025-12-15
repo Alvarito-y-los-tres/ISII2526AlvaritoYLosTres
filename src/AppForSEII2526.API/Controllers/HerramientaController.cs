@@ -16,14 +16,16 @@ namespace AppForSEII2526.API.Controllers
         {
             _context = context;
             _logger = logger;
-        }
+            _logger.LogInformation("HerramientaController initialized.");
+		}
 
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<Herramienta>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllHerramientas()
         {
-            IList<Herramienta> herramientas = await _context.Herramientas.ToListAsync();
+
+			IList<Herramienta> herramientas = await _context.Herramientas.ToListAsync();
               return Ok(herramientas);
         }
 
@@ -61,11 +63,21 @@ namespace AppForSEII2526.API.Controllers
         [HttpGet]
         [Route("Para-Alquilar")]
         [ProducesResponseType(typeof(IList<HerramientaAlquilarDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.InternalServerError)] 
         public async Task<IActionResult> GetHerramientasParaAlquilar(string? nombre, string? material)
         {
+      
+            _logger.LogInformation("Iniciando búsqueda de herramientas para alquilar. Filtros -> Nombre: {Nombre}, Material: {Material}",
+                nombre ?? "Todos", material ?? "Todos");
+
+            if (_context.Herramientas == null)
+            {
+                _logger.LogCritical("CRITICAL: La tabla 'Herramientas' no existe o es nula en el contexto de base de datos.");
+                return StatusCode(500, "Error interno al acceder a la base de datos.");
+            }
+
             var herramientasAlquilar = await _context.Herramientas
                 .Include(h => h.Fabricante)
-                // 👇 LÍNEA CORREGIDA 👇
                 .Where(h => (nombre == null || h.Nombre == nombre) && (material == null || h.Material == material))
                 .Select(h => new HerramientaAlquilarDTO(
                     h.Nombre,
@@ -73,6 +85,17 @@ namespace AppForSEII2526.API.Controllers
                     h.Fabricante.Nombre,
                     h.Precio))
                 .ToListAsync();
+
+            if (herramientasAlquilar.Count == 0)
+            {
+                
+                _logger.LogWarning("La búsqueda se completó sin resultados para Nombre: {Nombre} y Material: {Material}", nombre, material);
+            }
+            else
+            {
+                _logger.LogInformation("Búsqueda finalizada con éxito. Se devolvieron {Count} herramientas.", herramientasAlquilar.Count);
+            }
+
             return Ok(herramientasAlquilar);
         }
         [HttpGet]

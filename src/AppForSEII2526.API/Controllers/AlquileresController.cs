@@ -17,6 +17,7 @@ namespace AppForSEII2526.API.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AlquileresController> _logger;
+
         public AlquileresController(ApplicationDbContext context, ILogger<AlquileresController> logger)
         {
             _context = context;
@@ -25,34 +26,35 @@ namespace AppForSEII2526.API.Controllers
 
         [HttpGet]
         [Route("Alquiler-Detalle")]
-        // FIX 1: El tipo de respuesta es UN solo DTO, no una lista.
+        
         [ProducesResponseType(typeof(AlquilerDetalleDTO), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)] // Añadido para documentar el 404
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> GetAlquilerDetalle(int id)
         {
+            
+            _logger.LogInformation("Iniciando búsqueda del detalle de alquiler con ID: {Id}", id);
+
             if (_context.Alquileres == null)
             {
-                _logger.LogError("Error: La tabla no existe.");
+                _logger.LogCritical("CRITICAL: La tabla 'Alquileres' no existe en el contexto de la base de datos.");
                 return NotFound();
             }
 
-            
             var alquiler = await _context.Alquileres
-                .Where(o => o.Id == id) // <-- Filtra por ID aquí
+                .Where(o => o.Id == id) 
                 .Include(o => o.ApplicationUser)
                 .Include(o => o.AlquilerItems)
                     .ThenInclude(oi => oi.Herramienta)
                     .ThenInclude(h => h.Fabricante)
-                .FirstOrDefaultAsync(); 
+                .FirstOrDefaultAsync();
 
-            // FIX 3: Esta es la comprobación de 'null' que SÍ funciona.
             if (alquiler == null)
             {
+             
                 _logger.LogWarning("No se encontró alquiler con ID: {Id}", id);
-                return NotFound(); // <-- Esto hará que tu test pase
+                return NotFound(); 
             }
 
-            // FIX 4: Mapear a DTO *después* de confirmar que existe.
             var alquilerDetalleDTO = new AlquilerDetalleDTO(
                 alquiler.ApplicationUser.NombreCliente,
                 alquiler.ApplicationUser.ApellidoCliente,
@@ -72,6 +74,8 @@ namespace AppForSEII2526.API.Controllers
                     )).ToList()
             );
 
+         
+            _logger.LogInformation("Detalle de alquiler ID: {Id} recuperado exitosamente.", id);
             return Ok(alquilerDetalleDTO);
         }
 
@@ -82,21 +86,23 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<IActionResult> CrearAlquiler([FromBody] CrearAlquilerDTO crearAlquilerDTO)
         {
+            
+            _logger.LogInformation("Recibida solicitud para crear un nuevo alquiler.");
 
             if (_context.Alquileres == null || _context.Herramientas == null)
             {
-                _logger.LogError("Error: La tabla no existe.");
+               
+                _logger.LogCritical("CRITICAL: Tablas de base de datos no disponibles (Alquileres o Herramientas).");
                 return StatusCode(500, "Error al configurar la base de datos.");
             }
 
-
             if (crearAlquilerDTO == null)
             {
+               
+                _logger.LogWarning("Intento de crear alquiler con cuerpo nulo.");
                 ModelState.AddModelError("CrearAlquilerDTO", "El objeto no puede ser nulo.");
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
-
-
 
             if (crearAlquilerDTO.AlquilerItems == null || crearAlquilerDTO.AlquilerItems.Count == 0)
             {
@@ -114,7 +120,8 @@ namespace AppForSEII2526.API.Controllers
             {
                 ModelState.AddModelError(nameof(crearAlquilerDTO.DireccionEnvio), "La dirección de envío es obligatoria.");
             }
-            if (!crearAlquilerDTO.DireccionEnvio.Contains("Calle")){
+            if (!string.IsNullOrWhiteSpace(crearAlquilerDTO.DireccionEnvio) && !crearAlquilerDTO.DireccionEnvio.Contains("Calle"))
+            {
                 ModelState.AddModelError(nameof(crearAlquilerDTO.DireccionEnvio), "La direccion de envio tiene que contener la palabra Calle.");
             }
             if (crearAlquilerDTO.FechaInicio <= DateTime.Now)
@@ -126,19 +133,18 @@ namespace AppForSEII2526.API.Controllers
                 ModelState.AddModelError(nameof(crearAlquilerDTO.FechaFin), "La fecha de fin debe ser posterior a la fecha de inicio.");
             }
 
-
             if (ModelState.ErrorCount > 0)
             {
+               
+                _logger.LogWarning("Validación fallida al crear alquiler. Errores: {Count}", ModelState.ErrorCount);
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
-
 
             var nombreHerramienta = crearAlquilerDTO.AlquilerItems!.Select(h => h.NombreHerramienta).Distinct().ToList();
             var herramientas = await _context.Herramientas
                 .Include(f => f.Fabricante)
                 .Where(h => nombreHerramienta.Contains(h.Nombre))
                 .ToListAsync();
-
 
             TiposMetodosPago metodoPago = TiposMetodosPago.TarjetaCredito;
             if (crearAlquilerDTO.MetodoPago == 0)
@@ -161,8 +167,11 @@ namespace AppForSEII2526.API.Controllers
             var usuario = await _context.Users.FirstOrDefaultAsync(u => u.NombreCliente == crearAlquilerDTO.Nombre && u.ApellidoCliente == crearAlquilerDTO.Apellido);
             if (usuario == null)
             {
+    
+                _logger.LogWarning("Usuario no encontrado: {Nombre} {Apellido}", crearAlquilerDTO.Nombre, crearAlquilerDTO.Apellido);
                 ModelState.AddModelError(nameof(crearAlquilerDTO.Nombre), "El usuario no existe");
             }
+
             if (ModelState.ErrorCount > 0)
             {
                 return BadRequest(new ValidationProblemDetails(ModelState));
@@ -187,12 +196,15 @@ namespace AppForSEII2526.API.Controllers
                 var herramienta = herramientas.FirstOrDefault(h => h.Nombre == itemDTO.NombreHerramienta);
                 if (herramienta == null)
                 {
-                    ModelState.AddModelError("Herramienta","La herramienta no existe.");
+                  
+                    _logger.LogWarning("Herramienta solicitada no encontrada: {Herramienta}", itemDTO.NombreHerramienta);
+                    ModelState.AddModelError("Herramienta", "La herramienta no existe.");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
                 if (itemDTO.Cantidad <= 0)
                 {
-                    // Esto devolverá el string exacto que tu test espera
+                    _logger.LogWarning("Cantidad inválida ({Cantidad}) para herramienta: {Herramienta}", itemDTO.Cantidad, itemDTO.NombreHerramienta);
+                    
                     return BadRequest("Error: La cantidad de una herramienta en el alquiler debe ser mayor a 0.");
                 }
                 var alquilerItem = new AlquilerItem
@@ -204,7 +216,6 @@ namespace AppForSEII2526.API.Controllers
                 };
                 NuevoAlquiler.AlquilerItems.Add(alquilerItem);
             }
-
 
             NuevoAlquiler.PrecioTotal = NuevoAlquiler.AlquilerItems.Sum(ai => ai.Precio);
             NuevoAlquiler.Periodo = (int)(NuevoAlquiler.FechaFin - NuevoAlquiler.FechaInicio).TotalDays;
@@ -229,11 +240,12 @@ namespace AppForSEII2526.API.Controllers
                     oi.Herramienta.Precio,
                     oi.Cantidad
                     )).ToList()
-                
-
             );
 
-            // FIX 5: Añadir el 'id' del nuevo alquiler a la respuesta 'CreatedAtAction'.
+       
+            _logger.LogInformation("Alquiler creado exitosamente con ID: {Id} para usuario: {Usuario}", NuevoAlquiler.Id, usuario.Id);
+
+     
             return CreatedAtAction(nameof(GetAlquilerDetalle), new { id = NuevoAlquiler.Id }, alquilerDetalleDTO);
         }
     }
