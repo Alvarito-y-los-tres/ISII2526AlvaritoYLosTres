@@ -15,7 +15,7 @@ namespace LogViewer
 
         public void EmpezarRecibir(string subTopic)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "10.22.116.7" };
 
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
