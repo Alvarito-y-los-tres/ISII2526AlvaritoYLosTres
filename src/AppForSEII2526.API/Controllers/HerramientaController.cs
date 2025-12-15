@@ -48,15 +48,52 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<HerramientasParaComprarDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetHerramientaParaComprar(string? material, decimal? precio)
         {
-            IList<HerramientasParaComprarDTO> selectHerramienta = await _context.Herramientas
-                .Include(h => h.Fabricante)
-                .Include(h => h.CompraItems).ThenInclude(pi => pi.Compra)
-                .Where(h => (material == null || h.Material == material) &&
-                            (precio == null || h.Precio <= precio))
-                .Select(h => new HerramientasParaComprarDTO(h.Nombre, h.Material, h.Precio, h.Fabricante.Nombre))
-                .ToListAsync();
-            return Ok(selectHerramienta);
+            _logger.LogInformation(
+                "GET Para-Comprar iniciado con filtros -> Material: {Material}, Precio máximo: {Precio}",
+                material, precio);
+
+            try
+            {
+                IList<HerramientasParaComprarDTO> selectHerramienta = await _context.Herramientas
+                    .Include(h => h.Fabricante)
+                    .Include(h => h.CompraItems)
+                        .ThenInclude(pi => pi.Compra)
+                    .Where(h => (material == null || h.Material == material) &&
+                                (precio == null || h.Precio <= precio))
+                    .Select(h => new HerramientasParaComprarDTO(
+                        h.Nombre,
+                        h.Material,
+                        h.Precio,
+                        h.Fabricante.Nombre))
+                    .ToListAsync();
+
+                if (!selectHerramienta.Any())
+                {
+                    _logger.LogWarning(
+                        "No se encontraron herramientas para comprar con los filtros -> Material: {Material}, Precio: {Precio}",
+                        material, precio);
+                }
+                else
+                {
+                    _logger.LogInformation(
+                        "Se han encontrado {Cantidad} herramientas para comprar",
+                        selectHerramienta.Count);
+                }
+
+                return Ok(selectHerramienta);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Error al obtener herramientas para comprar con filtros -> Material: {Material}, Precio: {Precio}",
+                    material, precio);
+
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    "Error interno al obtener las herramientas");
+            }
         }
+
         [HttpGet]
         [Route("Para-Alquilar")]
         [ProducesResponseType(typeof(IList<HerramientaAlquilarDTO>), (int)HttpStatusCode.OK)]
