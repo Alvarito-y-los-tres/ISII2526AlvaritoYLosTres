@@ -161,9 +161,23 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<HerramientaRepararDTO>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetHerramientasParaReparar(string? nombre, float? tiempoReparacion)
         {
+            // [LOG] Registramos los parámetros de entrada.
+            // Usamos "Todos" o "Sin límite" para que el log sea legible si los valores son null.
+            _logger.LogInformation("Iniciando búsqueda 'Para-Reparar'. Filtros -> Nombre: {NombreFiltro}, TiempoReparacionMax: {TiempoFiltro}", 
+                nombre ?? "Todos", 
+                tiempoReparacion.HasValue ? tiempoReparacion.Value.ToString() : "Sin límite");
+
+            if (_context.Herramientas == null)
+            {
+                _logger.LogError("Error crítico: El DbSet de Herramientas es nulo.");
+                return StatusCode(500, "Error interno del servidor");
+            }
+
             var herramientasReparar = await _context.Herramientas
                 .Include(h => h.Fabricante)
-                .Where(h => (nombre == null || h.Nombre == nombre) && (tiempoReparacion == null || h.TiempoReparacion <= tiempoReparacion))
+                // La lógica de filtrado se mantiene igual
+                .Where(h => (nombre == null || h.Nombre == nombre) && 
+                            (tiempoReparacion == null || h.TiempoReparacion <= tiempoReparacion))
                 .Select(h => new HerramientaRepararDTO(
                     h.Nombre,
                     h.Material,
@@ -171,6 +185,10 @@ namespace AppForSEII2526.API.Controllers
                     h.Precio,
                     h.TiempoReparacion))
                 .ToListAsync();
+
+            // [LOG] Registramos cuántos elementos devolvió la base de datos
+            _logger.LogInformation("Búsqueda completada. Se encontraron {Count} herramientas que coinciden con los criterios.", herramientasReparar.Count);
+
             return Ok(herramientasReparar);
         }
 
