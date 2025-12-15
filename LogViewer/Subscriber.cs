@@ -1,81 +1,79 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
 
 namespace LogViewer
 {
-	public class Subscriber
-	{
-		
-		private readonly string _exchangeName = "logs";
-		public Subscriber()
-		{
+    public class Subscriber
+    {
+        private readonly string _exchangeName = "logs_topic";
 
-		}
+        public Subscriber()
+        {
+        }
 
-		public void EmpezarRecibir()
-		{
-			//creamos la conexion
-			var factory = new ConnectionFactory() { HostName = "localhost" };
+        public void EmpezarRecibir(string subTopic)
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
 
-			var connection = factory.CreateConnection();
-			var channel = connection.CreateModel();
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                // 1. Declarar Exchange (Topic)
+                channel.ExchangeDeclare(
+                    exchange: _exchangeName,
+                    type: ExchangeType.Topic,
+                    durable: true);
 
-			//creamos el exchange
-			channel.ExchangeDeclare(
-				exchange: _exchangeName,
-				type: ExchangeType.Fanout,
-				durable: true);
+                // 2. Crear cola temporal
+                var queueName = channel.QueueDeclare().QueueName;
 
-			//creamos la cola
-			var queueName = channel.QueueDeclare(
-				queue: "",
-				durable: false,
-				exclusive: true,
-				autoDelete: true,
-				arguments: null).QueueName;
+                // 3. Bind (Unión) usando el patrón que viene del Menú (ej: "information.#")
+                channel.QueueBind(
+                    queue: queueName,
+                    exchange: _exchangeName,
+                    routingKey: subTopic);
 
-			//bindamos la cola al exchange
-			channel.QueueBind(
-				queue: queueName,
-				exchange: _exchangeName,
-				routingKey: "");
+                Console.WriteLine($"[*] Conectado a '{_exchangeName}'.");
+                Console.WriteLine($"[*] Filtro activo: '{subTopic}'");
+                Console.WriteLine("[*] Esperando logs... Presione [Enter] para salir.");
 
-			var consumer = new EventingBasicConsumer(channel);
+                var consumer = new EventingBasicConsumer(channel);
 
-			Console.WriteLine($"[*] Suscrito a '{_exchangeName}'. Cola: {queueName}. Esperando logs...");
+                consumer.Received += (model, ea) =>
+                {
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var routingKey = ea.RoutingKey;
 
-			consumer.Received += (model, ea) =>
-			{
-				var body = ea.Body.ToArray(); //contenido del mensaje (array de bytes) 
-				var message = Encoding.UTF8.GetString(body); //se convierte de vuelta a string 
-				Console.ForegroundColor = ConsoleColor.Green;
-				Console.WriteLine($"[LOG RECIBIDO]: {message}");
-				Console.ResetColor();
-				Console.WriteLine($"Pedido recibido: {message}");
-				Console.WriteLine($"[LOG RECIBIDO]: {message}");
+                    // Cambio de color según el tipo de mensaje recibido
+                    if (routingKey.StartsWith("error"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else if (routingKey.StartsWith("information"))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                    }
 
+                    // Imprimimos una sola vez de forma limpia
+                    Console.WriteLine($"[{routingKey.ToUpper()}] {message}");
+                    Console.ResetColor();
+                };
 
-			};
+                channel.BasicConsume(
+                    queue: queueName,
+                    autoAck: true,
+                    consumer: consumer
+                );
 
-			channel.BasicConsume(
-			queue: queueName,
-			autoAck: true, // Confirmación automática de recepción del mensaje 
-			consumer: consumer
-			);
-
-			Console.WriteLine(" Presiona [Enter] para salir.");
-			Console.ReadLine();
-
-			channel.Close();
-			connection.Close();
-
-
-		}
-	}
-	}
+                Console.ReadLine();
+            }
+        }
+    }
+}

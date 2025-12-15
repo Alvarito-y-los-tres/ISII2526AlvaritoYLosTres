@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.Json;
-using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 
@@ -18,6 +17,10 @@ public class RabbitMQLogger : ILogger, IDisposable
     {
         _name = name ?? throw new ArgumentNullException(nameof(name));
         _config = config ?? throw new ArgumentNullException(nameof(config));
+
+        // Validación básica
+        if (string.IsNullOrEmpty(_config.HostName)) throw new ArgumentException("HostName required");
+
         var factory = new ConnectionFactory
         {
             HostName = _config.HostName,
@@ -25,50 +28,31 @@ public class RabbitMQLogger : ILogger, IDisposable
             UserName = _config.UserName,
             Password = _config.Password
         };
-		_connection = factory.CreateConnection();
-		_channel = _connection.CreateModel();
 
-		_channel.ExchangeDeclare(
-        exchange: _config.Exchange,
-        type: _config.ExchangeType,
-        durable: _config.Durable);
+        _connection = factory.CreateConnection();
+        _channel = _connection.CreateModel();
 
-		_properties = _channel.CreateBasicProperties();
-		_properties.Persistent = true;
-		_properties.ContentType = "application/json";
+        // IMPORTANTE: Para que coincida con tu Subscriber, usamos el nombre "logs_topic"
+        // Si prefieres usar _config.Exchange, asegúrate de poner "logs_topic" en el appsettings.json
+        string exchangeName = "logs_topic";
 
-		ValidateConfiguration(_config); 
-    }
+        _channel.ExchangeDeclare(
+            exchange: exchangeName,
+            type: ExchangeType.Topic, // OBLIGATORIO: Topic
+            durable: true);
 
-    private static void ValidateConfiguration(RabbitMQLoggerConfiguration config)
-    {
-        if (string.IsNullOrEmpty(config.HostName))
-            throw new ArgumentException("RabbitMQ HostName is required", nameof(config));
-        if (config.Port <= 0)
-            throw new ArgumentException("RabbitMQ Port must be greater than 0", nameof(config));
-        if (string.IsNullOrEmpty(config.UserName))
-            throw new ArgumentException("RabbitMQ UserName is required", nameof(config));
-        if (string.IsNullOrEmpty(config.Password))
-            throw new ArgumentException("RabbitMQ Password is required", nameof(config));
-        if (string.IsNullOrEmpty(config.Exchange))
-            throw new ArgumentException("RabbitMQ Exchange is required", nameof(config));
-        if (string.IsNullOrEmpty(config.ExchangeType))
-            throw new ArgumentException("RabbitMQ ExchangeType is required", nameof(config));
+        _properties = _channel.CreateBasicProperties();
+        _properties.Persistent = true;
+        _properties.ContentType = "application/json";
     }
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default;
 
     public bool IsEnabled(LogLevel logLevel) => logLevel != LogLevel.None;
 
-    public void Log<TState>(
-        LogLevel logLevel,
-        EventId eventId,
-        TState state,
-        Exception? exception,
-        Func<TState, Exception?, string> formatter)
+    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
-        if (!IsEnabled(logLevel))
-            return;
+        if (!IsEnabled(logLevel)) return;
 
         try
         {
@@ -77,43 +61,53 @@ public class RabbitMQLogger : ILogger, IDisposable
                 Timestamp = DateTime.UtcNow,
                 LogLevel = logLevel.ToString(),
                 Category = _name,
-                EventId = eventId.Id,
-                EventName = eventId.Name,
                 Message = formatter(state, exception),
                 Exception = exception?.ToString()
             };
 
-			var logEntryJson = JsonSerializer.Serialize(logEntry);
-			var body = Encoding.UTF8.GetBytes(logEntryJson);
+            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(logEntry));
 
-			_channel.BasicPublish(
-				exchange: _config.Exchange,
-				routingKey: "",
-				basicProperties: _properties,
-				body: body
-			);
+            // 1. Obtenemos la clave compatible con tu menú (information, error)
+            string routingKey = GetRoutingKey(logLevel);
 
-		}
+            // 2. Publicamos al exchange "logs_topic"
+            _channel.BasicPublish(
+                exchange: "logs_topic", // Debe coincidir con el Subscriber
+                routingKey: routingKey,
+                basicProperties: _properties,
+                body: body
+            );
+        }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error publishing log message to RabbitMQ: {ex.Message}");
+            Console.Error.WriteLine($"Error publishing to RabbitMQ: {ex.Message}");
         }
-		
-	}
+    }
+
+    // --- AQUÍ ESTÁ LA MAGIA ---
+    // Adaptamos los niveles de .NET a las palabras clave que pusiste en Program.cs
+    private string GetRoutingKey(LogLevel logLevel)
+    {
+        return logLevel switch
+        {
+            // Si es Crítico, lo mandamos como "error.critical" para que el filtro "error.#" lo capture
+            LogLevel.Critical => "error.critical",
+
+            // Si es Error, "error"
+            LogLevel.Error => "error",
+
+            // Si es Info, "information" (para que coincida con "information.#")
+            LogLevel.Information => "information",
+
+            LogLevel.Warning => "warning",
+            LogLevel.Debug => "debug",
+            _ => "information"
+        };
+    }
 
     public void Dispose()
     {
-        try
-        {
-            _channel?.Close();
-            _channel?.Dispose();
-            _connection?.Close();
-            _connection?.Dispose();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"Error disposing RabbitMQ logger: {ex.Message}");
-        }
-        GC.SuppressFinalize(this);
+        _channel?.Close();
+        _connection?.Close();
     }
 }
