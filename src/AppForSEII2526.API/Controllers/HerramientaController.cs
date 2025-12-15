@@ -34,13 +34,37 @@ namespace AppForSEII2526.API.Controllers
         [ProducesResponseType(typeof(IList<HerramientasParaOfertarDTO>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetHerramientaParaOferta(string? fabricante, decimal? precio)
         {
-            IList<HerramientasParaOfertarDTO> selectHerramienta = await _context.Herramientas
-                .Include(h => h.Fabricante)
-                .Where(h => (fabricante == null || h.Fabricante.Nombre == fabricante) &&
-                            (precio == null || h.Precio <= precio))
-                .Select(h => new HerramientasParaOfertarDTO(h.Nombre, h.Material, h.Fabricante.Nombre, h.Precio))
-                .ToListAsync();
-            return Ok(selectHerramienta);
+            _logger.LogInformation("Iniciando búsqueda de ofertas. Filtros -> Fabricante: {Fabricante}, Precio Máximo: {Precio}",
+                fabricante ?? "Todos",
+                precio.HasValue ? precio.Value.ToString() : "Sin límite");
+
+            try
+            {
+                IList<HerramientasParaOfertarDTO> selectHerramienta = await _context.Herramientas
+                    .Include(h => h.Fabricante)
+                    .Where(h => (fabricante == null || h.Fabricante.Nombre == fabricante) &&
+                                (precio == null || h.Precio <= precio))
+                    .Select(h => new HerramientasParaOfertarDTO(h.Nombre, h.Material, h.Fabricante.Nombre, h.Precio))
+                    .ToListAsync();
+
+                if (selectHerramienta.Count == 0)
+                {
+                    _logger.LogWarning("La búsqueda no arrojó resultados para Fabricante: {Fabricante} y Precio: {Precio}", fabricante, precio);
+                }
+                else
+                {
+                    _logger.LogInformation("Búsqueda exitosa. Se han recuperado {Count} herramientas.", selectHerramienta.Count);
+                }
+
+                return Ok(selectHerramienta);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error crítico al consultar herramientas para oferta en la base de datos.");
+
+
+                return StatusCode(500, "Ocurrió un error interno al procesar su solicitud.");
+            }
         }
 
         [HttpGet]
