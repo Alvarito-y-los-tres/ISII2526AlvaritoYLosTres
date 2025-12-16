@@ -80,7 +80,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             // Act
             PasosInicialesParaCrearOferta_UIT();
 
-            // Buscar y Seleccionar la herramienta
+            // Buscar y añadir la herramienta
             _selectPO.BuscarHerramientas(fabricanteHerramienta, precioHerramienta);
             _selectPO.AñadirHerramientaAlCarrito(nombreHerramienta);
             _selectPO.ContinuarConOferta();
@@ -94,7 +94,15 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             _crearPO.ConfirmarModal();
 
             // Assert
-            var detalleEsperado = new List<string[]>
+            Assert.True(_detallePO.CheckOfertaDetalles(
+                fechaInicio,
+                fechaFin,
+                fechaOferta,
+                _dirigidaA,
+                _metodoPago
+            ), "Los detalles de la oferta no son los esperados");
+
+            var herramientasEsperadas = new List<string[]>
             {
                 new string[] {
                     nombreHerramienta,
@@ -106,8 +114,8 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
                 }
             };
 
-            Assert.True(_detallePO.CheckOfertaCreadaCorrectamente(detalleEsperado),
-                "Los detalles de la oferta creada no coinciden con los datos ingresados.");
+            Assert.True(_detallePO.CheckOfertaCreadaCorrectamente(herramientasEsperadas),
+                "Las herramientas en la oferta no son las esperadas.");
         }
 
 
@@ -168,7 +176,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             // Act
             PasosInicialesParaCrearOferta_UIT();
 
-            // Intentar pulsar continuar sin añadir nada
+            // Intenta pulsar sin añadir ninguna herramienta
             try
             {
                 _selectPO.ContinuarConOferta();
@@ -186,7 +194,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
         {
             var allTests = new List<object[]>
             {
-                //Inicio anterior a hoy
+                // Inicio anterior a hoy
                 new object[] { DateTime.Today.AddDays(-1), DateTime.Today.AddDays(20), "La fecha de inicio debe ser futura" },
                 
                 // Fin anterior a inicio
@@ -208,7 +216,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             _selectPO.AñadirHerramientaAlCarrito(nombreHerramienta1);
             _selectPO.ContinuarConOferta();
 
-            // Rellenar formulario con fechas inválidas
+            // Rellenar datos con fechas inválidas
             _crearPO.RellenarDatos(fechaInicio, fechaFin, metodoPago, nombreUsuario, dirigidaA);
 
             _crearPO.PulsarCrearOferta();
@@ -255,7 +263,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             _selectPO.AñadirHerramientaAlCarrito(nombreHerramienta1);
             _selectPO.ContinuarConOferta();
 
-            // Rellenamos datos válidos generales
+            // Rellenar datos válidos
             _crearPO.RellenarDatos(DateTime.Today.AddDays(1), DateTime.Today.AddDays(10), metodoPago, nombreUsuario, dirigidaA);
 
             // Introducimos el porcentaje erróneo
