@@ -59,10 +59,10 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         [InlineData("CosaRara", "", false)]      // No existe
         // Solo Tiempo (asumiendo que tenemos items con estos tiempos en la BD)
         [InlineData("", "5", true)]              // Existe reparación de 5 días
-        [InlineData("", "999", false)]           // No existe nada tan largo
+        [InlineData("", "0", false)]           // No existe nada tan largo
         // Combinado: Nombre y Tiempo
         [InlineData("Martillo", "5", true)]      // Coinciden ambos
-        [InlineData("Martillo", "999", false)]   // Nombre ok, pero tiempo mal
+        [InlineData("Martillo", "0", false)]   // Nombre ok, pero tiempo mal
         public void UC2_AF0_FiltrarHerramientas_Completo_Theory(string nombre, string tiempo, bool debeEncontrarResultados)
         {
             _driver.Navigate().GoToUrl(_URI + "Reparacion/SelectItemReparacion");
@@ -153,7 +153,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             _selectPO.PulsarContinuar();
 
             // Probamos el pago correspondiente
-            _crearPO.RellenarDatosCliente("Pago", "Test", DateTime.Today.AddDays(4), "+34600222333", metodoPagoValue); 
+            _crearPO.RellenarDatosCliente("Martín", "Álvarez", DateTime.Today.AddDays(4), "+34600222333", metodoPagoValue); 
             _crearPO.RellenarDetalleItem(herramienta, 1, "Pago test");
 
             _crearPO.PulsarCrear();
@@ -175,9 +175,10 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             _selectPO.AgregarHerramienta(herramienta);
             _selectPO.PulsarContinuar();
 
-            _crearPO.RellenarDatosCliente("Luisa", "Gómez", DateTime.Today.AddDays(3), "+34600111222", "0"); 
             // Pasamos string vacío en la descripción
-            _crearPO.RellenarDetalleItem(herramienta, 1, ""); 
+            _crearPO.RellenarDetalleItem(herramienta, 1, "");
+            _crearPO.RellenarDatosCliente("Martín", "Álvarez", DateTime.Today.AddDays(3), "+34600111222", "0"); 
+            
 
             _crearPO.PulsarCrear();
             _crearPO.ConfirmarModal();
