@@ -49,11 +49,11 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             // 3. Comprobamos que todo se ha guardado bien en el detalle
             Assert.Contains("DetalleReparacion", _driver.Url);
             Assert.Equal(nombreUser+" "+apellidoUser, _detallePO.GetNombreCliente());
-            Assert.Equal("5€", _detallePO.GetPrecioTotal());
+            Assert.Equal("10 €", _detallePO.GetPrecioTotal());
             Assert.Equal(DateTime.Today.AddDays(5).ToString("dd/MM/yyyy"), _detallePO.GetFechaEntrega());
             Assert.Equal(DateTime.Today.AddDays(6).ToString("dd/MM/yyyy"), _detallePO.GetFechaRecogida());
             // Validamos que el item salga en la tabla final con su precio
-            Assert.True(_detallePO.ValidarItemEnTabla(herramienta, 2, "5€"), "El item no aparece en la tabla de detalle");
+            Assert.True(_detallePO.ValidarItemEnTabla(herramienta, 2, "5 €"), "El item no aparece en la tabla de detalle");
         }
 
 
@@ -131,6 +131,11 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             _selectPO.AgregarHerramienta(herramienta);
             _selectPO.BuscarHerramienta(herramienta2);
             _selectPO.AgregarHerramienta(herramienta2);
+
+            int resultados = _selectPO.ContarItemsEnCarrito();
+            Assert.True(resultados == 2, "Deberíamos ver el martillo y el taladro");
+
+
             _selectPO.PulsarContinuar();
 
             // Desde la página de Crear Reparación, pulsamos Modificar
@@ -138,11 +143,13 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 
             // Volvemos a la página de selección
             Assert.Contains("SelectItemReparacion", _driver.Url);
-
-            int resultados = _selectPO.ContarResultadosEnTabla();
-            Assert.True(resultados == 2, "Deberíamos ver el martillo y el taladro");
-
             _selectPO.BorrarDelCarrito(herramienta);
+
+
+            int resultados2 = _selectPO.ContarItemsEnCarrito();
+            Assert.True(resultados2 == 1, "Deberíamos ver el taladro solo");
+
+
             _selectPO.PulsarContinuar();
             // Volvemos a Crear Reparación y comprobamos que solo queda el taladro
             Assert.Contains("CrearReparacion", _driver.Url);
@@ -152,8 +159,8 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             _crearPO.ConfirmarModal();
             _crearPO.EsperarNavegacionADetalle();
             Assert.Contains("DetalleReparacion", _driver.Url);
-            Assert.True(_detallePO.ValidarItemEnTabla(herramienta2, 1, "30€"), "Debería crearse la reparación solo con el taladro");
-            Assert.False(_detallePO.ValidarItemEnTabla(herramienta, 1, "5€"), "El martillo no debería estar en la reparación");
+            Assert.True(_detallePO.ValidarItemEnTabla(herramienta2, 1, "30 €"), "Debería crearse la reparación solo con el taladro");
+            Assert.False(_detallePO.ValidarItemEnTabla(herramienta, 1, "5 €"), "El martillo no debería estar en la reparación");
         }
 
 
@@ -188,7 +195,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         [Trait("Category", "UIT")]
         [InlineData("", "ApellidoTest","1", "Name")]    // Me dejo el Nombre
         [InlineData("NombreTest", "", "1", "Surname")]   // Me dejo el Apellido
-        [InlineData("NombreTest", "ApellidoTest", "", "PaymentMethod")] // Me dejo el metodo de pago
+        [InlineData("NombreTest", "ApellidoTest", "-1", "PaymentMethod")] // Me dejo el metodo de pago
         public void UC2_AF4_DatosObligatorios_Theory(string nombre, string apellido,string metodo, string idCampoError)
         {
             string herramienta = "Martillo";
