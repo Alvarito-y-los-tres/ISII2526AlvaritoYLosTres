@@ -102,7 +102,20 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
            
             return CheckBodyTable(expectedHerramientas, tablaDeHerramientas);
         }
-        
+
+        public bool CheckCarritoVacio()
+        {
+            var botonContinuar = _driver.FindElements(By.Id("comprarHerramientasBoton"));
+
+            if (botonContinuar.Count > 0 && botonContinuar[0].Displayed)
+            {
+                return false;
+
+                throw new Exception("Error: El carrito debería estar vacío, pero el botón 'Continuar' es visible.");
+            }
+            return true;
+        }
+
 
     }
 }

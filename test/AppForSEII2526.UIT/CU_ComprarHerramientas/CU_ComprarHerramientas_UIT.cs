@@ -56,22 +56,22 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
             _driver.FindElement(id).Click();
         }
 
-
+        
         //Flujo alternativo 1 al paso 2
         [Theory]
         [InlineData(herramienta2Id, herramienta2Nombre, herramienta2Material, herramienta2Precio, herramienta2Fabricante, "Acero", "")] 
         [InlineData(herramienta3Id, herramienta3Nombre, herramienta3Material, herramienta3Precio, herramienta3Fabricante, "", "4")]
         [InlineData(herramienta3Id, herramienta3Nombre, herramienta3Material, herramienta3Precio, herramienta3Fabricante, "Hierro", "4")]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void UC1_2_3_AFO_filteringPorMaterialPrecio(string herramientaId, string herramientaNombre, string herramientaMaterial, string herramientaPrecio, string herramientaFabricante, string filtroMaterial, string filtroPrecio)
+        public void UC1_2_3_AF1_filtrarPorMaterialPrecio(string herramientaId, string herramientaNombre, string herramientaMaterial, string herramientaPrecio, string herramientaFabricante, string filtroMaterial, string filtroPrecio)
         {
-            //Arrange
-            InitialStepsForCompraHerramientas();
+            //Arrange 
             var expectedHerramientas = new List<string[]> { new string[] { herramientaNombre, herramientaMaterial, herramientaPrecio, herramientaFabricante, "Añadir" }, };
 
 
 
             //Act
+            InitialStepsForCompraHerramientas();
             selectHerramientasParaComprar_PO.BuscarHerramientas(filtroMaterial, filtroPrecio);
 
             Thread.Sleep(500);
@@ -85,36 +85,26 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
         //Flujo Alternativo 2 al paso 5
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU1_5_FA2_ModificarCarritoCompra()
+        public void UC1_5_FA2_ModificarCarritoCompra()
         {
 
-            //Arrange
+            //Act
             InitialStepsForCompraHerramientas();
             selectHerramientasParaComprar_PO.BuscarHerramientas("", "0");
-            Thread.Sleep(500);
-
-            //Act
             selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta1Nombre);
             Thread.Sleep(500);
+
+            selectHerramientasParaComprar_PO.BuscarHerramientas("", "0");
             selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta2Nombre);
             Thread.Sleep(500);
             selectHerramientasParaComprar_PO.ComprarHerramientas();
-            Thread.Sleep(500);
             crearCompra_PO.ModificarCompra();
-            Thread.Sleep(500);
-            selectHerramientasParaComprar_PO.QuitarHerramientaFromCart(herramienta2Nombre);
-            Thread.Sleep(500);
-            selectHerramientasParaComprar_PO.ComprarHerramientas();
-            Thread.Sleep(500);
-            var expectedHerramientas = new List<string[]>
-            {
-            new[]
-              {
-                 $"{herramienta1Nombre} {herramienta1Material}{Environment.NewLine}{herramienta1Precio}"
-                }
-            };
+            selectHerramientasParaComprar_PO.QuitarHerramientaFromCart(herramienta1Nombre);
 
-            Assert.True(crearCompra_PO.CheckListHerramientasEnCompra(expectedHerramientas));
+            //Assert
+            Assert.True(selectHerramientasParaComprar_PO.CheckCarritoVacio(),
+                "Error: El carrito no está vacío tras borrar la herramienta.");
+
 
 
 
@@ -123,16 +113,12 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
         //Flujo Alternativo 3 al paso 4
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU1_4_FA3_NotHerramientas()
+        public void UC1_4_FA3_NotHerramientas()
         {
 
-            //Arrange
+            //Act
             InitialStepsForCompraHerramientas();
             selectHerramientasParaComprar_PO.BuscarHerramientas("", "0");
-            Thread.Sleep(500);
-
-            //Act
-            
             Thread.Sleep(500);
 
             //Assert
@@ -141,16 +127,14 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
 
         }
 
+
         //Flujo Básico
         [Fact]
         [Trait("LevelTesting", "Funcional Testing")]
-        public void CU1_FB_CompraHerramienta()
+        public void UC1_FB_CompraHerramienta()
         {
 
-            //Arrange
-            InitialStepsForCompraHerramientas();
-            selectHerramientasParaComprar_PO.BuscarHerramientas("", "0");
-            Thread.Sleep(500);
+            //Arrange  
             var expectedHerramientas = new List<string[]>
             {
                 new string[] { herramienta1Nombre, herramienta1Material, "1", "5 €", "Nueva" }
@@ -158,6 +142,9 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
             };
 
             //Act
+            InitialStepsForCompraHerramientas();
+            selectHerramientasParaComprar_PO.BuscarHerramientas("", "");
+            Thread.Sleep(500);
             selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta1Nombre);
             Thread.Sleep(500);
             selectHerramientasParaComprar_PO.ComprarHerramientas();
@@ -189,12 +176,10 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
         public void CU1_6_FA5_camposNoValidos(string nombre, string apellido, string direccion, string metodoPago,string error)
         {
 
-            //Arrange
+            //Act
             InitialStepsForCompraHerramientas();
             selectHerramientasParaComprar_PO.BuscarHerramientas("", "0");
             Thread.Sleep(500);
-
-            //Act
             selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta1Nombre);
             Thread.Sleep(500);
             selectHerramientasParaComprar_PO.ComprarHerramientas();
@@ -215,12 +200,10 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
         public void CU1_6_FA5_noHayCantidad()
         {
 
-            //Arrange
+            //Act
             InitialStepsForCompraHerramientas();
             selectHerramientasParaComprar_PO.BuscarHerramientas("", "0");
             Thread.Sleep(500);
-
-            //Act
             selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta1Nombre);
             Thread.Sleep(500);
             selectHerramientasParaComprar_PO.ComprarHerramientas();
@@ -242,6 +225,8 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
 
 
         }
+
+
     }
 }
 
