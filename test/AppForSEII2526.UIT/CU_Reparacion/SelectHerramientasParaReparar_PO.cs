@@ -8,13 +8,13 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 {
     public class SelectHerramientasParaReparar_PO : PageObject
     {
-        // IDs extraídos de SelectItemReparacion.razor
-        private By _inputNombre = By.Id("inputTitle");
-        private By _inputTiempo = By.Id("inputGenre");
+        
+        private By _inputNombre = By.Id("filtroNombre");
+        private By _inputTiempo = By.Id("filtroTiempo");
         private By _btnBuscar = By.Id("searchitems");
 
         // El botón de continuar
-        private By _btnContinuar = By.Id("modificacion");
+        private By _btnContinuar = By.Id("continuar");
 
         public SelectHerramientasParaReparar_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {

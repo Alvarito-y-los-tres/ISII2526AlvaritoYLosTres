@@ -10,14 +10,14 @@
 
 <h3>CrearReparacion</h3>
 
-@* --- BLOQUE CORREGIDO CON ID PARA SELENIUM --- *@
+
 @if (!string.IsNullOrEmpty(errorMessage))
 {
     <div class="alert alert-danger" role="alert" id="ErrorsShown">
         @errorMessage
     </div>
 }
-@* ------------------------------------- *@
+
 
 <EditForm Model="reparacion" OnValidSubmit="OpenDialog">
     <div class="row">
@@ -25,7 +25,7 @@
         <ValidationSummary />
     </div>
 
-    @* He quitado el id="ErrorsShown" de aquí abajo para no tener duplicados, ya que usaremos el de arriba *@
+    
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
         <p>Errors: @messageError</p>
     </div>
@@ -77,12 +77,12 @@
         </div>
     </div>
 
-    <h4>Rental detail</h4>
-    <p><b>Date from:</b> @reparacion.FechaEntrega.ToString("dd/MM/yyyy") <b>to:</b> @reparacion.NombreCliente</p>
+    <h4>Detalles de la Reparacion</h4>
+    <p><b>Fecha entrega:</b> @reparacion.FechaEntrega.ToString("dd/MM/yyyy") <b>Hecha por:</b> @reparacion.NombreCliente</p>
     <p>
-        <b>Total price:</b> @TotalCost €
+        <b>Precio total:</b> @TotalCost €
         <button class="btn btn-outline-primary" type="submit" @onclick="ModifyRentalItems" id="ModifyMovies">
-            Modify movies
+            Modificar herramientas
         </button>
     </p>
 
@@ -248,7 +248,7 @@
                 }
                 else
                 {
-                    // --- CORRECCIÓN AQUÍ: Leemos el mensaje del servidor para errores como 404 ---
+                    //Leemos el mensaje del servidor para errores como 404 ---
                     if (!string.IsNullOrEmpty(ex.Response))
                     {
                         errorMessage = ex.Response;
