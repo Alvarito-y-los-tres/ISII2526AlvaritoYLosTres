@@ -16,16 +16,16 @@ else
 {
     <table class="table table-borderless table-sm">
         <tr>
-            <th>Name and Surname</th>
+            <th>Nombre y Apellidos</th>
             <td id="NameSurname">@reparacion.NombreCLiente @reparacion.ApellidoCliente</td>
         </tr>
         <tr>
             <th>Fecha entrega</th>
-            <td id="DeliveryAddress">@reparacion.FechaEntrega.ToString("dd/MM/yyyy hh:mm:ss")</td>
+            <td id="fechaentrega">@reparacion.FechaEntrega.ToString("dd/MM/yyyy")</td>
         </tr>
         <tr>
             <th>Fecha recogida</th>
-            <td id="PaymentMethod">@reparacion.FechaRecogida.ToString("dd/MM/yyyy hh:mm:ss")</td>
+            <td id="fecharecogida">@reparacion.FechaRecogida.ToString("dd/MM/yyyy")</td>
         </tr>
         <tr>
             <th>Precio Total</th>

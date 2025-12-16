@@ -8,7 +8,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 {
     public class CrearReparacion_PO : PageObject
     {
-        // IDs extraídos de CrearReparacion.razor
+        
         private By _nombreCliente = By.Id("Name");
         private By _apellidoCliente = By.Id("Surname");
         private By _fechaEntrega = By.Id("DeliveryAddress"); 
@@ -16,6 +16,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         private By _metodoPago = By.Id("PaymentMethod");
         private By _btnCrear = By.Id("Submit");
         private By _errorBox = By.Id("ErrorsShown");
+        private By _btnModificar = By.Id("ModifyMovies");
 
         public CrearReparacion_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
@@ -121,6 +122,11 @@ namespace AppForSEII2526.UIT.CU_Reparacion
                 // Si salta el timeout, el test fallará luego en el Assert, 
                 // pero esto nos da tiempo a que la API responda.
             }
+        }
+        public void PulsarModificar()
+        {
+            WaitForBeingClickable(_btnModificar);
+            _driver.FindElement(_btnModificar).Click();
         }
     }
 }

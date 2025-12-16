@@ -7,10 +7,10 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 {
     public class DetalleReparacion_PO : PageObject
     {
-        // IDs extraídos de DetalleReparacion.razor 
+
         private By _nombreCompleto = By.Id("NameSurname");
-        private By _fechaEntrega = By.Id("DeliveryAddress");
-        private By _fechaRecogida = By.Id("PaymentMethod"); 
+        private By _fechaEntrega = By.Id("fechaentrega");
+        private By _fechaRecogida = By.Id("fecharecogida"); 
         private By _precioTotal = By.Id("TotalPrice");
         private By _tablaItems = By.Id("ReparacionItems");
 
@@ -29,6 +29,18 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             WaitForBeingVisible(_precioTotal);
             return _driver.FindElement(_precioTotal).Text;
         }
+
+        public string GetFechaEntrega()
+        {
+            WaitForBeingVisible(_fechaEntrega);
+            return _driver.FindElement(_fechaEntrega).Text;
+        }
+        public string GetFechaRecogida()
+        {
+            WaitForBeingVisible(_fechaRecogida);
+            return _driver.FindElement(_fechaRecogida).Text;
+        }
+        
 
         public bool ValidarItemEnTabla(string nombreHerramienta, int cantidad, string precio)
         {

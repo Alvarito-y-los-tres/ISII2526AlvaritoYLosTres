@@ -8,13 +8,13 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 {
     public class SelectHerramientasParaReparar_PO : PageObject
     {
-        // IDs extraídos de SelectItemReparacion.razor
-        private By _inputNombre = By.Id("inputTitle");
-        private By _inputTiempo = By.Id("inputGenre");
+        
+        private By _inputNombre = By.Id("filtroNombre");
+        private By _inputTiempo = By.Id("filtroTiempo");
         private By _btnBuscar = By.Id("searchitems");
 
         // El botón de continuar
-        private By _btnContinuar = By.Id("modificacion");
+        private By _btnContinuar = By.Id("continuar");
 
         public SelectHerramientasParaReparar_PO(IWebDriver driver, ITestOutputHelper output) : base(driver, output)
         {
@@ -114,7 +114,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 
         public int ContarResultadosEnTabla()
         {
-            // [cite: 53] La tabla tiene id "TableOfRepairs"
+            //  La tabla tiene id "TableOfRepairs"
             try
             {
                 // Esperamos un momento a que renderice
@@ -130,7 +130,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
 
         public void BorrarDelCarrito(string nombreHerramienta)
         {
-            // [cite: 65] El botón de borrar está dentro del foreach del carrito
+            // El botón de borrar está dentro del foreach del carrito
             // Buscamos el botón rojo dentro del div del carrito
             By btnBorrar = By.XPath($"//div[contains(., '{nombreHerramienta}')]//button[contains(text(),'Borrar')]");
             
@@ -162,6 +162,26 @@ namespace AppForSEII2526.UIT.CU_Reparacion
                 }
             }
             return false; // Si tras los intentos sigue fallando, asumimos que no está
+        }
+
+       
+
+        public int ContarItemsEnCarrito()
+        {
+            try
+            {
+                // Esperamos un poco para asegurar que el DOM se ha actualizado tras la navegación
+                System.Threading.Thread.Sleep(500);
+
+                // XPath: Busca cualquier div con clase 'col-2' y dentro cuenta los botones de 'Borrar'
+                // Es la forma más fiable de saber cuántos items hay agregados.
+                var items = _driver.FindElements(By.XPath("//div[contains(@class, 'col-2')]//button[contains(text(),'Borrar')]"));
+                return items.Count;
+            }
+            catch (NoSuchElementException)
+            {
+                return 0;
+            }
         }
     }
 }
