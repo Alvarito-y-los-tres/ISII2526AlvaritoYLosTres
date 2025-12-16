@@ -30,8 +30,8 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
         private By _modificarCompra = By.Id("ModifyCompraItems");
         private By _tableOfItems = By.Id("TableOfRentalItems");
 
-        private By _listaErroresValidacion = By.ClassName("validation-message"); // Errores campo a campo
-        private By _resumenErrores = By.ClassName("validation-summary-errors"); // Resumen arriba
+        private By _listaErroresValidacion = By.ClassName("validation-message"); 
+        private By _resumenErrores = By.ClassName("validation-summary-errors"); 
         private By _validationSummary = By.CssSelector(".validation-summary-errors, .text-danger, .alert-danger");
 
         private By _dialogModal = By.Id("DialogOKSaveDelete");
@@ -91,7 +91,7 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
             }
             else
             {
-                // Intenta seleccionar la opción vacía (value="") si existe
+                
                 var emptyOpt = select.Options.FirstOrDefault(o => (o.GetAttribute("value") ?? "") == "");
                 if (emptyOpt != null)
                 {
@@ -100,7 +100,7 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
                 }
                 else
                 {
-                    // Si no existe, fuerza el placeholder (normalmente índice 0)
+                    
                     select.SelectByIndex(0);
                     _output.WriteLine($"Seleccionado índice 0: '{select.SelectedOption.Text}' value='{select.SelectedOption.GetAttribute("value")}'");
                 }
