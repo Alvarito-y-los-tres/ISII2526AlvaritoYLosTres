@@ -225,6 +225,45 @@ namespace AppForSEII2526.UIT.CU_ComprarHerramientas
 
 
         }
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void CU1_Examen_Sprint3()
+        {
+             
+            var expectedHerramientas = new List<string[]>
+            {
+                new string[] { herramienta2Nombre, herramienta2Material, "1", "30 €", "Nueva" }
+
+            };
+            
+            InitialStepsForCompraHerramientas();
+            selectHerramientasParaComprar_PO.BuscarHerramientas(herramienta1Material, ""); //filtro por material
+            selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta1Nombre); //añado al carrito
+            Thread.Sleep(500);
+            selectHerramientasParaComprar_PO.BuscarHerramientas("", herramienta2Precio); //filtro por precio
+            selectHerramientasParaComprar_PO.AñadirHerramientaToCart(herramienta2Nombre); //añado al carrito
+            Thread.Sleep(500);
+            selectHerramientasParaComprar_PO.ComprarHerramientas(); //voy proceso de compra
+            Thread.Sleep(500);
+            crearCompra_PO.ModificarCompra(); //modifico carrito
+            selectHerramientasParaComprar_PO.QuitarHerramientaFromCart(herramienta1Nombre); //quito primera herramienta añadida
+            Thread.Sleep(500);
+            selectHerramientasParaComprar_PO.ComprarHerramientas(); //voy proceso compra
+            crearCompra_PO.RellenarFormulario("Ana", "López", "ana.lopez@gmail.com", "Calle Feria", "PayPal", "Nueva"); //relleno datos
+            Thread.Sleep(500);
+            crearCompra_PO.SubmitCompra();
+            Thread.Sleep(500);
+            crearCompra_PO.ConfirmCompra();
+            Thread.Sleep(500);
+
+           
+
+            Assert.True(detalleCompra_PO.CheckDetalleCompra("Ana", "López", "Calle Feria", DateTime.Today, 30), "Falla CheckDetalleCompra");
+
+            Assert.True(detalleCompra_PO.CheckListHerramienta(expectedHerramientas), "Falla CheckListHerramienta");
+
+
+        }
 
 
     }
