@@ -327,6 +327,66 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             // Assert
             bool hayError = _crearPO.CheckErroresMensaje("no existe") || _crearPO.CheckErroresMensaje("Error");
             Assert.True(hayError, "El sistema no mostró error al usar un usuario inexistente.");
-        }        
+        }
+
+        // EXAMEN
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void pruebaExamen()
+        {
+            // Arrange
+            var fechaInicio = DateTime.Today.AddDays(1);
+            var fechaFin = DateTime.Today.AddDays(20);
+            var fechaOferta = DateTime.Today;
+            int porcentajeDescuento = 80;
+            double precioFinal = Math.Round(precioHerramienta2 * (1 - (porcentajeDescuento / 100.0)), 2);
+
+            // Act
+            PasosInicialesParaCrearOferta_UIT();
+
+            // Buscar y añadir las herramientas
+            _selectPO.BuscarHerramientas(fabricante1, null);
+            _selectPO.AñadirHerramientaAlCarrito(nombreHerramienta1);
+            _selectPO.BuscarHerramientas("", precioHerramienta2);
+            _selectPO.AñadirHerramientaAlCarrito(nombreHerramienta2);
+            _selectPO.ContinuarConOferta();
+
+            // Eliminar la primera herramienta y continuar con la oferta
+            _crearPO.ModificarHerramientas();
+            _selectPO.EliminarHerramienta(nombreHerramienta1);
+            _selectPO.ContinuarConOferta();
+
+            // Rellenar datos necesarios
+            _crearPO.RellenarDatos(fechaInicio, fechaFin, metodoPago, nombreUsuario, dirigidaA);
+            _crearPO.EstablecerPorcentaje(nombreHerramienta2, porcentajeDescuento);
+
+            // Confirmar
+            _crearPO.PulsarCrearOferta();
+            _crearPO.ConfirmarModal();
+
+            // Assert
+            Assert.True(_detallePO.CheckOfertaDetalles(
+                fechaInicio,
+                fechaFin,
+                fechaOferta,
+                dirigidaA,
+                metodoPago
+            ), "Los detalles de la oferta no son los esperados");
+
+            var herramientasEsperadas = new List<string[]>
+            {
+                new string[] {
+                    nombreHerramienta2,
+                    materialHerramienta2,
+                    fabricante2,
+                    precioHerramienta2.ToString("0.00") + " €",
+                    porcentajeDescuento.ToString() + " %",
+                    precioFinal.ToString("0.00") + " €"
+                }
+            };
+
+            Assert.True(_detallePO.CheckOfertaCreadaCorrectamente(herramientasEsperadas),
+                "Las herramientas en la oferta no son las esperadas.");
+        }
     }
 }
