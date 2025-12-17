@@ -289,5 +289,56 @@ namespace AppForSEII2526.UIT.CU_Reparacion
             Assert.True(hayError, "El sistema debería quejarse si el usuario no existe");
         }
 
+
+        //Test examen sprint3, filtro nombre añado , filtro tiempo añado ,
+        //modifico quito primera , continuar hasta acabar como basico
+        [Fact(DisplayName = "UC2.BF_AF0_AF0_AF2_ModificacionSprint3")]
+        [Trait("Category", "UIT")]
+        public void UC2_BF_AF0_AF0_AF2_ModificacionSprint3()
+        {
+            string herramienta = "Taladro";
+            string herramienta2 = "Martillo";
+            _driver.Navigate().GoToUrl(_URI + "Reparacion/SelectItemReparacion");
+            _selectPO.BuscarHerramienta(herramienta);
+            _selectPO.AgregarHerramienta(herramienta);
+
+            _selectPO.BuscarHerramienta("","4");
+            _selectPO.AgregarHerramienta(herramienta2);
+
+            int resultados = _selectPO.ContarItemsEnCarrito();
+            Assert.True(resultados == 2, "Deberíamos ver el martillo y el taladro");
+
+            _selectPO.PulsarContinuar();
+
+            // Desde la página de Crear Reparación, pulsamos Modificar
+            _crearPO.PulsarModificar();
+
+            // Volvemos a la página de selección
+            Assert.Contains("SelectItemReparacion", _driver.Url);
+            _selectPO.BorrarDelCarrito(herramienta);
+
+            int resultados2 = _selectPO.ContarItemsEnCarrito();
+            Assert.True(resultados2 == 1, "Deberíamos ver el martillo solo");
+
+
+            _selectPO.PulsarContinuar();
+            // Volvemos a Crear Reparación y comprobamos que solo queda el taladro y todo lo del detalle es correcto cuando se crea 
+            Assert.Contains("CrearReparacion", _driver.Url);
+            string nombreUser = "Martín"; string apellidoUser = "Álvarez";
+
+            _crearPO.RellenarDatosCliente(nombreUser, apellidoUser, DateTime.Today.AddDays(2), "+34600000000", "1");
+            _crearPO.RellenarDetalleItem(herramienta2, 1, "desc");
+            _crearPO.PulsarCrear();
+            _crearPO.ConfirmarModal();
+            _crearPO.EsperarNavegacionADetalle();
+
+            Assert.Contains("DetalleReparacion", _driver.Url);
+            Assert.True(_detallePO.ValidarItemEnTabla(herramienta2, 1, "5 €"), "Debería crearse la reparación solo con el martillo");
+            Assert.False(_detallePO.ValidarItemEnTabla(herramienta, 1, "30 €"), "El taladro no debería estar en la reparación");
+            Assert.Equal(nombreUser + " " + apellidoUser, _detallePO.GetNombreCliente());
+            Assert.Equal("5 €", _detallePO.GetPrecioTotal());
+            Assert.Equal(DateTime.Today.AddDays(2).ToString("dd/MM/yyyy"), _detallePO.GetFechaEntrega());
+            Assert.Equal(DateTime.Today.AddDays(3).ToString("dd/MM/yyyy"), _detallePO.GetFechaRecogida());
+        }
     }
 }
