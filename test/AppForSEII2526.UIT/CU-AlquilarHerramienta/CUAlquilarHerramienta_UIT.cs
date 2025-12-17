@@ -332,9 +332,64 @@ namespace AppForSEII2526.UIT.CU_Alquiler
                 "Error: El carrito (botón alquilar) sigue visible tras borrar la única herramienta.");
         }
 
-        
+
+
+
+        [Fact]
+        [Trait("LevelTesting", "Funcional Testing")]
+        public void UC4_Examen()
+        {
+            
+            var fechaInicio = DateTime.Today.AddDays(3);
+            var fechaFin = DateTime.Today.AddDays(10);
+            string nombre = "Álvaro";
+            string apellido = "Cano";
+            string direccion = "Calle Mayor";
+            string telefono = "600654321";
+            string email = "daniel@gmail.com";
+            int cantidad = 1;
+            string pagoValue = "0";
+            InitialStepsForCrearAlquiler_UIT();
+            _selectPO.Buscarherramientas(herramientaNombre, "");
+            _selectPO.AddHerramientaToAlquilerCart(herramientaNombre);
+            System.Threading.Thread.Sleep(500);
+            _selectPO.Buscarherramientas("", "Madera");
+            _selectPO.AddHerramientaToAlquilerCart("Martillo");
+            System.Threading.Thread.Sleep(500);
+            _selectPO.PressAlquilar();
+            System.Threading.Thread.Sleep(500);
+            _crearPO.PulsarModificarCarrito();
+            _selectPO.RemoveHerramientaFromAlquilerCart(herramientaNombre);
+            _selectPO.PressAlquilar();
+            _crearPO.RellenarDatosCliente(nombre, apellido, direccion, telefono, email, pagoValue);
+            _crearPO.RellenarFechas(fechaInicio, fechaFin);
+            _crearPO.EstablecerCantidad("Martillo", cantidad);
+            _crearPO.PulsarCrearAlquiler();
+            _crearPO.ConfirmarModal();
+
+
+            var expectedRow = new List<string[]>
+            {
+                new string[] {
+                    "Martillo",
+                    "Madera",
+                    "5,00 €",
+                    cantidad.ToString()
+                }
+            };
+
+            Assert.True(_detallePO.CheckDetalleAlquiler(expectedRow), "Los detalles del alquiler no coinciden con lo esperado.");
+
+
+        }
+
 
 
 
     }
+
+
+
+
+
 }
