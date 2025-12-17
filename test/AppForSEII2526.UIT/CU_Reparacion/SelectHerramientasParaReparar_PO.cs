@@ -23,7 +23,7 @@ namespace AppForSEII2526.UIT.CU_Reparacion
         public void BuscarHerramienta(string nombre = "", string tiempo = "")
         {
             // Envolvemos las interacciones en AccionSegura para evitar StaleElementReferenceException
-            if (!string.IsNullOrEmpty(nombre))
+            if (nombre != null)
             {
                 AccionSegura(() =>
                 {
