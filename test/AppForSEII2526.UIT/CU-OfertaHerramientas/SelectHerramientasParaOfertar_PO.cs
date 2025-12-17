@@ -25,6 +25,7 @@ namespace AppForSEII2526.UIT.CU_OfertaHerramientas
             if (fabricante != null)
             {
                 var fabricanteInputElement = _driver.FindElement(inputFabricante);
+                fabricanteInputElement.Clear();
                 fabricanteInputElement.SendKeys(fabricante);
             }
             if (precio != null)
