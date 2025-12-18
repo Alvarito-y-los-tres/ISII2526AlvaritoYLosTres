@@ -9,9 +9,9 @@ public class RabbitMQLogger : ILogger, IDisposable
 {
     private readonly string _name;
     private readonly RabbitMQLoggerConfiguration _config;
-    private readonly IConnection _connection;
-    private readonly IModel _channel;
-    private readonly IBasicProperties _properties;
+    private readonly IConnection _connection; //conexión TCP con RabbitMQ
+    private readonly IModel _channel; //canal por el que se publican los mensajes
+    private readonly IBasicProperties _properties; //propiedades del mensaje
 
     public RabbitMQLogger(string name, RabbitMQLoggerConfiguration config)
     {
@@ -21,6 +21,8 @@ public class RabbitMQLogger : ILogger, IDisposable
         // Validación básica
         if (string.IsNullOrEmpty(_config.HostName)) throw new ArgumentException("HostName required");
 
+
+        //Preparar para cómo conectarse a RabbitMQ
         var factory = new ConnectionFactory
         {
             HostName = _config.HostName,
@@ -29,20 +31,21 @@ public class RabbitMQLogger : ILogger, IDisposable
             Password = _config.Password
         };
 
-        _connection = factory.CreateConnection();
-        _channel = _connection.CreateModel();
+        _connection = factory.CreateConnection();  
+        _channel = _connection.CreateModel(); //abrir canal
 
         // IMPORTANTE: Para que coincida con tu Subscriber, usamos el nombre "logs_topic"
         // Si prefieres usar _config.Exchange, asegúrate de poner "logs_topic" en el appsettings.json
         string exchangeName = "logs_topic";
 
+        //declarar exchange
         _channel.ExchangeDeclare(
             exchange: exchangeName,
             type: ExchangeType.Topic, // OBLIGATORIO: Topic
             durable: true);
 
         _properties = _channel.CreateBasicProperties();
-        _properties.Persistent = true;
+        _properties.Persistent = true; //el mensaje se guarda en disco
         _properties.ContentType = "application/json";
     }
 
@@ -56,6 +59,7 @@ public class RabbitMQLogger : ILogger, IDisposable
 
         try
         {
+            //crear objeto log
             var logEntry = new
             {
                 Timestamp = DateTime.UtcNow,
@@ -65,12 +69,12 @@ public class RabbitMQLogger : ILogger, IDisposable
                 Exception = exception?.ToString()
             };
 
-            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(logEntry));
+            var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(logEntry)); //convierto el objeto a JSON y luego a bytes
 
-            // 1. Obtenemos la clave compatible con tu menú (information, error)
+            // 1. Obtenemos la clave compatible con el menú (information, error)
             string routingKey = GetRoutingKey(logLevel);
 
-            // 2. Publicamos al exchange "logs_topic"
+            // 2. Publicamos el mensaje al exchange "logs_topic"
             _channel.BasicPublish(
                 exchange: "logs_topic", // Debe coincidir con el Subscriber
                 routingKey: routingKey,
@@ -84,8 +88,8 @@ public class RabbitMQLogger : ILogger, IDisposable
         }
     }
 
-    // --- AQUÍ ESTÁ LA MAGIA ---
-    // Adaptamos los niveles de .NET a las palabras clave que pusiste en Program.cs
+   
+    
     private string GetRoutingKey(LogLevel logLevel)
     {
         return logLevel switch
