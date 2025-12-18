@@ -34,8 +34,8 @@ public class RabbitMQLogger : ILogger, IDisposable
         _connection = factory.CreateConnection();  
         _channel = _connection.CreateModel(); //abrir canal
 
-        // IMPORTANTE: Para que coincida con tu Subscriber, usamos el nombre "logs_topic"
-        // Si prefieres usar _config.Exchange, asegúrate de poner "logs_topic" en el appsettings.json
+        
+       
         string exchangeName = "logs_topic";
 
         //declarar exchange
