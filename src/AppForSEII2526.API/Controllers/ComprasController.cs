@@ -64,5 +64,13 @@ namespace AppForSEII2526.API.Controllers
             _logger.LogInformation("Compra con ID {CompraId} recuperada correctamente", id);
             return Ok(compra);
         }
+
+        //A implementar
+        [HttpPost]
+        public async Task<IActionResult> CrearCompra([FromBody] CrearCompraDTO crearCompraDTO)
+        {
+
+            return BadRequest();
+        }
     }
 }
